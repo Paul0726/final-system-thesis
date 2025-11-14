@@ -100,11 +100,16 @@ function SurveyPage() {
     setLoading(true);
     
     try {
-      await axios.post(`${API_URL}/survey`, formData);
-      setSubmitted(true);
+      const response = await axios.post(`${API_URL}/survey`, formData);
+      if (response.data.success) {
+        setSubmitted(true);
+      } else {
+        alert('Error: ' + (response.data.message || 'Failed to submit survey'));
+      }
     } catch (error) {
       console.error('Error submitting survey:', error);
-      alert('Error submitting survey. Please try again.');
+      const errorMessage = error.response?.data?.message || error.message || 'Error submitting survey. Please try again.';
+      alert('Error: ' + errorMessage);
     } finally {
       setLoading(false);
     }
