@@ -266,6 +266,47 @@
   text-align: center;
   color: #6b7280;
   margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+.otp-request-info {
+  background: #f0fdf4;
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.otp-request-info p {
+  color: #059669;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.otp-sent-message {
+  background: #f0fdf4;
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.otp-sent-message p {
+  color: #059669;
+  margin: 5px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.otp-input {
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 10px;
+  font-weight: 600;
+  color: #059669;
 }
 
 .login-form {

@@ -183,32 +183,29 @@ function AdminPage() {
           <div className="login-container">
             <div className="login-box">
               <h2>🔐 Admin Login</h2>
-              <p>Enter your email to receive OTP</p>
+              <p>Request OTP to access admin panel</p>
               
               {!otpSent ? (
                 <div className="login-form">
-                  <div className="form-group">
-                    <label>Email Address</label>
-                    <input 
-                      type="email" 
-                      value={email} 
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="johnpauld750@gmail.com"
-                      disabled
-                    />
+                  <div className="otp-request-info">
+                    <p>Click the button below to receive a one-time password (OTP) via email.</p>
                   </div>
                   <button 
                     onClick={handleSendOTP} 
                     className="btn-primary"
                     disabled={loginLoading}
                   >
-                    {loginLoading ? 'Sending...' : 'Send OTP'}
+                    {loginLoading ? 'Sending OTP...' : '📧 Request OTP'}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleVerifyOTP} className="login-form">
+                  <div className="otp-sent-message">
+                    <p>✅ OTP has been sent to your registered email address.</p>
+                    <p>Please check your inbox and enter the 6-digit code below.</p>
+                  </div>
                   <div className="form-group">
-                    <label>Enter OTP</label>
+                    <label>Enter OTP Code</label>
                     <input 
                       type="text" 
                       value={otp} 
@@ -216,15 +213,15 @@ function AdminPage() {
                       placeholder="Enter 6-digit OTP"
                       maxLength="6"
                       required
+                      className="otp-input"
                     />
-                    <small>Check your email for the OTP code</small>
                   </div>
                   <button 
                     type="submit" 
                     className="btn-primary"
                     disabled={loginLoading}
                   >
-                    {loginLoading ? 'Verifying...' : 'Verify OTP'}
+                    {loginLoading ? 'Verifying...' : '✓ Verify OTP'}
                   </button>
                   <button 
                     type="button"
@@ -234,7 +231,7 @@ function AdminPage() {
                     }}
                     className="btn-secondary"
                   >
-                    Back
+                    ← Request New OTP
                   </button>
                 </form>
               )}
