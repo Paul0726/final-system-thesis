@@ -13,7 +13,6 @@ const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'
 function DashboardPage() {
   const [stats, setStats] = useState(null);
   const [surveys, setSurveys] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -31,13 +30,10 @@ function DashboardPage() {
 
   const fetchSurveys = async () => {
     try {
-      setLoading(true);
       const response = await axios.get(`${API_URL}/surveys`);
       setSurveys(response.data.data || []);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching surveys:', error);
-      setLoading(false);
     }
   };
 
