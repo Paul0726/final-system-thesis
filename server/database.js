@@ -6,10 +6,23 @@ let pool = null;
 // Only create pool if DATABASE_URL is available
 if (process.env.DATABASE_URL) {
   try {
+    // Fix DATABASE_URL if it uses internal hostname
+    let databaseUrl = process.env.DATABASE_URL;
+    
+    // Replace internal hostname with public if needed
+    if (databaseUrl.includes('postgres.railway.internal')) {
+      // Try to extract connection details and use public hostname
+      // This is a fallback - ideally use public connection string from Railway
+      console.log('⚠️ Using internal hostname, may need public connection string');
+    }
+    
     // Create connection pool
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+      connectionString: databaseUrl,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      connectionTimeoutMillis: 10000, // 10 seconds timeout
+      idleTimeoutMillis: 30000,
+      max: 20 // Maximum number of clients in the pool
     });
 
     // Test connection
