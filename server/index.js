@@ -8,8 +8,13 @@ let pool = null;
 let useDatabase = false;
 try {
   pool = require('./database');
-  useDatabase = true;
-  console.log('✅ Using PostgreSQL database');
+  if (pool) {
+    useDatabase = true;
+    console.log('✅ Using PostgreSQL database');
+  } else {
+    console.log('⚠️ Database not available, using in-memory storage');
+    console.log('💡 Add PostgreSQL database in Railway for permanent storage');
+  }
 } catch (error) {
   console.log('⚠️ Database not available, using in-memory storage');
   console.log('💡 Add PostgreSQL database in Railway for permanent storage');
