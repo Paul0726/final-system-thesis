@@ -1,9 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './LandingPage.css';
+
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api' 
+  : 'http://localhost:3000/api';
 
 function LandingPage() {
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [ratings, setRatings] = useState({ school: 0, system: 0, total: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeedbacks();
+  }, []);
+
+  const fetchFeedbacks = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/feedbacks`);
+      if (response.data.success) {
+        setFeedbacks(response.data.data || []);
+        setRatings(response.data.ratings || { school: 0, system: 0, total: 0 });
+      }
+    } catch (error) {
+      console.error('Error fetching feedbacks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="landing-page">
@@ -49,6 +75,103 @@ function LandingPage() {
             </Link>
           </div>
         </div>
+
+        {/* Ratings Section */}
+        <div className="ratings-section">
+          <h2>⭐ Overall Ratings</h2>
+          <div className="ratings-display">
+            <div className="rating-card">
+              <h3>School Experience</h3>
+              <div className="rating-stars">
+                {ratings.school > 0 ? '⭐'.repeat(Math.round(parseFloat(ratings.school))) : '⭐'}
+              </div>
+              <p className="rating-value">{ratings.school} / 5.0</p>
+              <p className="rating-count">{ratings.total} total ratings</p>
+            </div>
+            <div className="rating-card">
+              <h3>System Experience</h3>
+              <div className="rating-stars">
+                {ratings.system > 0 ? '⭐'.repeat(Math.round(parseFloat(ratings.system))) : '⭐'}
+              </div>
+              <p className="rating-value">{ratings.system} / 5.0</p>
+              <p className="rating-count">{ratings.total} total ratings</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Feedback Section */}
+        {feedbacks.length > 0 && (
+          <div className="feedback-section">
+            <h2>💬 What Our Graduates Say</h2>
+            <div className="feedback-scroll-container">
+              <div className="feedback-scroll">
+                {feedbacks.map((feedback, index) => (
+                  <div key={index} className="feedback-card">
+                    <div className="feedback-header">
+                      <h4>{feedback.name || 'Anonymous'}</h4>
+                      <div className="feedback-ratings">
+                        {feedback.schoolRating > 0 && (
+                          <span className="feedback-rating">
+                            School: {'⭐'.repeat(feedback.schoolRating)}
+                          </span>
+                        )}
+                        {feedback.systemRating > 0 && (
+                          <span className="feedback-rating">
+                            System: {'⭐'.repeat(feedback.systemRating)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {feedback.schoolFeedback && (
+                      <div className="feedback-item">
+                        <strong>About School:</strong>
+                        <p>"{feedback.schoolFeedback}"</p>
+                      </div>
+                    )}
+                    {feedback.systemFeedback && (
+                      <div className="feedback-item">
+                        <strong>About System:</strong>
+                        <p>"{feedback.systemFeedback}"</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {/* Duplicate for seamless scroll */}
+                {feedbacks.map((feedback, index) => (
+                  <div key={`dup-${index}`} className="feedback-card">
+                    <div className="feedback-header">
+                      <h4>{feedback.name || 'Anonymous'}</h4>
+                      <div className="feedback-ratings">
+                        {feedback.schoolRating > 0 && (
+                          <span className="feedback-rating">
+                            School: {'⭐'.repeat(feedback.schoolRating)}
+                          </span>
+                        )}
+                        {feedback.systemRating > 0 && (
+                          <span className="feedback-rating">
+                            System: {'⭐'.repeat(feedback.systemRating)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {feedback.schoolFeedback && (
+                      <div className="feedback-item">
+                        <strong>About School:</strong>
+                        <p>"{feedback.schoolFeedback}"</p>
+                      </div>
+                    )}
+                    {feedback.systemFeedback && (
+                      <div className="feedback-item">
+                        <strong>About System:</strong>
+                        <p>"{feedback.systemFeedback}"</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="privacy-section">
           <div className="privacy-header" onClick={() => setShowPrivacy(!showPrivacy)}>

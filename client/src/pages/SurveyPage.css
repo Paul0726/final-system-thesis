@@ -195,6 +195,129 @@
   border-left: 4px solid #10b981;
 }
 
+/* Alumni Modal */
+.alumni-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alumni-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.alumni-modal h2 {
+  color: #059669;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.alumni-modal p {
+  color: #374151;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.modal-note {
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.modal-buttons button {
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modal-buttons .btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.modal-buttons .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.modal-buttons .btn-secondary {
+  background: white;
+  color: #059669;
+  border: 2px solid #10b981;
+}
+
+.modal-buttons .btn-secondary:hover {
+  background: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+/* Star Rating */
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.star-label {
+  cursor: pointer;
+  font-size: 2rem;
+  transition: transform 0.2s;
+}
+
+.star-label:hover {
+  transform: scale(1.2);
+}
+
+.star-label input[type="radio"] {
+  display: none;
+}
+
+.star-label input[type="radio"]:checked ~ .star,
+.star-label:hover .star {
+  filter: brightness(1.2);
+}
+
+.star {
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.rating-value {
+  margin-left: 15px;
+  font-weight: 600;
+  color: #059669;
+  font-size: 1.1rem;
+}
+
 .rating-section {
   margin-bottom: 30px;
   padding: 20px;

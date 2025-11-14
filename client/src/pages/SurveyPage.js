@@ -8,6 +8,10 @@ const API_URL = process.env.NODE_ENV === 'production'
   : 'http://localhost:3000/api';
 
 function SurveyPage() {
+  const [showAlumniModal, setShowAlumniModal] = useState(true);
+  const [isAlumni, setIsAlumni] = useState('');
+  const [interestedAlumni, setInterestedAlumni] = useState('');
+  
   const [formData, setFormData] = useState({
     // A. Individual Information
     name: '',
@@ -45,7 +49,15 @@ function SurveyPage() {
       itField: { q1: '', q2: '', q3: '', q4: '' },
       competitiveEdge: { q1: '', q2: '', q3: '', q4: '' },
       workplace: { q1: '', q2: '', q3: '', q4: '' }
-    }
+    },
+    
+    // E. Alumni Status & Ratings
+    isAlumni: '',
+    interestedAlumni: '',
+    schoolRating: 0,
+    systemRating: 0,
+    schoolFeedback: '',
+    systemFeedback: ''
   });
   
   const [submitted, setSubmitted] = useState(false);
@@ -95,12 +107,45 @@ function SurveyPage() {
     }));
   };
 
+  const handleAlumniModal = () => {
+    if (isAlumni === 'Yes') {
+      setFormData(prev => ({ ...prev, isAlumni: 'Yes' }));
+      setShowAlumniModal(false);
+    } else if (isAlumni === 'No') {
+      if (interestedAlumni === '') {
+        // Show interested question - don't close modal yet
+        return;
+      } else if (interestedAlumni === 'Yes') {
+        setFormData(prev => ({ 
+          ...prev, 
+          isAlumni: 'No',
+          interestedAlumni: 'Yes'
+        }));
+        alert('Thank you for your interest! Your survey responses will be used as your alumni information.');
+        setShowAlumniModal(false);
+      } else if (interestedAlumni === 'No') {
+        setFormData(prev => ({ 
+          ...prev, 
+          isAlumni: 'No',
+          interestedAlumni: 'No'
+        }));
+        setShowAlumniModal(false);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
     try {
-      const response = await axios.post(`${API_URL}/survey`, formData);
+      const submitData = {
+        ...formData,
+        isAlumni: isAlumni,
+        interestedAlumni: interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null)
+      };
+      
+      const response = await axios.post(`${API_URL}/survey`, submitData);
       if (response.data.success) {
         setSubmitted(true);
       } else {
@@ -127,6 +172,69 @@ function SurveyPage() {
             <Link to="/survey" className="btn-secondary" onClick={() => setSubmitted(false)}>
               Submit Another
             </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Alumni Modal
+  if (showAlumniModal) {
+    return (
+      <div className="survey-page">
+        <div className="alumni-modal-overlay">
+          <div className="alumni-modal">
+            <h2>🎓 Alumni Verification</h2>
+            {interestedAlumni === '' ? (
+              <>
+                <p>Are you already an alumni of this institution?</p>
+                <div className="modal-buttons">
+                  <button 
+                    className="btn-primary" 
+                    onClick={() => {
+                      setIsAlumni('Yes');
+                      handleAlumniModal();
+                    }}
+                  >
+                    Yes, I am an Alumni
+                  </button>
+                  <button 
+                    className="btn-secondary" 
+                    onClick={() => {
+                      setIsAlumni('No');
+                      setInterestedAlumni('pending');
+                    }}
+                  >
+                    No, I am not an Alumni
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>Are you interested in becoming an alumni?</p>
+                <p className="modal-note">If yes, your survey responses will be used as your alumni information.</p>
+                <div className="modal-buttons">
+                  <button 
+                    className="btn-primary" 
+                    onClick={() => {
+                      setInterestedAlumni('Yes');
+                      handleAlumniModal();
+                    }}
+                  >
+                    Yes, I'm Interested
+                  </button>
+                  <button 
+                    className="btn-secondary" 
+                    onClick={() => {
+                      setInterestedAlumni('No');
+                      handleAlumniModal();
+                    }}
+                  >
+                    No, Not Interested
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -466,6 +574,71 @@ function SurveyPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* E. SCHOOL AND SYSTEM RATINGS */}
+          <div className="form-section">
+            <h2>E. SCHOOL AND SYSTEM RATINGS</h2>
+            
+            {/* School Rating */}
+            <div className="rating-section">
+              <h3>Rate Your School Experience (1-5 Stars)</h3>
+              <div className="star-rating">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <label key={star} className="star-label">
+                    <input 
+                      type="radio" 
+                      name="schoolRating" 
+                      value={star}
+                      checked={formData.schoolRating === star}
+                      onChange={(e) => setFormData(prev => ({ ...prev, schoolRating: parseInt(e.target.value) }))}
+                    />
+                    <span className="star">⭐</span>
+                  </label>
+                ))}
+                <span className="rating-value">{formData.schoolRating > 0 ? `${formData.schoolRating} / 5` : 'Not rated'}</span>
+              </div>
+              <div className="form-group">
+                <label>Feedback about the School</label>
+                <textarea 
+                  name="schoolFeedback" 
+                  value={formData.schoolFeedback} 
+                  onChange={handleChange}
+                  rows="4"
+                  placeholder="Share your thoughts about your school experience..."
+                />
+              </div>
+            </div>
+
+            {/* System Rating */}
+            <div className="rating-section">
+              <h3>Rate This System (1-5 Stars)</h3>
+              <div className="star-rating">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <label key={star} className="star-label">
+                    <input 
+                      type="radio" 
+                      name="systemRating" 
+                      value={star}
+                      checked={formData.systemRating === star}
+                      onChange={(e) => setFormData(prev => ({ ...prev, systemRating: parseInt(e.target.value) }))}
+                    />
+                    <span className="star">⭐</span>
+                  </label>
+                ))}
+                <span className="rating-value">{formData.systemRating > 0 ? `${formData.systemRating} / 5` : 'Not rated'}</span>
+              </div>
+              <div className="form-group">
+                <label>Feedback about the System</label>
+                <textarea 
+                  name="systemFeedback" 
+                  value={formData.systemFeedback} 
+                  onChange={handleChange}
+                  rows="4"
+                  placeholder="Share your thoughts about this tracer system..."
+                />
+              </div>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { sendOTP, verifyOTP } = require('./auth');
 require('dotenv').config();
 
 // Try to load database, fallback to in-memory if not available
@@ -45,6 +46,134 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Admin Authentication Routes
+app.post('/api/admin/send-otp', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    // Only allow specific admin email
+    if (email !== 'johnpauld750@gmail.com') {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Unauthorized email address' 
+      });
+    }
+
+    const result = await sendOTP(email);
+    if (result.success) {
+      res.json({ success: true, message: 'OTP sent to your email' });
+    } else {
+      res.status(500).json({ success: false, message: result.message });
+    }
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).json({ success: false, message: 'Failed to send OTP' });
+  }
+});
+
+app.post('/api/admin/verify-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    
+    if (email !== 'johnpauld750@gmail.com') {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Unauthorized email address' 
+      });
+    }
+
+    const result = verifyOTP(email, otp);
+    if (result.success) {
+      res.json({ success: true, message: 'Login successful', token: 'admin-token' });
+    } else {
+      res.status(401).json({ success: false, message: result.message });
+    }
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    res.status(500).json({ success: false, message: 'Failed to verify OTP' });
+  }
+});
+
+// Get feedbacks and ratings for landing page
+app.get('/api/feedbacks', async (req, res) => {
+  try {
+    if (useDatabase && pool) {
+      const result = await pool.query(`
+        SELECT name, school_rating, system_rating, school_feedback, system_feedback, created_at
+        FROM surveys
+        WHERE (school_feedback IS NOT NULL AND school_feedback != '') 
+           OR (system_feedback IS NOT NULL AND system_feedback != '')
+        ORDER BY created_at DESC
+        LIMIT 50
+      `);
+      
+      const feedbacks = result.rows.map(row => ({
+        name: row.name,
+        schoolRating: row.school_rating,
+        systemRating: row.system_rating,
+        schoolFeedback: row.school_feedback,
+        systemFeedback: row.system_feedback,
+        createdAt: row.created_at
+      }));
+      
+      // Calculate average ratings
+      const ratingsResult = await pool.query(`
+        SELECT 
+          AVG(school_rating) as avg_school_rating,
+          AVG(system_rating) as avg_system_rating,
+          COUNT(*) as total_ratings
+        FROM surveys
+        WHERE school_rating IS NOT NULL OR system_rating IS NOT NULL
+      `);
+      
+      const avgRatings = {
+        school: ratingsResult.rows[0]?.avg_school_rating ? parseFloat(ratingsResult.rows[0].avg_school_rating).toFixed(1) : 0,
+        system: ratingsResult.rows[0]?.avg_system_rating ? parseFloat(ratingsResult.rows[0].avg_system_rating).toFixed(1) : 0,
+        total: parseInt(ratingsResult.rows[0]?.total_ratings || 0)
+      };
+      
+      res.json({
+        success: true,
+        data: feedbacks,
+        ratings: avgRatings
+      });
+    } else {
+      // Fallback to in-memory
+      const feedbacks = surveys
+        .filter(s => (s.schoolFeedback && s.schoolFeedback.trim()) || (s.systemFeedback && s.systemFeedback.trim()))
+        .slice(0, 50)
+        .map(s => ({
+          name: s.name,
+          schoolRating: s.schoolRating,
+          systemRating: s.systemRating,
+          schoolFeedback: s.schoolFeedback,
+          systemFeedback: s.systemFeedback,
+          createdAt: s.createdAt
+        }));
+      
+      const ratings = surveys.filter(s => s.schoolRating || s.systemRating);
+      const avgRatings = {
+        school: ratings.length > 0 ? (ratings.reduce((sum, s) => sum + (s.schoolRating || 0), 0) / ratings.length).toFixed(1) : 0,
+        system: ratings.length > 0 ? (ratings.reduce((sum, s) => sum + (s.systemRating || 0), 0) / ratings.length).toFixed(1) : 0,
+        total: ratings.length
+      };
+      
+      res.json({
+        success: true,
+        data: feedbacks,
+        ratings: avgRatings
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching feedbacks:', error);
+    res.json({
+      success: true,
+      data: [],
+      ratings: { school: 0, system: 0, total: 0 }
+    });
+  }
+});
+
 // Get all surveys
 app.get('/api/surveys', async (req, res) => {
   try {
@@ -79,6 +208,12 @@ app.get('/api/surveys', async (req, res) => {
         monthlyIncome: row.monthly_income,
         additionalRevenueSources: row.additional_revenue_sources,
         ratings: typeof row.ratings === 'string' ? JSON.parse(row.ratings) : row.ratings,
+        isAlumni: row.is_alumni,
+        interestedAlumni: row.interested_alumni,
+        schoolRating: row.school_rating,
+        systemRating: row.system_rating,
+        schoolFeedback: row.school_feedback,
+        systemFeedback: row.system_feedback,
         createdAt: row.created_at
       }));
       res.json({
@@ -148,8 +283,9 @@ app.post('/api/survey', async (req, res) => {
           civil_status, sex, current_location, course_graduated, school_year_graduated,
           max_academic_achievement, trainings, civil_service, let_license, other_prc_license,
           professional_organizations, is_employed, employment_nature, employment_classification,
-          job_title, place_of_work, monthly_income, additional_revenue_sources, ratings
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+          job_title, place_of_work, monthly_income, additional_revenue_sources, ratings,
+          is_alumni, interested_alumni, school_rating, system_rating, school_feedback, system_feedback
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)
         RETURNING *
       `, [
         surveyData.name,
@@ -176,7 +312,13 @@ app.post('/api/survey', async (req, res) => {
         surveyData.placeOfWork || null,
         surveyData.monthlyIncome || null,
         surveyData.additionalRevenueSources || null,
-        JSON.stringify(surveyData.ratings || {})
+        JSON.stringify(surveyData.ratings || {}),
+        surveyData.isAlumni || null,
+        surveyData.interestedAlumni || null,
+        surveyData.schoolRating || null,
+        surveyData.systemRating || null,
+        surveyData.schoolFeedback || null,
+        surveyData.systemFeedback || null
       ]);
 
       // Convert snake_case to camelCase for response
@@ -207,6 +349,12 @@ app.post('/api/survey', async (req, res) => {
         monthlyIncome: result.rows[0].monthly_income,
         additionalRevenueSources: result.rows[0].additional_revenue_sources,
         ratings: typeof result.rows[0].ratings === 'string' ? JSON.parse(result.rows[0].ratings) : result.rows[0].ratings,
+        isAlumni: result.rows[0].is_alumni,
+        interestedAlumni: result.rows[0].interested_alumni,
+        schoolRating: result.rows[0].school_rating,
+        systemRating: result.rows[0].system_rating,
+        schoolFeedback: result.rows[0].school_feedback,
+        systemFeedback: result.rows[0].system_feedback,
         createdAt: result.rows[0].created_at
       };
 

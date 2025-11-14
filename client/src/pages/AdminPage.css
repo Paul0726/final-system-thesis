@@ -239,6 +239,248 @@
   }
 }
 
+/* Login Styles */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.login-box {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.login-box h2 {
+  color: #059669;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.login-box > p {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-form label {
+  color: #374151;
+  font-weight: 600;
+}
+
+.login-form input {
+  padding: 12px 15px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.login-form small {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.login-form .btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.login-form .btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.login-form .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-form .btn-secondary {
+  background: white;
+  color: #059669;
+  padding: 12px 30px;
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.login-form .btn-secondary:hover {
+  background: #f0fdf4;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logout-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background: white;
+  color: #059669;
+}
+
+/* Survey Card Styles */
+.surveys-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.survey-card {
+  background: #f9fafb;
+  border-radius: 15px;
+  border: 2px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.survey-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.survey-card-header {
+  padding: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.survey-card-header:hover {
+  background: #f0fdf4;
+}
+
+.survey-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.survey-card-main h3 {
+  color: #059669;
+  margin: 0 0 5px 0;
+  font-size: 1.3rem;
+}
+
+.survey-meta {
+  color: #6b7280;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.survey-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.expand-icon {
+  font-size: 1.2rem;
+  color: #059669;
+  font-weight: bold;
+}
+
+.survey-card-details {
+  padding: 20px;
+  background: white;
+  border-top: 2px solid #e5e7eb;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.detail-section {
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border-left: 4px solid #10b981;
+}
+
+.detail-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-section h4 {
+  color: #059669;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #10b981;
+  padding-bottom: 10px;
+}
+
+.detail-section p {
+  margin: 8px 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.detail-section strong {
+  color: #059669;
+  min-width: 180px;
+  display: inline-block;
+}
+
+.training-item {
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border-left: 3px solid #10b981;
+}
+
+.training-item p {
+  margin: 5px 0;
+}
+
 @media (max-width: 768px) {
   .filter-bar {
     flex-direction: column;
@@ -261,6 +503,20 @@
   .surveys-table th,
   .surveys-table td {
     padding: 8px;
+  }
+
+  .survey-card-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .survey-card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
   }
 }
 

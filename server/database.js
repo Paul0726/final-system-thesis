@@ -90,10 +90,28 @@ if (process.env.DATABASE_URL) {
             monthly_income VARCHAR(100),
             additional_revenue_sources TEXT,
             ratings JSONB,
+            is_alumni VARCHAR(10),
+            interested_alumni VARCHAR(10),
+            school_rating INTEGER,
+            system_rating INTEGER,
+            school_feedback TEXT,
+            system_feedback TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           )
         `);
+
+        // Add new columns if they don't exist (for existing tables)
+        try {
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_alumni VARCHAR(10)`);
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS interested_alumni VARCHAR(10)`);
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS school_rating INTEGER`);
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_rating INTEGER`);
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS school_feedback TEXT`);
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_feedback TEXT`);
+        } catch (err) {
+          // Columns might already exist, ignore error
+        }
 
         console.log('✅ Database tables initialized');
       } catch (error) {
