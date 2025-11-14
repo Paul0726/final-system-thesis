@@ -7,11 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // In-memory database (for demo - in production, use real database)
-let items = [
-  { id: 1, title: 'Chapter 1: Introduction', description: 'Research background and objectives', category: 'Chapter', status: 'Completed', createdAt: new Date().toISOString() },
-  { id: 2, title: 'Chapter 2: Literature Review', description: 'Review of related studies and theories', category: 'Chapter', status: 'In Progress', createdAt: new Date().toISOString() },
-  { id: 3, title: 'Data Collection', description: 'Gather survey responses and interviews', category: 'Task', status: 'Pending', createdAt: new Date().toISOString() }
-];
+let surveys = [];
 
 // Middleware
 app.use(cors());
@@ -32,133 +28,85 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Get all items
-app.get('/api/data', (req, res) => {
-  const { search, category, status } = req.query;
-  let filteredItems = [...items];
-
-  // Filter by search
-  if (search) {
-    filteredItems = filteredItems.filter(item => 
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.description.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  // Filter by category
-  if (category) {
-    filteredItems = filteredItems.filter(item => item.category === category);
-  }
-
-  // Filter by status
-  if (status) {
-    filteredItems = filteredItems.filter(item => item.status === status);
-  }
-
+// Survey Routes
+// Get all surveys
+app.get('/api/surveys', (req, res) => {
   res.json({
-    message: 'Data retrieved successfully',
-    data: filteredItems,
-    total: filteredItems.length
+    success: true,
+    message: 'Surveys retrieved successfully',
+    data: surveys
   });
 });
 
-// Get single item
-app.get('/api/data/:id', (req, res) => {
+// Get single survey
+app.get('/api/surveys/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const item = items.find(item => item.id === id);
+  const survey = surveys.find(s => s.id === id);
   
-  if (!item) {
-    return res.status(404).json({ success: false, message: 'Item not found' });
+  if (!survey) {
+    return res.status(404).json({ success: false, message: 'Survey not found' });
   }
   
-  res.json({ success: true, data: item });
+  res.json({ success: true, data: survey });
 });
 
-// Create new item
-app.post('/api/data', (req, res) => {
-  const { title, description, category, status } = req.body;
+// Create new survey
+app.post('/api/survey', (req, res) => {
+  const { name, yearGraduated, currentStatus, company, position, email, contactNumber, address, feedback } = req.body;
   
-  if (!title || !description) {
-    return res.status(400).json({ success: false, message: 'Title and description are required' });
+  if (!name || !yearGraduated || !currentStatus || !email) {
+    return res.status(400).json({ success: false, message: 'Name, year graduated, status, and email are required' });
   }
 
-  const newItem = {
-    id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1,
-    title,
-    description,
-    category: category || 'General',
-    status: status || 'Pending',
+  const newSurvey = {
+    id: surveys.length > 0 ? Math.max(...surveys.map(s => s.id)) + 1 : 1,
+    name,
+    yearGraduated,
+    currentStatus,
+    company: company || '',
+    position: position || '',
+    email,
+    contactNumber: contactNumber || '',
+    address: address || '',
+    feedback: feedback || '',
     createdAt: new Date().toISOString()
   };
 
-  items.push(newItem);
+  surveys.push(newSurvey);
   
   res.json({
     success: true,
-    message: 'Item created successfully',
-    data: newItem
+    message: 'Survey submitted successfully',
+    data: newSurvey
   });
 });
 
-// Update item
-app.put('/api/data/:id', (req, res) => {
+// Delete survey
+app.delete('/api/surveys/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const { title, description, category, status } = req.body;
+  const surveyIndex = surveys.findIndex(s => s.id === id);
   
-  const itemIndex = items.findIndex(item => item.id === id);
-  
-  if (itemIndex === -1) {
-    return res.status(404).json({ success: false, message: 'Item not found' });
+  if (surveyIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Survey not found' });
   }
 
-  items[itemIndex] = {
-    ...items[itemIndex],
-    title: title || items[itemIndex].title,
-    description: description || items[itemIndex].description,
-    category: category || items[itemIndex].category,
-    status: status || items[itemIndex].status,
-    updatedAt: new Date().toISOString()
-  };
-
-  res.json({
-    success: true,
-    message: 'Item updated successfully',
-    data: items[itemIndex]
-  });
-});
-
-// Delete item
-app.delete('/api/data/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const itemIndex = items.findIndex(item => item.id === id);
-  
-  if (itemIndex === -1) {
-    return res.status(404).json({ success: false, message: 'Item not found' });
-  }
-
-  const deletedItem = items.splice(itemIndex, 1)[0];
+  const deletedSurvey = surveys.splice(surveyIndex, 1)[0];
   
   res.json({
     success: true,
-    message: 'Item deleted successfully',
-    data: deletedItem
+    message: 'Survey deleted successfully',
+    data: deletedSurvey
   });
 });
 
 // Get statistics
 app.get('/api/stats', (req, res) => {
   const stats = {
-    total: items.length,
-    byStatus: {
-      'Completed': items.filter(i => i.status === 'Completed').length,
-      'In Progress': items.filter(i => i.status === 'In Progress').length,
-      'Pending': items.filter(i => i.status === 'Pending').length
-    },
-    byCategory: {
-      'Chapter': items.filter(i => i.category === 'Chapter').length,
-      'Task': items.filter(i => i.category === 'Task').length,
-      'General': items.filter(i => i.category === 'General').length
-    }
+    totalGraduates: surveys.length,
+    employed: surveys.filter(s => s.currentStatus === 'Employed').length,
+    selfEmployed: surveys.filter(s => s.currentStatus === 'Self-Employed').length,
+    unemployed: surveys.filter(s => s.currentStatus === 'Unemployed').length,
+    furtherStudies: surveys.filter(s => s.currentStatus === 'Further Studies').length
   };
 
   res.json({ success: true, data: stats });

@@ -1,0 +1,265 @@
+.dashboard-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 20px;
+}
+
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  padding: 30px 20px;
+}
+
+.back-link {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 20px;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+
+.back-link:hover {
+  opacity: 1;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-header p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-info h3 {
+  font-size: 2rem;
+  color: #10b981;
+  margin-bottom: 5px;
+}
+
+.stat-info p {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.chart-section,
+.recent-surveys {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.chart-section h2,
+.recent-surveys h2 {
+  color: #059669;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #10b981;
+}
+
+.chart-placeholder {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f0fdf4;
+  border-radius: 15px;
+  border: 2px dashed #10b981;
+}
+
+.chart-placeholder p {
+  color: #059669;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.chart-note {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.surveys-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.survey-item {
+  background: #f0fdf4;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #10b981;
+  transition: transform 0.3s;
+}
+
+.survey-item:hover {
+  transform: translateX(5px);
+}
+
+.survey-header-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.survey-header-item h3 {
+  color: #059669;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.employed {
+  background: #10b981;
+  color: white;
+}
+
+.status-badge.self-employed {
+  background: #3b82f6;
+  color: white;
+}
+
+.status-badge.further-studies {
+  background: #8b5cf6;
+  color: white;
+}
+
+.status-badge.unemployed {
+  background: #f59e0b;
+  color: white;
+}
+
+.survey-year,
+.survey-company,
+.survey-position {
+  color: #6b7280;
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+
+.loading,
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.empty-state p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 15px 40px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+
+.btn-secondary {
+  background: white;
+  color: #059669;
+  border: 2px solid #10b981;
+}
+
+.btn-secondary:hover {
+  background: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 968px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+
