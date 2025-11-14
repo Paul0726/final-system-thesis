@@ -5,7 +5,7 @@
 }
 
 .survey-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -59,14 +59,26 @@
 
 .form-section h2 {
   color: #059669;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin-bottom: 25px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #10b981;
+  border-bottom: 3px solid #10b981;
+}
+
+.form-section h3 {
+  color: #059669;
+  font-size: 1.3rem;
+  margin: 25px 0 15px 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 .form-group {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
@@ -99,14 +111,166 @@
 
 .form-group textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.form-subgroup {
+  margin-bottom: 15px;
+}
+
+.form-subgroup label {
+  display: block;
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.training-entry {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-remove {
+  padding: 8px 15px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  align-self: end;
+  transition: all 0.3s;
+}
+
+.btn-remove:hover {
+  background: #dc2626;
+}
+
+.btn-add-training {
+  padding: 10px 20px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+
+.btn-add-training:hover {
+  background: #059669;
+}
+
+.rating-instruction {
+  background: #f0fdf4;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: #059669;
+  font-weight: 600;
+  border-left: 4px solid #10b981;
+}
+
+.rating-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.rating-question {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rating-question:last-child {
+  border-bottom: none;
+}
+
+.rating-question > label {
+  display: block;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.rating-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.3s;
+  min-width: 50px;
+}
+
+.rating-label:hover {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.rating-label input[type="radio"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.rating-label input[type="radio"]:checked + span {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.rating-label span {
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+.rating-label:has(input[type="radio"]:checked) {
+  border-color: #10b981;
+  background: #f0fdf4;
 }
 
 .form-actions {
   display: flex;
   gap: 15px;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid #f0fdf4;
   flex-wrap: wrap;
 }
 
@@ -183,6 +347,10 @@
     padding: 25px 20px;
   }
 
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
   .form-actions {
     flex-direction: column;
   }
@@ -191,5 +359,8 @@
   .btn-cancel {
     width: 100%;
   }
-}
 
+  .rating-buttons {
+    justify-content: center;
+  }
+}

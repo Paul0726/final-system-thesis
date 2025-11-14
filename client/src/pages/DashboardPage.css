@@ -78,128 +78,33 @@
   font-size: 0.9rem;
 }
 
-.dashboard-content {
+.charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   gap: 30px;
   margin-bottom: 30px;
 }
 
-.chart-section,
-.recent-surveys {
+.chart-card {
   background: white;
   padding: 30px;
   border-radius: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.chart-section h2,
-.recent-surveys h2 {
+.chart-card h2 {
   color: #059669;
   font-size: 1.5rem;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 2px solid #10b981;
 }
 
-.chart-placeholder {
-  text-align: center;
-  padding: 60px 20px;
-  background: #f0fdf4;
-  border-radius: 15px;
-  border: 2px dashed #10b981;
-}
-
-.chart-placeholder p {
-  color: #059669;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.chart-note {
+.chart-subtitle {
   color: #6b7280;
   font-size: 0.9rem;
-}
-
-.surveys-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.survey-item {
-  background: #f0fdf4;
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 4px solid #10b981;
-  transition: transform 0.3s;
-}
-
-.survey-item:hover {
-  transform: translateX(5px);
-}
-
-.survey-header-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.survey-header-item h3 {
-  color: #059669;
-  font-size: 1.2rem;
-  margin: 0;
-}
-
-.status-badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.status-badge.employed {
-  background: #10b981;
-  color: white;
-}
-
-.status-badge.self-employed {
-  background: #3b82f6;
-  color: white;
-}
-
-.status-badge.further-studies {
-  background: #8b5cf6;
-  color: white;
-}
-
-.status-badge.unemployed {
-  background: #f59e0b;
-  color: white;
-}
-
-.survey-year,
-.survey-company,
-.survey-position {
-  color: #6b7280;
-  margin: 5px 0;
-  font-size: 0.95rem;
-}
-
-.loading,
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #6b7280;
-}
-
-.empty-state p {
   margin-bottom: 20px;
-  font-size: 1.1rem;
+  font-style: italic;
 }
 
 .dashboard-actions {
@@ -242,8 +147,8 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 968px) {
-  .dashboard-content {
+@media (max-width: 1200px) {
+  .charts-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -251,6 +156,10 @@
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-card {
+    padding: 20px;
   }
 
   .dashboard-actions {
@@ -263,3 +172,8 @@
   }
 }
 
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -52,23 +52,16 @@ app.get('/api/surveys/:id', (req, res) => {
 
 // Create new survey
 app.post('/api/survey', (req, res) => {
-  const { name, yearGraduated, currentStatus, company, position, email, contactNumber, address, feedback } = req.body;
+  const surveyData = req.body;
   
-  if (!name || !yearGraduated || !currentStatus || !email) {
-    return res.status(400).json({ success: false, message: 'Name, year graduated, status, and email are required' });
+  // Required fields validation
+  if (!surveyData.name || !surveyData.emailAddress || !surveyData.schoolYearGraduated) {
+    return res.status(400).json({ success: false, message: 'Name, email address, and school year graduated are required' });
   }
 
   const newSurvey = {
     id: surveys.length > 0 ? Math.max(...surveys.map(s => s.id)) + 1 : 1,
-    name,
-    yearGraduated,
-    currentStatus,
-    company: company || '',
-    position: position || '',
-    email,
-    contactNumber: contactNumber || '',
-    address: address || '',
-    feedback: feedback || '',
+    ...surveyData,
     createdAt: new Date().toISOString()
   };
 
@@ -103,10 +96,10 @@ app.delete('/api/surveys/:id', (req, res) => {
 app.get('/api/stats', (req, res) => {
   const stats = {
     totalGraduates: surveys.length,
-    employed: surveys.filter(s => s.currentStatus === 'Employed').length,
-    selfEmployed: surveys.filter(s => s.currentStatus === 'Self-Employed').length,
-    unemployed: surveys.filter(s => s.currentStatus === 'Unemployed').length,
-    furtherStudies: surveys.filter(s => s.currentStatus === 'Further Studies').length
+    employed: surveys.filter(s => s.isEmployed === 'Yes' && (s.employmentNature === 'Government Sector' || s.employmentNature === 'Private Sector')).length,
+    selfEmployed: surveys.filter(s => s.employmentNature === 'Self-Employed').length,
+    unemployed: surveys.filter(s => s.isEmployed === 'No' || s.employmentNature === 'Not Currently Employed').length,
+    furtherStudies: surveys.filter(s => s.employmentNature === 'Further Studies').length
   };
 
   res.json({ success: true, data: stats });
