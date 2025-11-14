@@ -9,7 +9,7 @@ const API_URL = process.env.NODE_ENV === 'production'
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [email, setEmail] = useState('johnpauld750@gmail.com');
+  const email = 'johnpauld750@gmail.com'; // Admin email (hardcoded for security)
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
