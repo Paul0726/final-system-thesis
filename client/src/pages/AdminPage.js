@@ -21,10 +21,15 @@ function AdminPage() {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/surveys`);
-      setSurveys(response.data.data || []);
+      console.log('API Response:', response.data);
+      const surveysData = response.data.data || [];
+      console.log('Surveys data:', surveysData);
+      setSurveys(surveysData);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching surveys:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      alert('Error loading surveys. Please check console for details.');
       setLoading(false);
     }
   };
@@ -118,9 +123,24 @@ function AdminPage() {
         <div className="admin-content">
           {loading ? (
             <div className="loading">Loading surveys...</div>
+          ) : surveys.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">📭</div>
+              <h3>No Surveys Yet</h3>
+              <p>There are no survey responses in the database.</p>
+              <p>Submit a survey first to see data here.</p>
+              <Link to="/survey" className="btn-primary" style={{ marginTop: '20px', display: 'inline-block' }}>
+                Go to Survey Page
+              </Link>
+            </div>
           ) : filteredSurveys.length === 0 ? (
             <div className="empty-state">
-              <p>No surveys found.</p>
+              <div className="empty-icon">🔍</div>
+              <h3>No Results Found</h3>
+              <p>No surveys match your search or filter criteria.</p>
+              <button onClick={() => { setSearchTerm(''); setFilterStatus(''); }} className="btn-primary" style={{ marginTop: '20px' }}>
+                Clear Filters
+              </button>
             </div>
           ) : (
             <div className="surveys-table">

@@ -20,5 +20,15 @@
 
 ---
 
-**Admin Page = Pinakamadali!** ✅
+## 🔍 ALTERNATIVE: Via Connect Tab
 
+1. **Railway Dashboard** → PostgreSQL → Connect tab
+2. **Kopyahin ang connection details**
+3. **Gamitin ang external tool:**
+   - **pgAdmin** (https://www.pgadmin.org/)
+   - **DBeaver** (https://dbeaver.io/)
+   - **TablePlus** (https://tableplus.com/)
+
+---
+
+**Admin Page = Pinakamadali!** ✅
