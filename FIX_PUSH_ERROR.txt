@@ -1,0 +1,57 @@
+========================================
+  FIX: WALANG COMMITS KAYA AYAW MAG-PUSH
+========================================
+
+PROBLEMA: Walang commits sa local repository mo kaya hindi makapag-push.
+
+SOLUTION: Kailangan mo munang mag-commit ng files.
+
+========================================
+  I-RUN ANG COMMANDS NA ITO (isa-isa):
+========================================
+
+STEP 1: Pumunta sa project folder
+-----------------------------------
+cd "C:\final system thesis"
+
+
+STEP 2: I-check kung may commits na
+-----------------------------------
+git log
+
+(Kung walang lalabas, walang commits pa)
+
+
+STEP 3: I-add ang lahat ng files
+-----------------------------------
+git add .
+
+
+STEP 4: I-commit
+-----------------------------------
+git commit -m "Initial commit: Thesis System"
+
+
+STEP 5: I-verify na may commit na
+-----------------------------------
+git log
+
+(Dapat may lalabas na commit message)
+
+
+STEP 6: I-push ulit
+-----------------------------------
+git push -u origin main
+
+
+========================================
+  COMPLETE SEQUENCE:
+========================================
+
+cd "C:\final system thesis"
+git add .
+git commit -m "Initial commit: Thesis System"
+git push -u origin main
+
+========================================
+
