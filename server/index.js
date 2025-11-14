@@ -96,9 +96,14 @@ app.delete('/api/surveys/:id', (req, res) => {
 app.get('/api/stats', (req, res) => {
   const stats = {
     totalGraduates: surveys.length,
-    employed: surveys.filter(s => s.isEmployed === 'Yes' && (s.employmentNature === 'Government Sector' || s.employmentNature === 'Private Sector')).length,
+    employed: surveys.filter(s => {
+      return s.isEmployed === 'Yes' && 
+             (s.employmentNature === 'Government Sector' || s.employmentNature === 'Private Sector');
+    }).length,
     selfEmployed: surveys.filter(s => s.employmentNature === 'Self-Employed').length,
-    unemployed: surveys.filter(s => s.isEmployed === 'No' || s.employmentNature === 'Not Currently Employed').length,
+    unemployed: surveys.filter(s => {
+      return s.isEmployed === 'No' || s.employmentNature === 'Not Currently Employed';
+    }).length,
     furtherStudies: surveys.filter(s => s.employmentNature === 'Further Studies').length
   };
 

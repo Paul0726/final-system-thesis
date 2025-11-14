@@ -45,9 +45,25 @@ function AdminPage() {
   const filteredSurveys = surveys.filter(survey => {
     const matchesSearch = !searchTerm || 
       (survey.name && survey.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (survey.email && survey.email.toLowerCase().includes(searchTerm.toLowerCase()));
+      (survey.emailAddress && survey.emailAddress.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    const matchesStatus = !filterStatus || survey.currentStatus === filterStatus;
+    // Determine status from isEmployed and employmentNature
+    let surveyStatus = '';
+    if (survey.isEmployed === 'Yes') {
+      if (survey.employmentNature === 'Self-Employed') {
+        surveyStatus = 'Self-Employed';
+      } else if (survey.employmentNature === 'Government Sector' || survey.employmentNature === 'Private Sector') {
+        surveyStatus = 'Employed';
+      } else if (survey.employmentNature === 'Further Studies') {
+        surveyStatus = 'Further Studies';
+      } else {
+        surveyStatus = 'Employed';
+      }
+    } else if (survey.isEmployed === 'No' || survey.employmentNature === 'Not Currently Employed') {
+      surveyStatus = 'Unemployed';
+    }
+    
+    const matchesStatus = !filterStatus || surveyStatus === filterStatus;
     
     return matchesSearch && matchesStatus;
   });
@@ -114,41 +130,57 @@ function AdminPage() {
                     <th>Name</th>
                     <th>Year Graduated</th>
                     <th>Status</th>
-                    <th>Company</th>
-                    <th>Position</th>
+                    <th>Employment Nature</th>
+                    <th>Job Title</th>
                     <th>Email</th>
                     <th>Contact</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSurveys.map((survey, index) => (
-                    <tr key={index}>
-                      <td>{survey.name || 'N/A'}</td>
-                      <td>{survey.yearGraduated || 'N/A'}</td>
-                      <td>
-                        <span 
-                          className="status-badge"
-                          style={{ backgroundColor: getStatusColor(survey.currentStatus) }}
-                        >
-                          {survey.currentStatus || 'N/A'}
-                        </span>
-                      </td>
-                      <td>{survey.company || 'N/A'}</td>
-                      <td>{survey.position || 'N/A'}</td>
-                      <td>{survey.email || 'N/A'}</td>
-                      <td>{survey.contactNumber || 'N/A'}</td>
-                      <td>
-                        <button
-                          onClick={() => handleDelete(survey.id || index)}
-                          className="btn-delete"
-                          title="Delete"
-                        >
-                          🗑️
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredSurveys.map((survey, index) => {
+                    // Determine status
+                    let surveyStatus = '';
+                    if (survey.isEmployed === 'Yes') {
+                      if (survey.employmentNature === 'Self-Employed') {
+                        surveyStatus = 'Self-Employed';
+                      } else if (survey.employmentNature === 'Further Studies') {
+                        surveyStatus = 'Further Studies';
+                      } else {
+                        surveyStatus = 'Employed';
+                      }
+                    } else if (survey.isEmployed === 'No' || survey.employmentNature === 'Not Currently Employed') {
+                      surveyStatus = 'Unemployed';
+                    }
+                    
+                    return (
+                      <tr key={survey.id || index}>
+                        <td>{survey.name || 'N/A'}</td>
+                        <td>{survey.schoolYearGraduated || 'N/A'}</td>
+                        <td>
+                          <span 
+                            className="status-badge"
+                            style={{ backgroundColor: getStatusColor(surveyStatus) }}
+                          >
+                            {surveyStatus || 'N/A'}
+                          </span>
+                        </td>
+                        <td>{survey.employmentNature || 'N/A'}</td>
+                        <td>{survey.jobTitle || 'N/A'}</td>
+                        <td>{survey.emailAddress || 'N/A'}</td>
+                        <td>{survey.mobileNumber || 'N/A'}</td>
+                        <td>
+                          <button
+                            onClick={() => handleDelete(survey.id || index)}
+                            className="btn-delete"
+                            title="Delete"
+                          >
+                            🗑️
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

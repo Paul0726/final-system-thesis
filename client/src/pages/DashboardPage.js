@@ -60,7 +60,8 @@ function DashboardPage() {
   const courseData = surveys.reduce((acc, survey) => {
     if (survey.courseGraduated) {
       const course = survey.courseGraduated.includes('Multimedia') ? 'BSIT Multimedia' :
-                     survey.courseGraduated.includes('Animation') ? 'BSIT Animation' : 'BSIT';
+                     survey.courseGraduated.includes('Animation') ? 'BSIT Animation' : 
+                     survey.courseGraduated.includes('BSIT') ? 'BSIT' : survey.courseGraduated;
       acc[course] = (acc[course] || 0) + 1;
     }
     return acc;
