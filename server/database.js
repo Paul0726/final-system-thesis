@@ -25,8 +25,28 @@ if (process.env.DATABASE_URL) {
     // Initialize database tables
     const initializeDatabase = async () => {
       try {
-        // Test connection first
-        await pool.query('SELECT NOW()');
+        // Wait a bit for database to be ready
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Test connection first with retry
+        let retries = 3;
+        let connected = false;
+        
+        while (retries > 0 && !connected) {
+          try {
+            await pool.query('SELECT NOW()');
+            connected = true;
+            console.log('✅ Database connection successful');
+          } catch (err) {
+            retries--;
+            if (retries > 0) {
+              console.log(`⏳ Retrying database connection... (${retries} attempts left)`);
+              await new Promise(resolve => setTimeout(resolve, 3000));
+            } else {
+              throw err;
+            }
+          }
+        }
         
         // Create surveys table
         await pool.query(`
@@ -65,16 +85,18 @@ if (process.env.DATABASE_URL) {
         console.log('✅ Database tables initialized');
       } catch (error) {
         console.error('❌ Error initializing database:', error.message);
-        // Set pool to null if initialization fails
-        pool = null;
+        console.log('⚠️ Will retry on first database query');
+        // Don't set pool to null - let it retry on first use
       }
     };
 
-    // Initialize on startup (non-blocking)
-    initializeDatabase().catch(err => {
-      console.error('❌ Failed to initialize database:', err.message);
-      pool = null;
-    });
+    // Initialize on startup (non-blocking, with delay)
+    setTimeout(() => {
+      initializeDatabase().catch(err => {
+        console.error('❌ Failed to initialize database:', err.message);
+        console.log('⚠️ Database will be available on first query');
+      });
+    }, 1000);
   } catch (error) {
     console.error('❌ Failed to create database pool:', error.message);
     pool = null;
