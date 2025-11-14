@@ -1,0 +1,32 @@
+========================================
+  FIX: BRANCH NAME MISMATCH
+========================================
+
+PROBLEMA: Ang branch mo ay "master" pero nag-push ka ng "main"
+
+SOLUTION: I-rename ang branch to "main" o i-push ang "master"
+
+========================================
+  OPTION 1: I-RENAME TO MAIN (Recommended)
+========================================
+
+git branch -M main
+git push -u origin main
+
+
+========================================
+  OPTION 2: I-PUSH ANG MASTER BRANCH
+========================================
+
+git push -u origin master
+
+
+========================================
+  RECOMMENDED: I-RUN ANG OPTION 1
+========================================
+
+git branch -M main
+git push -u origin main
+
+========================================
+

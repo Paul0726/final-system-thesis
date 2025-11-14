@@ -41,7 +41,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/data`, formData);
+      await axios.post(`${API_URL}/data`, formData);
       alert('Data submitted successfully!');
       setFormData({ title: '', description: '' });
       fetchData();

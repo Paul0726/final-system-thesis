@@ -1,0 +1,55 @@
+========================================
+  FIX: REMOTE ORIGIN NOT FOUND
+========================================
+
+PROBLEMA: Hindi makita ang remote origin repository
+
+SOLUTION: I-check at i-add ulit ang remote origin
+
+========================================
+  STEP 1: I-CHECK KUNG MAY REMOTE NA
+========================================
+
+git remote -v
+
+
+========================================
+  STEP 2: KUNG WALANG LALABAS, I-ADD ULIT
+========================================
+
+git remote add origin https://github.com/Paul0726/final-system-thesis.git
+
+
+========================================
+  STEP 3: I-VERIFY
+========================================
+
+git remote -v
+
+(Dapat makita mo ang origin URL)
+
+
+========================================
+  STEP 4: I-PUSH ULIT
+========================================
+
+git push -u origin main
+
+
+========================================
+  COMPLETE SEQUENCE:
+========================================
+
+git remote -v
+git remote add origin https://github.com/Paul0726/final-system-thesis.git
+git remote -v
+git push -u origin main
+
+========================================
+
+NOTE: Kung may error na "remote origin already exists", i-run:
+git remote remove origin
+git remote add origin https://github.com/Paul0726/final-system-thesis.git
+
+========================================
+
