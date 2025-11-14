@@ -50,6 +50,7 @@ app.get('/api/surveys', async (req, res) => {
   try {
     if (useDatabase && pool) {
       const result = await pool.query('SELECT * FROM surveys ORDER BY created_at DESC');
+      console.log(`📊 Found ${result.rows.length} surveys in database`);
       // Convert snake_case to camelCase for frontend
       const surveys = result.rows.map(row => ({
         id: row.id,
@@ -178,10 +179,42 @@ app.post('/api/survey', async (req, res) => {
         JSON.stringify(surveyData.ratings || {})
       ]);
 
+      // Convert snake_case to camelCase for response
+      const savedSurvey = {
+        id: result.rows[0].id,
+        name: result.rows[0].name,
+        permanentAddress: result.rows[0].permanent_address,
+        mobileNumber: result.rows[0].mobile_number,
+        emailAddress: result.rows[0].email_address,
+        dateOfBirth: result.rows[0].date_of_birth,
+        age: result.rows[0].age,
+        civilStatus: result.rows[0].civil_status,
+        sex: result.rows[0].sex,
+        currentLocation: result.rows[0].current_location,
+        courseGraduated: result.rows[0].course_graduated,
+        schoolYearGraduated: result.rows[0].school_year_graduated,
+        maxAcademicAchievement: result.rows[0].max_academic_achievement,
+        trainings: typeof result.rows[0].trainings === 'string' ? JSON.parse(result.rows[0].trainings) : result.rows[0].trainings,
+        civilService: result.rows[0].civil_service,
+        letLicense: result.rows[0].let_license,
+        otherPRCLicense: result.rows[0].other_prc_license,
+        professionalOrganizations: result.rows[0].professional_organizations,
+        isEmployed: result.rows[0].is_employed,
+        employmentNature: result.rows[0].employment_nature,
+        employmentClassification: result.rows[0].employment_classification,
+        jobTitle: result.rows[0].job_title,
+        placeOfWork: result.rows[0].place_of_work,
+        monthlyIncome: result.rows[0].monthly_income,
+        additionalRevenueSources: result.rows[0].additional_revenue_sources,
+        ratings: typeof result.rows[0].ratings === 'string' ? JSON.parse(result.rows[0].ratings) : result.rows[0].ratings,
+        createdAt: result.rows[0].created_at
+      };
+
+      console.log('✅ Survey saved to database:', savedSurvey.id);
       res.json({
         success: true,
         message: 'Survey submitted successfully',
-        data: result.rows[0]
+        data: savedSurvey
       });
     } else {
       // Fallback to in-memory database
