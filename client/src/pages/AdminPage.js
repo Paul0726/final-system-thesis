@@ -383,6 +383,11 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
             >
               {surveyStatus || 'N/A'}
             </span>
+            {(survey.interestedAlumni === 'Yes' || survey.isAlumni === 'Yes') && (
+              <span className="alumni-badge" title="Alumni Registration">
+                🎓 Alumni
+              </span>
+            )}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -406,7 +411,7 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
               <p><strong>Name:</strong> {survey.name || 'N/A'}</p>
               <p><strong>Email:</strong> {survey.emailAddress || 'N/A'}</p>
               <p><strong>Mobile:</strong> {survey.mobileNumber || 'N/A'}</p>
-              <p><strong>Date of Birth:</strong> {survey.dateOfBirth || 'N/A'}</p>
+              <p><strong>Date of Birth:</strong> {survey.dateOfBirth ? new Date(survey.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</p>
               <p><strong>Age:</strong> {survey.age || 'N/A'}</p>
               <p><strong>Sex:</strong> {survey.sex || 'N/A'}</p>
               <p><strong>Civil Status:</strong> {survey.civilStatus || 'N/A'}</p>

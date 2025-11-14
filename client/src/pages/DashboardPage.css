@@ -2,6 +2,8 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   padding: 20px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .dashboard-container {
@@ -173,7 +175,32 @@
 }
 
 @media (max-width: 480px) {
+  .dashboard-page {
+    padding: 10px;
+  }
+
+  .dashboard-header {
+    padding: 20px 10px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .chart-card {
+    padding: 15px;
+  }
+
+  .chart-card h2 {
+    font-size: 1.2rem;
   }
 }

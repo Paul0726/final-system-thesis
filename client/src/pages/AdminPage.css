@@ -2,6 +2,8 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   padding: 20px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .admin-container {
@@ -467,6 +469,17 @@
   font-weight: bold;
 }
 
+.alumni-badge {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
 .survey-card-details {
   padding: 20px;
   background: white;
@@ -558,6 +571,38 @@
 
   .details-grid {
     grid-template-columns: 1fr;
+  }
+
+  .survey-card-actions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .alumni-badge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .login-box {
+    padding: 25px;
+  }
+
+  .login-box h2 {
+    font-size: 1.5rem;
+  }
+
+  .survey-card-main h3 {
+    font-size: 1.1rem;
+  }
+
+  .survey-meta {
+    font-size: 0.85rem;
   }
 }
 

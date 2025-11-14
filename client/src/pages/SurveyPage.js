@@ -57,7 +57,12 @@ function SurveyPage() {
     schoolRating: 0,
     systemRating: 0,
     schoolFeedback: '',
-    systemFeedback: ''
+    systemFeedback: '',
+    // Additional fields for conditional inputs
+    letLicenseNumber: '',
+    otherPRCLicenseNumber: '',
+    professionalOrganizationsList: '',
+    additionalRevenueSourcesDetails: ''
   });
   
   const [submitted, setSubmitted] = useState(false);
@@ -142,7 +147,20 @@ function SurveyPage() {
       const submitData = {
         ...formData,
         isAlumni: isAlumni,
-        interestedAlumni: interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null)
+        interestedAlumni: interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null),
+        // Handle conditional fields
+        letLicense: formData.letLicense === 'Yes - With License Number' && formData.letLicenseNumber 
+          ? `${formData.letLicense} - ${formData.letLicenseNumber}` 
+          : formData.letLicense,
+        otherPRCLicense: formData.otherPRCLicense === 'Yes - With License Number' && formData.otherPRCLicenseNumber 
+          ? `${formData.otherPRCLicense} - ${formData.otherPRCLicenseNumber}` 
+          : formData.otherPRCLicense,
+        professionalOrganizations: formData.professionalOrganizations === 'Yes - Member' && formData.professionalOrganizationsList
+          ? `${formData.professionalOrganizations}: ${formData.professionalOrganizationsList}`
+          : formData.professionalOrganizations,
+        additionalRevenueSources: formData.additionalRevenueSources && formData.additionalRevenueSources.startsWith('Yes') && formData.additionalRevenueSourcesDetails
+          ? `${formData.additionalRevenueSources}: ${formData.additionalRevenueSourcesDetails}`
+          : formData.additionalRevenueSources
       };
       
       const response = await axios.post(`${API_URL}/survey`, submitData);
@@ -262,18 +280,39 @@ function SurveyPage() {
 
             <div className="form-group">
               <label>Permanent Address *</label>
-              <textarea name="permanentAddress" value={formData.permanentAddress} onChange={handleChange} required rows="2" />
+              <textarea 
+                name="permanentAddress" 
+                value={formData.permanentAddress} 
+                onChange={handleChange} 
+                required 
+                rows="2"
+                placeholder="Enter your complete permanent address (e.g., Street, Barangay, City, Province)"
+              />
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label>Mobile Number(s) *</label>
-                <input type="tel" name="mobileNumber" value={formData.mobileNumber} onChange={handleChange} required />
+                <input 
+                  type="tel" 
+                  name="mobileNumber" 
+                  value={formData.mobileNumber} 
+                  onChange={handleChange} 
+                  required
+                  placeholder="e.g., 09123456789 or 0912-345-6789"
+                />
               </div>
 
               <div className="form-group">
                 <label>E-mail Address *</label>
-                <input type="email" name="emailAddress" value={formData.emailAddress} onChange={handleChange} required />
+                <input 
+                  type="email" 
+                  name="emailAddress" 
+                  value={formData.emailAddress} 
+                  onChange={handleChange} 
+                  required
+                  placeholder="e.g., yourname@email.com"
+                />
               </div>
             </div>
 
@@ -313,7 +352,14 @@ function SurveyPage() {
 
             <div className="form-group">
               <label>Current Location or Address</label>
-              <textarea name="currentLocation" value={formData.currentLocation} onChange={handleChange} rows="2" />
+              <textarea 
+                name="currentLocation" 
+                value={formData.currentLocation} 
+                onChange={handleChange} 
+                rows="2"
+                placeholder="Enter your current location/address (if different from permanent address). Leave blank if same as permanent address."
+              />
+              <small className="form-help">Leave blank if same as permanent address</small>
             </div>
 
             <div className="form-group">
@@ -347,25 +393,49 @@ function SurveyPage() {
             
             <div className="form-group">
               <label>1. Maximum Academic Achievement</label>
-              <input type="text" name="maxAcademicAchievement" value={formData.maxAcademicAchievement} onChange={handleChange} placeholder="e.g., Bachelor's Degree, Master's Degree" />
+              <select name="maxAcademicAchievement" value={formData.maxAcademicAchievement} onChange={handleChange}>
+                <option value="">Select or type below...</option>
+                <option value="Bachelor's Degree">Bachelor's Degree</option>
+                <option value="Master's Degree">Master's Degree</option>
+                <option value="Doctorate Degree">Doctorate Degree</option>
+                <option value="Post-Graduate Diploma">Post-Graduate Diploma</option>
+                <option value="N/A">N/A - Not Applicable</option>
+              </select>
+              <small className="form-help">If your achievement is not listed, you can still type it in the field above after selecting.</small>
             </div>
 
             <div className="form-group">
               <label>2. Attendance at Training and Seminars over the Last Three Years</label>
+              <small className="form-help">If you have no trainings, you can leave the fields blank or click "Remove" to remove the training entry.</small>
               {formData.trainings.map((training, index) => (
                 <div key={index} className="training-entry">
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Title of Training</label>
-                      <input type="text" value={training.title} onChange={(e) => handleTrainingChange(index, 'title', e.target.value)} />
+                      <label>Title of Training {index === 0 && '(Optional - Leave blank if none)'}</label>
+                      <input 
+                        type="text" 
+                        value={training.title} 
+                        onChange={(e) => handleTrainingChange(index, 'title', e.target.value)}
+                        placeholder="e.g., Web Development Bootcamp, Data Analytics Seminar (Leave blank if none)"
+                      />
                     </div>
                     <div className="form-group">
                       <label>Duration & Credits Earned</label>
-                      <input type="text" value={training.duration} onChange={(e) => handleTrainingChange(index, 'duration', e.target.value)} />
+                      <input 
+                        type="text" 
+                        value={training.duration} 
+                        onChange={(e) => handleTrainingChange(index, 'duration', e.target.value)}
+                        placeholder="e.g., 40 hours, 3 units (Leave blank if none)"
+                      />
                     </div>
                     <div className="form-group">
-                      <label>Name of Trainer</label>
-                      <input type="text" value={training.trainer} onChange={(e) => handleTrainingChange(index, 'trainer', e.target.value)} />
+                      <label>Name of Trainer/Institution</label>
+                      <input 
+                        type="text" 
+                        value={training.trainer} 
+                        onChange={(e) => handleTrainingChange(index, 'trainer', e.target.value)}
+                        placeholder="e.g., John Doe or Training Institution Name (Leave blank if none)"
+                      />
                     </div>
                     {formData.trainings.length > 1 && (
                       <button type="button" onClick={() => removeTraining(index)} className="btn-remove">Remove</button>
@@ -381,24 +451,71 @@ function SurveyPage() {
               <div className="form-subgroup">
                 <label>3.a. Civil Service</label>
                 <select name="civilService" value={formData.civilService} onChange={handleChange}>
-                  <option value="">None</option>
-                  <option value="Professional">Professional</option>
-                  <option value="Sub Professional">Sub Professional</option>
+                  <option value="">Select...</option>
+                  <option value="Yes - Professional">Yes - Professional</option>
+                  <option value="Yes - Sub Professional">Yes - Sub Professional</option>
+                  <option value="No">No - Not yet taken</option>
+                  <option value="N/A">N/A - Not Applicable</option>
                 </select>
               </div>
               <div className="form-subgroup">
                 <label>3.b. LET License</label>
-                <input type="text" name="letLicense" value={formData.letLicense} onChange={handleChange} placeholder="Enter LET License if applicable" />
+                <select name="letLicense" value={formData.letLicense} onChange={handleChange}>
+                  <option value="">Select...</option>
+                  <option value="Yes - With License Number">Yes - I have LET License</option>
+                  <option value="No">No - Not yet taken</option>
+                  <option value="N/A">N/A - Not Applicable</option>
+                </select>
+                {formData.letLicense === 'Yes - With License Number' && (
+                  <input 
+                    type="text" 
+                    name="letLicenseNumber" 
+                    value={formData.letLicenseNumber || ''} 
+                    onChange={handleChange} 
+                    placeholder="Enter LET License Number (optional)"
+                    style={{ marginTop: '10px' }}
+                  />
+                )}
               </div>
               <div className="form-subgroup">
                 <label>3.c. Other Professional License under PRC</label>
-                <input type="text" name="otherPRCLicense" value={formData.otherPRCLicense} onChange={handleChange} placeholder="Enter other PRC license" />
+                <select name="otherPRCLicense" value={formData.otherPRCLicense} onChange={handleChange}>
+                  <option value="">Select...</option>
+                  <option value="Yes - With License Number">Yes - I have PRC License</option>
+                  <option value="No">No - None</option>
+                  <option value="N/A">N/A - Not Applicable</option>
+                </select>
+                {formData.otherPRCLicense === 'Yes - With License Number' && (
+                  <input 
+                    type="text" 
+                    name="otherPRCLicenseNumber" 
+                    value={formData.otherPRCLicenseNumber || ''} 
+                    onChange={handleChange} 
+                    placeholder="Enter PRC License Number (optional)"
+                    style={{ marginTop: '10px' }}
+                  />
+                )}
               </div>
             </div>
 
             <div className="form-group">
               <label>4. Involvement in Professional Organizations</label>
-              <textarea name="professionalOrganizations" value={formData.professionalOrganizations} onChange={handleChange} rows="3" placeholder="List professional organizations you are involved in" />
+              <select name="professionalOrganizations" value={formData.professionalOrganizations} onChange={handleChange}>
+                <option value="">Select...</option>
+                <option value="Yes - Member">Yes - I am a member</option>
+                <option value="No">No - Not a member</option>
+                <option value="N/A">N/A - Not Applicable</option>
+              </select>
+              {formData.professionalOrganizations === 'Yes - Member' && (
+                <textarea 
+                  name="professionalOrganizationsList" 
+                  value={formData.professionalOrganizationsList || ''} 
+                  onChange={handleChange} 
+                  rows="3" 
+                  placeholder="List the professional organizations you are involved in (e.g., Philippine Computer Society, etc.)"
+                  style={{ marginTop: '10px' }}
+                />
+              )}
             </div>
           </div>
 
@@ -441,7 +558,14 @@ function SurveyPage() {
 
                 <div className="form-group">
                   <label>1.c. What is your current job title or position? *</label>
-                  <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+                  <input 
+                    type="text" 
+                    name="jobTitle" 
+                    value={formData.jobTitle} 
+                    onChange={handleChange} 
+                    required
+                    placeholder="e.g., Software Developer, IT Support Specialist, Web Designer"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -467,7 +591,25 @@ function SurveyPage() {
 
             <div className="form-group">
               <label>3. Additional Revenue Sources</label>
-              <textarea name="additionalRevenueSources" value={formData.additionalRevenueSources} onChange={handleChange} rows="3" placeholder="Specify additional revenue sources if any" />
+              <select name="additionalRevenueSources" value={formData.additionalRevenueSources} onChange={handleChange}>
+                <option value="">Select...</option>
+                <option value="Yes - Freelance Work">Yes - Freelance Work</option>
+                <option value="Yes - Business/Entrepreneurship">Yes - Business/Entrepreneurship</option>
+                <option value="Yes - Part-time Job">Yes - Part-time Job</option>
+                <option value="Yes - Investments">Yes - Investments</option>
+                <option value="No">No - None</option>
+                <option value="N/A">N/A - Not Applicable</option>
+              </select>
+              {(formData.additionalRevenueSources && formData.additionalRevenueSources.startsWith('Yes')) && (
+                <textarea 
+                  name="additionalRevenueSourcesDetails" 
+                  value={formData.additionalRevenueSourcesDetails || ''} 
+                  onChange={handleChange} 
+                  rows="3" 
+                  placeholder="Please specify details about your additional revenue sources (optional)"
+                  style={{ marginTop: '10px' }}
+                />
+              )}
             </div>
           </div>
 
