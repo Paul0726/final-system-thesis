@@ -1,52 +1,26 @@
 @echo off
 echo ========================================
-echo   FIXING DEPLOYMENT ERROR
+echo   FIXING DEPLOYMENT ERRORS
 echo ========================================
 echo.
-echo Fixed: Removed unused 'loading' variable
-echo.
 
-cd /d "%~dp0"
-
-echo [1/3] Adding changes...
+echo Step 1: Adding fixed files...
 git add .
-if errorlevel 1 (
-    echo [ERROR] Failed to add files
-    pause
-    exit /b 1
-)
-echo [OK] Files added!
-echo.
 
-echo [2/3] Committing fix...
-git commit -m "Fix: Remove unused loading variable in DashboardPage.js"
-if errorlevel 1 (
-    echo [WARNING] No changes to commit
-    echo.
-)
 echo.
+echo Step 2: Committing fixes...
+git commit -m "Fix: Remove unused variables for deployment"
 
-echo [3/3] Pushing to GitHub...
+echo.
+echo Step 3: Pushing to GitHub...
 git push origin main
-if errorlevel 1 (
-    echo [ERROR] Failed to push to GitHub
-    echo.
-    echo Please check:
-    echo 1. Internet connection
-    echo 2. GitHub credentials
-    echo 3. Run this in Command Prompt (not PowerShell)
-    echo.
-    pause
-    exit /b 1
-)
 
 echo.
 echo ========================================
-echo   SUCCESS! Fix pushed to GitHub
+echo   FIXES DEPLOYED!
 echo ========================================
 echo.
-echo Railway will automatically redeploy!
-echo Check your Railway dashboard for deployment status.
+echo Railway will automatically redeploy.
+echo Check Railway dashboard for deployment status.
 echo.
 pause
-

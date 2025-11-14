@@ -11,7 +11,6 @@ function LandingPage() {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
   const [ratings, setRatings] = useState({ school: 0, system: 0, total: 0 });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchFeedbacks();
@@ -26,8 +25,6 @@ function LandingPage() {
       }
     } catch (error) {
       console.error('Error fetching feedbacks:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

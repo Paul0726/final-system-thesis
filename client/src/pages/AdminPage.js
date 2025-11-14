@@ -164,11 +164,6 @@ function AdminPage() {
       }
       return 0;
     });
-  
-  // Separate by gender for display
-  const maleSurveys = filteredSurveys.filter(s => s.sex && s.sex.toLowerCase() === 'male');
-  const femaleSurveys = filteredSurveys.filter(s => s.sex && s.sex.toLowerCase() === 'female');
-  const otherSurveys = filteredSurveys.filter(s => !s.sex || (s.sex.toLowerCase() !== 'male' && s.sex.toLowerCase() !== 'female'));
 
   const getStatusColor = (status) => {
     switch (status) {
