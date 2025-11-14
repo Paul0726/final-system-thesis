@@ -1,0 +1,29 @@
+========================================
+  FIX: I-ADD MUNA ANG FILES
+========================================
+
+I-run ang command na ito sa Command Prompt:
+
+git add .
+
+
+Pagkatapos, i-run ulit ang commit:
+
+git commit -m "Initial commit: Thesis System"
+
+
+Tapos i-run:
+
+git branch -M main
+
+
+========================================
+  COMPLETE COMMANDS (isa-isa):
+========================================
+
+git add .
+git commit -m "Initial commit: Thesis System"
+git branch -M main
+
+========================================
+

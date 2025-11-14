@@ -1,0 +1,42 @@
+========================================
+  COMMANDS PARA I-SETUP ANG REPOSITORY
+========================================
+
+I-copy at i-paste ang commands na ito sa Command Prompt mo
+(isa-isa, press Enter after each command)
+
+========================================
+
+STEP 1: Pumunta sa project folder
+-----------------------------------
+cd "C:\final system thesis"
+
+
+STEP 2: Initialize git repository
+-----------------------------------
+git init
+
+
+STEP 3: Add all files
+-----------------------------------
+git add .
+
+
+STEP 4: Create commit
+-----------------------------------
+git commit -m "Initial commit: Thesis System"
+
+
+STEP 5: Set branch to main
+-----------------------------------
+git branch -M main
+
+
+========================================
+  TAPOS NA ANG LOCAL SETUP!
+========================================
+
+Next: Gumawa ng GitHub repository at i-push
+
+Sundin ang STEP_BY_STEP_GUIDE.md para sa complete instructions
+
