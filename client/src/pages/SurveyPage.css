@@ -731,6 +731,93 @@
   margin: 0 10px;
 }
 
+.submission-success {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.submission-success h2 {
+  color: #11823b;
+  margin-bottom: 15px;
+}
+
+.account-section {
+  background: rgba(220, 227, 199, 0.3);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(17, 130, 59, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.account-section h2 {
+  color: #11823b;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.section-description {
+  color: #6b7280;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #11823b;
+}
+
+.account-info {
+  background: #dce3c7;
+  border: 2px solid #11823b;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.account-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.account-info li {
+  padding: 8px 0;
+  color: #374151;
+}
+
+.account-info strong {
+  color: #11823b;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
 @media (max-width: 768px) {
   .survey-page {
     padding: 10px;

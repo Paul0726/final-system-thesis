@@ -583,11 +583,42 @@ app.post('/api/survey', async (req, res) => {
         createdAt: result.rows[0].created_at
       };
 
+      // Create user account if requested
+      let accountCreated = false;
+      if (surveyData.createAccount && surveyData.accountPassword && surveyData.emailAddress) {
+        try {
+          // Check if user already exists
+          const existingUser = await pool.query('SELECT id FROM users WHERE LOWER(email) = LOWER($1)', [surveyData.emailAddress]);
+          
+          if (existingUser.rows.length === 0) {
+            // Hash password
+            const crypto = require('crypto');
+            const hashedPassword = crypto.createHash('sha256').update(surveyData.accountPassword).digest('hex');
+            
+            // Create user account linked to the survey
+            await pool.query(
+              'INSERT INTO users (email, password, survey_id) VALUES ($1, $2, $3)',
+              [surveyData.emailAddress, hashedPassword, result.rows[0].id]
+            );
+            accountCreated = true;
+            console.log(`✅ User account created for email: ${surveyData.emailAddress}`);
+          } else {
+            // User exists, just update survey_id
+            await pool.query('UPDATE users SET survey_id = $1 WHERE LOWER(email) = LOWER($2)', [result.rows[0].id, surveyData.emailAddress]);
+            console.log(`✅ Linked existing user account to survey for email: ${surveyData.emailAddress}`);
+          }
+        } catch (error) {
+          console.error('Error creating user account:', error);
+          // Don't fail the survey submission if account creation fails
+        }
+      }
+
       console.log('✅ Survey saved to database:', savedSurvey.id);
       res.json({
         success: true,
         message: 'Survey submitted successfully',
-        data: savedSurvey
+        data: savedSurvey,
+        accountCreated: accountCreated
       });
     } else {
       // Fallback to in-memory database

@@ -67,6 +67,9 @@ function SurveyPage() {
   
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [createAccount, setCreateAccount] = useState(true); // Default to true
+  const [accountPassword, setAccountPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -141,6 +144,19 @@ function SurveyPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate account creation if enabled
+    if (createAccount) {
+      if (!accountPassword || accountPassword.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+      }
+      if (accountPassword !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+    }
+    
     setLoading(true);
     
     try {
@@ -161,12 +177,19 @@ function SurveyPage() {
           : formData.professionalOrganizations,
         additionalRevenueSources: formData.additionalRevenueSources && formData.additionalRevenueSources.startsWith('Yes') && formData.additionalRevenueSourcesDetails
           ? `${formData.additionalRevenueSources}: ${formData.additionalRevenueSourcesDetails}`
-          : formData.additionalRevenueSources
+          : formData.additionalRevenueSources,
+        // Account creation data
+        createAccount: createAccount,
+        accountPassword: createAccount ? accountPassword : null
       };
       
       const response = await axios.post(`${API_URL}/survey`, submitData);
       if (response.data.success) {
         setSubmitted(true);
+        // If account was created, show message
+        if (createAccount && response.data.accountCreated) {
+          // Account creation message will be shown in the success screen
+        }
       } else {
         alert('Error: ' + (response.data.message || 'Failed to submit survey'));
       }
@@ -204,13 +227,25 @@ function SurveyPage() {
             </div>
             <h2>Thank You!</h2>
             <p>Your survey has been submitted successfully.</p>
+            {createAccount && (
+              <div className="account-info">
+                <p><strong>Account Created!</strong></p>
+                <p>You can now login to access your personal dashboard using:</p>
+                <ul>
+                  <li><strong>Email:</strong> {formData.emailAddress}</li>
+                  <li><strong>Password:</strong> The password you created</li>
+                </ul>
+                <Link to="/login" className="btn-primary" style={{ marginTop: '15px', display: 'inline-block' }}>
+                  Go to Login Page
+                </Link>
+              </div>
+            )}
             <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
-              <Link to={`/personal-dashboard?email=${encodeURIComponent(formData.emailAddress)}`} className="btn-primary">
-                Access Your Personal Dashboard
-              </Link>
-              <p style={{ marginTop: '10px', color: '#6b7280', fontSize: '0.9rem' }}>
-                You can edit your survey responses anytime using your email address.
-              </p>
+              {!createAccount && (
+                <Link to={`/personal-dashboard?email=${encodeURIComponent(formData.emailAddress)}`} className="btn-primary">
+                  Access Your Personal Dashboard
+                </Link>
+              )}
               <Link to="/dashboard" className="btn-secondary">View Public Dashboard</Link>
               <Link to="/" className="btn-secondary">Back to Home</Link>
             </div>
@@ -806,6 +841,54 @@ function SurveyPage() {
                 />
               </div>
             </div>
+          </div>
+
+          {/* Account Creation Section */}
+          <div className="form-section account-section">
+            <h2>Create Account for Dashboard Access</h2>
+            <p className="section-description">
+              Create an account to access and edit your survey responses anytime. You can login using your email and password.
+            </p>
+            
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={createAccount}
+                  onChange={(e) => setCreateAccount(e.target.checked)}
+                />
+                <span>Yes, create an account for me to access my personal dashboard</span>
+              </label>
+            </div>
+
+            {createAccount && (
+              <>
+                <div className="form-group">
+                  <label>Password <span className="required">*</span></label>
+                  <input
+                    type="password"
+                    value={accountPassword}
+                    onChange={(e) => setAccountPassword(e.target.value)}
+                    placeholder="Enter password (minimum 6 characters)"
+                    minLength={6}
+                    required={createAccount}
+                  />
+                  <small>Your email address will be used as your login username</small>
+                </div>
+
+                <div className="form-group">
+                  <label>Confirm Password <span className="required">*</span></label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your password"
+                    minLength={6}
+                    required={createAccount}
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           <div className="form-actions">
