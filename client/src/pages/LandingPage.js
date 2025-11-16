@@ -205,6 +205,64 @@ function LandingPage() {
           </div>
         )}
 
+        {/* Developers Section */}
+        <div className="developers-section">
+          <h2>Meet the Developers</h2>
+          <p className="developers-subtitle">Built with passion by BSIT students</p>
+          <div className="developers-grid">
+            <div className="developer-card">
+              <div className="developer-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <h3>John Paul Dequilla</h3>
+              <p className="developer-role">Developer</p>
+            </div>
+            <div className="developer-card">
+              <div className="developer-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <h3>Marc Paul Adarlo</h3>
+              <p className="developer-role">Developer</p>
+            </div>
+            <div className="developer-card">
+              <div className="developer-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <h3>Arben Antonio</h3>
+              <p className="developer-role">Developer</p>
+            </div>
+            <div className="developer-card">
+              <div className="developer-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <h3>Angel Bert Guiral</h3>
+              <p className="developer-role">Developer</p>
+            </div>
+            <div className="developer-card">
+              <div className="developer-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <h3>Lucky Lim Arielle</h3>
+              <p className="developer-role">Developer</p>
+            </div>
+          </div>
+        </div>
+
         <div className="privacy-section">
           <div className="privacy-header" onClick={() => setShowPrivacy(!showPrivacy)}>
             <h3>Privacy Statement</h3>
@@ -275,6 +333,20 @@ function LandingPage() {
         <footer className="landing-footer">
           <p>BSIT Graduate Tracer System © 2024</p>
           <p className="footer-domain">dwcsjgraduatetracer.it.com</p>
+          <div className="footer-developers">
+            <p className="developers-label">Developed by:</p>
+            <div className="developers-list">
+              <span>John Paul Dequilla</span>
+              <span>•</span>
+              <span>Marc Paul Adarlo</span>
+              <span>•</span>
+              <span>Arben Antonio</span>
+              <span>•</span>
+              <span>Angel Bert Guiral</span>
+              <span>•</span>
+              <span>Lucky Lim Arielle</span>
+            </div>
+          </div>
         </footer>
       </div>
     </div>

@@ -630,6 +630,122 @@
   margin: 0;
 }
 
+/* Developers Section */
+.developers-section {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-radius: 28px;
+  padding: 50px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.developers-section h2 {
+  color: #11823b;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.developers-subtitle {
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  font-style: italic;
+}
+
+.developers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.developer-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  padding: 30px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.developer-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #11823b, #11823b);
+  transform: scaleX(0);
+  transition: transform 0.4s;
+}
+
+.developer-card:hover::before {
+  transform: scaleX(1);
+}
+
+.developer-card:hover {
+  border-color: #11823b;
+  box-shadow: 
+    0 12px 40px rgba(17, 130, 59, 0.25),
+    0 0 0 1px rgba(17, 130, 59, 0.1);
+  transform: translateY(-8px) scale(1.03);
+}
+
+.developer-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  color: #11823b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 130, 59, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.developer-card:hover .developer-icon {
+  background: rgba(17, 130, 59, 0.2);
+  transform: scale(1.1);
+}
+
+.developer-icon svg {
+  width: 50px;
+  height: 50px;
+  stroke-width: 2;
+}
+
+.developer-card h3 {
+  color: #11823b;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.developer-role {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+  font-style: italic;
+}
+
 .privacy-section {
   background: white;
   border-radius: 20px;
@@ -707,7 +823,7 @@
 .landing-footer {
   text-align: center;
   color: white;
-  padding: 20px;
+  padding: 30px 20px;
   opacity: 0.9;
 }
 
@@ -715,6 +831,45 @@
   font-size: 0.9rem;
   opacity: 0.8;
   margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.footer-developers {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.developers-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.developers-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 12px;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.developers-list span {
+  opacity: 0.9;
+}
+
+.developers-list span:not(:nth-child(even)) {
+  font-weight: 500;
+}
+
+.developers-list span:nth-child(even) {
+  opacity: 0.5;
+  font-weight: 300;
 }
 
 @media (max-width: 768px) {
@@ -795,6 +950,37 @@
     max-width: 300px;
   }
 
+  .developers-section {
+    padding: 30px 20px;
+  }
+
+  .developers-section h2 {
+    font-size: 2rem;
+  }
+
+  .developers-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+  }
+
+  .developer-card {
+    padding: 25px 15px;
+  }
+
+  .developer-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .developer-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .developer-card h3 {
+    font-size: 1rem;
+  }
+
   .privacy-section {
     margin-bottom: 20px;
   }
@@ -838,8 +1024,18 @@
   }
 
   .ratings-section h2,
-  .feedback-section h2 {
+  .feedback-section h2,
+  .developers-section h2 {
     font-size: 1.5rem;
+  }
+
+  .developers-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .developer-card {
+    padding: 20px 15px;
   }
 
   .feedback-card {
