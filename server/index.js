@@ -833,35 +833,60 @@ app.delete('/api/surveys/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     
     if (useDatabase && pool) {
-      // First, get the survey to find associated email
-      const surveyResult = await pool.query('SELECT email_address FROM surveys WHERE id = $1', [id]);
+      // Start a transaction to ensure all deletions succeed or fail together
+      const client = await pool.connect();
       
-      if (surveyResult.rows.length === 0) {
-        return res.status(404).json({ success: false, message: 'Survey not found' });
+      try {
+        await client.query('BEGIN');
+        
+        // First, get the survey to find associated email
+        const surveyResult = await client.query('SELECT email_address FROM surveys WHERE id = $1', [id]);
+        
+        if (surveyResult.rows.length === 0) {
+          await client.query('ROLLBACK');
+          return res.status(404).json({ success: false, message: 'Survey not found' });
+        }
+
+        const email = surveyResult.rows[0].email_address;
+
+        // First, update or delete users that reference this survey
+        // Set survey_id to NULL for users referencing this survey
+        await client.query('UPDATE users SET survey_id = NULL WHERE survey_id = $1', [id]);
+        console.log(`✅ Updated users table: Set survey_id to NULL for survey ${id}`);
+
+        // Optionally, you can also delete the user accounts if you want
+        // Uncomment the next line if you want to delete user accounts when survey is deleted
+        // if (email) {
+        //   await client.query('DELETE FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+        //   console.log(`✅ Deleted user account for email: ${email}`);
+        // }
+
+        // Now delete the survey (should work since we've removed the foreign key references)
+        const deleteResult = await client.query('DELETE FROM surveys WHERE id = $1 RETURNING *', [id]);
+        
+        if (deleteResult.rows.length === 0) {
+          await client.query('ROLLBACK');
+          return res.status(404).json({ success: false, message: 'Survey not found' });
+        }
+
+        // Commit the transaction
+        await client.query('COMMIT');
+        
+        console.log(`✅ Survey ${id} deleted successfully (email: ${email})`);
+        
+        res.json({
+          success: true,
+          message: 'Survey and associated feedback deleted successfully',
+          data: deleteResult.rows[0]
+        });
+      } catch (error) {
+        // Rollback the transaction on error
+        await client.query('ROLLBACK');
+        throw error;
+      } finally {
+        // Release the client back to the pool
+        client.release();
       }
-
-      const email = surveyResult.rows[0].email_address;
-
-      // Delete the survey (this will also cascade to users table due to ON DELETE SET NULL)
-      const deleteResult = await pool.query('DELETE FROM surveys WHERE id = $1 RETURNING *', [id]);
-      
-      if (deleteResult.rows.length === 0) {
-        return res.status(404).json({ success: false, message: 'Survey not found' });
-      }
-
-      // Also delete the user account associated with this survey (optional - you can keep users even if survey is deleted)
-      // Uncomment the next lines if you want to delete user accounts when survey is deleted
-      // if (email) {
-      //   await pool.query('DELETE FROM users WHERE LOWER(email) = LOWER($1)', [email]);
-      // }
-
-      console.log(`✅ Survey ${id} deleted successfully (email: ${email})`);
-      
-      res.json({
-        success: true,
-        message: 'Survey and associated feedback deleted successfully',
-        data: deleteResult.rows[0]
-      });
     } else {
       // Fallback to in-memory
       const surveyIndex = surveys.findIndex(s => s.id === id);
@@ -878,14 +903,17 @@ app.delete('/api/surveys/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting survey:', error);
     console.error('Error details:', error.message);
+    console.error('Error code:', error.code);
     console.error('Error stack:', error.stack);
     
     // Provide more detailed error message
     let errorMessage = 'Error deleting survey';
     if (error.code === '23503') {
-      errorMessage = 'Cannot delete survey: It is referenced by other records';
+      errorMessage = 'Cannot delete survey: It is referenced by other records. Please contact administrator.';
     } else if (error.code === '23505') {
       errorMessage = 'Database constraint violation';
+    } else if (error.code === '42P01') {
+      errorMessage = 'Database table not found. Please ensure database is properly initialized.';
     } else {
       errorMessage = `Error deleting survey: ${error.message}`;
     }
