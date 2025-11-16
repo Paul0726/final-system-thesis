@@ -211,51 +211,36 @@ function LandingPage() {
           <p className="developers-subtitle">Built with passion by BSIT students</p>
           <div className="developers-grid">
             <div className="developer-card">
-              <div className="developer-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+              <div className="developer-image">
+                <img src="/John Paul Dequilla.jpg" alt="John Paul Dequilla" />
               </div>
               <h3>John Paul Dequilla</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
-              <div className="developer-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+              <div className="developer-image">
+                <img src="/Marc Paul Adarlo.jpg" alt="Marc Paul Adarlo" />
               </div>
               <h3>Marc Paul Adarlo</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
-              <div className="developer-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+              <div className="developer-image">
+                <img src="/Arben Antonio.jpg" alt="Arben Antonio" />
               </div>
               <h3>Arben Antonio</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
-              <div className="developer-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+              <div className="developer-image">
+                <img src="/Angel Bert Guiral.jpg" alt="Angel Bert Guiral" />
               </div>
               <h3>Angel Bert Guiral</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
-              <div className="developer-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+              <div className="developer-image">
+                <img src="/Lucky Lim Arielle.jpg" alt="Lucky Lim Arielle" />
               </div>
               <h3>Lucky Lim Arielle</h3>
               <p className="developer-role">Developer</p>
