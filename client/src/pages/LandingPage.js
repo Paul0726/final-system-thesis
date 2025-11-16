@@ -240,9 +240,9 @@ function LandingPage() {
             </div>
             <div className="developer-card">
               <div className="developer-image">
-                <img src="/Lucky Lim Arielle.jpg" alt="Lucky Lim Arielle" />
+                <img src="/Lucky Lim Arielle.jpg" alt="Lucky Arielle Lim" />
               </div>
-              <h3>Lucky Lim Arielle</h3>
+              <h3>Lucky Arielle Lim</h3>
               <p className="developer-role">Developer</p>
             </div>
           </div>
@@ -329,7 +329,7 @@ function LandingPage() {
               <span>•</span>
               <span>Angel Bert Guiral</span>
               <span>•</span>
-              <span>Lucky Lim Arielle</span>
+              <span>Lucky Arielle Lim</span>
             </div>
           </div>
         </footer>
