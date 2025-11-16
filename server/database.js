@@ -114,22 +114,44 @@ if (process.env.DATABASE_URL) {
         }
 
         // Create users table for respondent accounts (AFTER surveys table)
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            email VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            survey_id INTEGER REFERENCES surveys(id) ON DELETE SET NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          )
-        `);
-
-        // Create index on email for faster lookups
+        console.log('🔄 Creating users table...');
         try {
-          await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email))`);
+          // Check if users table already exists
+          const tableCheck = await pool.query(`
+            SELECT EXISTS (
+              SELECT FROM information_schema.tables 
+              WHERE table_schema = 'public' 
+              AND table_name = 'users'
+            );
+          `);
+          
+          if (!tableCheck.rows[0].exists) {
+            await pool.query(`
+              CREATE TABLE users (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                survey_id INTEGER REFERENCES surveys(id) ON DELETE SET NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+              )
+            `);
+            console.log('✅ Users table created successfully!');
+          } else {
+            console.log('✅ Users table already exists');
+          }
+          
+          // Create index on email for faster lookups
+          try {
+            await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email))`);
+            console.log('✅ Users email index created');
+          } catch (err) {
+            console.log('⚠️ Index might already exist:', err.message);
+          }
         } catch (err) {
-          // Index might already exist, ignore error
+          console.error('❌ Error creating users table:', err.message);
+          console.error('Full error:', err);
+          throw err;
         }
 
         console.log('✅ Database tables initialized');

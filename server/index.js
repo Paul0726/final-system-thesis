@@ -221,41 +221,89 @@ app.post('/api/user/verify-otp', async (req, res) => {
 const ensureUsersTable = async () => {
   if (useDatabase && pool) {
     try {
-      // First ensure surveys table exists
-      await pool.query(`
-        CREATE TABLE IF NOT EXISTS surveys (
-          id SERIAL PRIMARY KEY,
-          name VARCHAR(255) NOT NULL,
-          email_address VARCHAR(255) NOT NULL,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
+      console.log('🔄 Checking and creating users table...');
+      
+      // Check if users table exists
+      const tableCheck = await pool.query(`
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'users'
+        );
       `);
       
-      // Then create users table
-      await pool.query(`
-        CREATE TABLE IF NOT EXISTS users (
-          id SERIAL PRIMARY KEY,
-          email VARCHAR(255) UNIQUE NOT NULL,
-          password VARCHAR(255) NOT NULL,
-          survey_id INTEGER REFERENCES surveys(id) ON DELETE SET NULL,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
-      
-      // Create index on email for faster lookups
-      await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email))`);
-      console.log('✅ Users table ensured');
+      if (!tableCheck.rows[0].exists) {
+        console.log('📝 Users table does not exist. Creating...');
+        
+        // First ensure surveys table exists (minimal version if it doesn't)
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS surveys (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            email_address VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `);
+        
+        // Then create users table
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            survey_id INTEGER REFERENCES surveys(id) ON DELETE SET NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `);
+        
+        // Create index on email for faster lookups
+        await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email))`);
+        console.log('✅ Users table created successfully!');
+      } else {
+        console.log('✅ Users table already exists');
+      }
     } catch (error) {
-      console.error('⚠️ Error ensuring users table:', error.message);
+      console.error('❌ Error ensuring users table:', error.message);
+      console.error('Full error:', error);
+    }
+  } else {
+    console.log('⚠️ Database not available for users table creation');
+  }
+};
+
+// Ensure users table exists on startup (with multiple retries)
+const initializeUsersTable = async (retries = 5) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await ensureUsersTable();
+      break;
+    } catch (error) {
+      if (i < retries - 1) {
+        console.log(`⏳ Retry ${i + 1}/${retries} in 5 seconds...`);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      } else {
+        console.error('❌ Failed to create users table after all retries');
+      }
     }
   }
 };
 
 // Ensure users table exists on startup
 setTimeout(() => {
-  ensureUsersTable();
+  initializeUsersTable();
 }, 3000);
+
+// Manual endpoint to create users table (for debugging/manual trigger)
+app.post('/api/admin/create-users-table', async (req, res) => {
+  try {
+    await ensureUsersTable();
+    res.json({ success: true, message: 'Users table check/creation completed. Check server logs for details.' });
+  } catch (error) {
+    console.error('Error in manual users table creation:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 // Get feedbacks and ratings for landing page
 app.get('/api/feedbacks', async (req, res) => {
