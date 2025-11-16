@@ -80,20 +80,21 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: white;
+  color: #11823b;
   text-decoration: none;
   margin-bottom: 20px;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.1);
+  background: white;
   backdrop-filter: blur(10px);
   border-radius: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid #11823b;
   transition: all 0.3s ease;
   font-weight: 500;
 }
 
 .back-link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #dce3c7;
+  border-color: #0d6b2f;
   transform: translateX(-5px);
 }
 
