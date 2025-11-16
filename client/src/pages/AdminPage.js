@@ -201,13 +201,27 @@ function AdminPage() {
                     className="btn-primary"
                     disabled={loginLoading}
                   >
-                    {loginLoading ? 'Sending OTP...' : '📧 Request OTP'}
+                    {loginLoading ? 'Sending OTP...' : (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                          <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Request OTP
+                      </>
+                    )}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleVerifyOTP} className="login-form">
                   <div className="otp-sent-message">
-                    <p>✅ OTP has been sent to your registered email address.</p>
+                    <p>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                      OTP has been sent to your registered email address.
+                    </p>
                     <p>Please check your inbox and enter the 6-digit code below.</p>
                   </div>
                   <div className="form-group">
@@ -227,7 +241,14 @@ function AdminPage() {
                     className="btn-primary"
                     disabled={loginLoading}
                   >
-                    {loginLoading ? 'Verifying...' : '✓ Verify OTP'}
+                    {loginLoading ? 'Verifying...' : (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Verify OTP
+                      </>
+                    )}
                   </button>
                   <button 
                     type="button"
@@ -255,15 +276,40 @@ function AdminPage() {
       <div className="admin-container">
         <header className="admin-header">
           <div className="header-top">
-            <Link to="/" className="back-link">← Back to Home</Link>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+            <Link to="/" className="back-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              Back to Home
+            </Link>
+            <button onClick={handleLogout} className="logout-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Logout
+            </button>
           </div>
-          <h1>Admin Panel</h1>
-          <p>Manage BSIT Graduate Survey Data</p>
+          <div className="header-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="32" height="32" style={{ marginRight: '12px', verticalAlign: 'middle' }}>
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+              <line x1="9" y1="9" x2="21" y2="9"></line>
+            </svg>
+            <div>
+              <h1>Admin Panel</h1>
+              <p>Manage BSIT Graduate Survey Data</p>
+            </div>
+          </div>
         </header>
 
         <div className="admin-controls">
           <div className="search-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" className="search-icon">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="M21 21l-4.35-4.35"></path>
+            </svg>
             <input
               type="text"
               placeholder="Search by name or email..."
@@ -436,7 +482,17 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
                 <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
               </svg>
             </button>
-            <span className="expand-icon">{expanded ? '▼' : '▶'}</span>
+            <span className="expand-icon">
+              {expanded ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              )}
+            </span>
           </div>
         </div>
       </div>
@@ -512,3 +568,4 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
 
 export default AdminPage;
 
+ 

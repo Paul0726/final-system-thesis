@@ -113,6 +113,18 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.header-title svg {
+  color: white;
+  flex-shrink: 0;
+}
+
 .admin-header h1 {
   font-size: clamp(2rem, 5vw, 2.8rem);
   margin-bottom: 10px;
@@ -143,11 +155,22 @@
 
 .search-bar {
   margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .search-input {
   width: 100%;
-  padding: 12px 15px;
+  padding: 12px 15px 12px 45px;
   border: 2px solid #e5e7eb;
   border-radius: 10px;
   font-size: 1rem;
@@ -532,6 +555,32 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  font-size: 1rem;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logout-btn svg {
+  flex-shrink: 0;
 }
 
 .logout-btn {
