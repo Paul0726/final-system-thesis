@@ -287,6 +287,12 @@ function PersonalDashboard() {
                 <option value="₱80,000 – ₱89,999">₱80,000 – ₱89,999</option>
                 <option value="₱90,000 – ₱99,999">₱90,000 – ₱99,999</option>
                 <option value="₱100,000 and above">₱100,000 and above</option>
+                {/* Backward compatibility: Show old value if it exists and is not in the list above */}
+                {formData.monthlyIncome && 
+                 formData.monthlyIncome !== '' && 
+                 !['Less than ₱10,000', '₱10,000 – ₱19,999', '₱20,000 – ₱29,999', '₱30,000 – ₱39,999', '₱40,000 – ₱49,999', '₱50,000 – ₱59,999', '₱60,000 – ₱69,999', '₱70,000 – ₱79,999', '₱80,000 – ₱89,999', '₱90,000 – ₱99,999', '₱100,000 and above'].includes(formData.monthlyIncome) && (
+                  <option value={formData.monthlyIncome}>{formData.monthlyIncome} (Current Value)</option>
+                )}
               </select>
             </div>
           </div>
