@@ -276,6 +276,30 @@
   display: inline-block;
 }
 
+.btn-download {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.3s;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-download:hover {
+  background: rgba(17, 130, 59, 0.1);
+  color: #11823b;
+  transform: scale(1.1);
+}
+
+.btn-download svg {
+  width: 18px;
+  height: 18px;
+}
+
 .btn-delete {
   padding: 8px;
   border: none;
@@ -375,6 +399,30 @@
 .btn-refresh:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(17, 130, 59, 0.5);
+}
+
+.btn-download-all {
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-download-all:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.btn-download-all svg {
+  flex-shrink: 0;
 }
 
 @media (max-width: 968px) {

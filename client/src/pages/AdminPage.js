@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { StarRating } from '../utils/helpers';
+import jsPDF from 'jspdf';
 import './AdminPage.css';
 
 const API_URL = process.env.NODE_ENV === 'production' 
@@ -178,6 +179,222 @@ function AdminPage() {
       case 'Further Studies': return '#8b5cf6';
       case 'Unemployed': return '#f59e0b';
       default: return '#6b7280';
+    }
+  };
+
+  // Generate PDF for single survey
+  const generatePDF = (survey) => {
+    const doc = new jsPDF();
+    let yPosition = 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const maxWidth = pageWidth - (margin * 2);
+
+    // Helper function to add text with word wrap
+    const addText = (text, x, y, maxWidth, fontSize = 10, isBold = false) => {
+      doc.setFontSize(fontSize);
+      doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+      const lines = doc.splitTextToSize(text || 'N/A', maxWidth);
+      doc.text(lines, x, y);
+      return y + (lines.length * (fontSize * 0.4));
+    };
+
+    // Helper function to check if new page needed
+    const checkNewPage = (requiredSpace) => {
+      if (yPosition + requiredSpace > doc.internal.pageSize.getHeight() - 20) {
+        doc.addPage();
+        yPosition = 20;
+        return true;
+      }
+      return false;
+    };
+
+    // Title
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BSIT Graduate Tracer System', margin, yPosition);
+    yPosition += 10;
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Survey Response Details', margin, yPosition);
+    yPosition += 15;
+
+    // Personal Information Section
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('A. Personal Information', margin, yPosition);
+    yPosition += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addText(`Name: ${survey.name || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Email: ${survey.emailAddress || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Mobile Number: ${survey.mobileNumber || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Date of Birth: ${survey.dateOfBirth ? new Date(survey.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Age: ${survey.age || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Sex: ${survey.sex || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Civil Status: ${survey.civilStatus || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Permanent Address: ${survey.permanentAddress || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Current Location: ${survey.currentLocation || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition += 5;
+
+    checkNewPage(30);
+    
+    // Education Section
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('B. Education', margin, yPosition);
+    yPosition += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addText(`Course Graduated: ${survey.courseGraduated || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`School Year Graduated: ${survey.schoolYearGraduated || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Max Academic Achievement: ${survey.maxAcademicAchievement || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Civil Service: ${survey.civilService || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`LET License: ${survey.letLicense || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Other PRC License: ${survey.otherPRCLicense || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Professional Organizations: ${survey.professionalOrganizations || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    
+    // Trainings
+    if (survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0) {
+      yPosition += 5;
+      doc.setFont('helvetica', 'bold');
+      doc.text('Trainings Attended:', margin, yPosition);
+      yPosition += 6;
+      doc.setFont('helvetica', 'normal');
+      survey.trainings.forEach((training, idx) => {
+        checkNewPage(20);
+        yPosition = addText(`${idx + 1}. ${training.title || 'N/A'}`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`   Duration: ${training.duration || 'N/A'}`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`   Trainer: ${training.trainer || 'N/A'}`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition += 3;
+      });
+    }
+    yPosition += 5;
+
+    checkNewPage(30);
+    
+    // Employment Section
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('C. Employment', margin, yPosition);
+    yPosition += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addText(`Is Employed: ${survey.isEmployed || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Employment Nature: ${survey.employmentNature || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Employment Classification: ${survey.employmentClassification || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Job Title: ${survey.jobTitle || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Place of Work: ${survey.placeOfWork || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Monthly Income: ${survey.monthlyIncome || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`Additional Revenue Sources: ${survey.additionalRevenueSources || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition += 5;
+
+    checkNewPage(30);
+    
+    // Ratings Section
+    if (survey.ratings) {
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('D. After Study Status - Ratings', margin, yPosition);
+      yPosition += 8;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      
+      const ratingSections = [
+        { key: 'jobPlacement', label: 'Job Placement' },
+        { key: 'itField', label: 'IT Field Competency' },
+        { key: 'competitiveEdge', label: 'Competitive Edge' },
+        { key: 'workplace', label: 'Workplace Environment' }
+      ];
+      
+      ratingSections.forEach(section => {
+        if (survey.ratings[section.key]) {
+          checkNewPage(15);
+          doc.setFont('helvetica', 'bold');
+          doc.text(`${section.label}:`, margin, yPosition);
+          yPosition += 6;
+          doc.setFont('helvetica', 'normal');
+          Object.keys(survey.ratings[section.key]).forEach(key => {
+            const value = survey.ratings[section.key][key];
+            if (value) {
+              yPosition = addText(`  ${key}: ${value}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+            }
+          });
+          yPosition += 3;
+        }
+      });
+      yPosition += 5;
+    }
+
+    checkNewPage(30);
+    
+    // Alumni & Feedback Section
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('E. Alumni Status & Feedback', margin, yPosition);
+    yPosition += 8;
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addText(`Is Alumni: ${survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}`, margin, yPosition, maxWidth, 10);
+    if (survey.isAlumni !== 'Yes') {
+      yPosition = addText(`Interested in Alumni Registration: ${survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}`, margin, yPosition, maxWidth, 10);
+    }
+    yPosition = addText(`School Rating: ${survey.schoolRating ? `${survey.schoolRating}/5` : 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`System Rating: ${survey.systemRating ? `${survey.systemRating}/5` : 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition += 5;
+    
+    if (survey.schoolFeedback) {
+      checkNewPage(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('School Feedback:', margin, yPosition);
+      yPosition += 6;
+      doc.setFont('helvetica', 'normal');
+      yPosition = addText(survey.schoolFeedback, margin, yPosition, maxWidth, 10);
+      yPosition += 5;
+    }
+    
+    if (survey.systemFeedback) {
+      checkNewPage(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('System Feedback:', margin, yPosition);
+      yPosition += 6;
+      doc.setFont('helvetica', 'normal');
+      yPosition = addText(survey.systemFeedback, margin, yPosition, maxWidth, 10);
+    }
+
+    // Footer
+    const totalPages = doc.internal.pages.length - 1;
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'italic');
+      doc.text(`Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - Page ${i} of ${totalPages}`, margin, doc.internal.pageSize.getHeight() - 10);
+    }
+
+    // Save PDF
+    const fileName = `Survey_${survey.name?.replace(/[^a-z0-9]/gi, '_') || 'Unknown'}_${survey.schoolYearGraduated || 'Unknown'}.pdf`;
+    doc.save(fileName);
+  };
+
+  // Generate PDF for all filtered surveys
+  const generateAllPDFs = () => {
+    if (filteredSurveys.length === 0) {
+      alert('No surveys to export.');
+      return;
+    }
+
+    if (window.confirm(`Generate PDF for ${filteredSurveys.length} survey(s)? This will download ${filteredSurveys.length} PDF file(s).`)) {
+      filteredSurveys.forEach((survey, index) => {
+        setTimeout(() => {
+          generatePDF(survey);
+        }, index * 500); // Delay each download by 500ms to avoid browser blocking
+      });
     }
   };
 
@@ -395,7 +612,8 @@ function AdminPage() {
                   survey={survey} 
                   index={index} 
                   onDelete={handleDelete} 
-                  getStatusColor={getStatusColor} 
+                  getStatusColor={getStatusColor}
+                  onDownloadPDF={generatePDF}
                 />
               ))}
             </div>
@@ -405,6 +623,16 @@ function AdminPage() {
         <div className="admin-actions">
           <Link to="/dashboard" className="btn-secondary">View Dashboard</Link>
           <button onClick={fetchSurveys} className="btn-refresh">🔄 Refresh</button>
+          {filteredSurveys.length > 0 && (
+            <button onClick={generateAllPDFs} className="btn-download-all" title="Download all filtered surveys as PDF">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download All as PDF ({filteredSurveys.length})
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -412,7 +640,7 @@ function AdminPage() {
 }
 
 // Survey Card Component
-function SurveyCard({ survey, index, onDelete, getStatusColor }) {
+function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
   const [expanded, setExpanded] = useState(false);
   
   // Determine status
@@ -469,6 +697,20 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
                 Not Alumni
               </span>
             )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDownloadPDF(survey);
+              }}
+              className="btn-download"
+              title="Download as PDF"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();
