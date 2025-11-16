@@ -462,8 +462,10 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
             
             <div className="detail-section">
               <h4>Alumni & Ratings</h4>
-              <p><strong>Is Alumni:</strong> {survey.isAlumni || 'N/A'}</p>
-              <p><strong>Interested in Alumni:</strong> {survey.interestedAlumni || 'N/A'}</p>
+              <p><strong>Is Alumni:</strong> {survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}</p>
+              {survey.isAlumni !== 'Yes' && (
+                <p><strong>Interested in Alumni Registration:</strong> {survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}</p>
+              )}
               <p><strong>School Rating:</strong> {survey.schoolRating ? <><StarRating rating={survey.schoolRating} size="small" /> <span>({survey.schoolRating}/5)</span></> : 'N/A'}</p>
               <p><strong>System Rating:</strong> {survey.systemRating ? <><StarRating rating={survey.systemRating} size="small" /> <span>({survey.systemRating}/5)</span></> : 'N/A'}</p>
               <p><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</p>

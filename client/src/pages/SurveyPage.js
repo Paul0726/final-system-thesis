@@ -146,8 +146,9 @@ function SurveyPage() {
     try {
       const submitData = {
         ...formData,
-        isAlumni: isAlumni,
-        interestedAlumni: interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null),
+        // Properly record alumni status
+        isAlumni: isAlumni === 'Yes' ? 'Yes' : 'No',
+        interestedAlumni: isAlumni === 'Yes' ? null : (interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null)),
         // Handle conditional fields
         letLicense: formData.letLicense === 'Yes - With License Number' && formData.letLicenseNumber 
           ? `${formData.letLicense} - ${formData.letLicenseNumber}` 
@@ -172,7 +173,19 @@ function SurveyPage() {
     } catch (error) {
       console.error('Error submitting survey:', error);
       const errorMessage = error.response?.data?.message || error.message || 'Error submitting survey. Please try again.';
-      alert('Error: ' + errorMessage);
+      const existingEmail = error.response?.data?.existingEmail;
+      
+      if (error.response?.status === 400 && existingEmail) {
+        // Duplicate found - show message with link to personal dashboard
+        const confirmEdit = window.confirm(
+          errorMessage + '\n\nWould you like to access your personal dashboard to edit your existing survey?'
+        );
+        if (confirmEdit) {
+          window.location.href = `/personal-dashboard?email=${encodeURIComponent(existingEmail)}`;
+        }
+      } else {
+        alert('Error: ' + errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -183,13 +196,24 @@ function SurveyPage() {
       <div className="survey-page">
         <div className="survey-container">
           <div className="success-message">
-            <div className="success-icon">✅</div>
+            <div className="success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="64" height="64" style={{ color: '#11823b' }}>
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
             <h2>Thank You!</h2>
             <p>Your survey has been submitted successfully.</p>
-            <Link to="/dashboard" className="btn-primary">View Dashboard</Link>
-            <Link to="/survey" className="btn-secondary" onClick={() => setSubmitted(false)}>
-              Submit Another
-            </Link>
+            <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+              <Link to={`/personal-dashboard?email=${encodeURIComponent(formData.emailAddress)}`} className="btn-primary">
+                Access Your Personal Dashboard
+              </Link>
+              <p style={{ marginTop: '10px', color: '#6b7280', fontSize: '0.9rem' }}>
+                You can edit your survey responses anytime using your email address.
+              </p>
+              <Link to="/dashboard" className="btn-secondary">View Public Dashboard</Link>
+              <Link to="/" className="btn-secondary">Back to Home</Link>
+            </div>
           </div>
         </div>
       </div>

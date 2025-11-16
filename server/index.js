@@ -276,6 +276,20 @@ app.post('/api/survey', async (req, res) => {
     }
 
     if (useDatabase && pool) {
+      // Check for duplicate email/name
+      const duplicateCheck = await pool.query(
+        'SELECT id, email_address, name FROM surveys WHERE LOWER(email_address) = LOWER($1) OR LOWER(name) = LOWER($2)',
+        [surveyData.emailAddress, surveyData.name]
+      );
+      
+      if (duplicateCheck.rows.length > 0) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'A survey with this email address or name already exists. You can edit your existing survey by accessing your personal dashboard.',
+          existingEmail: duplicateCheck.rows[0].email_address
+        });
+      }
+
       // Use PostgreSQL database
       const result = await pool.query(`
         INSERT INTO surveys (
@@ -366,6 +380,20 @@ app.post('/api/survey', async (req, res) => {
       });
     } else {
       // Fallback to in-memory database
+      // Check for duplicate email/name
+      const duplicate = surveys.find(s => 
+        s.emailAddress?.toLowerCase() === surveyData.emailAddress?.toLowerCase() || 
+        s.name?.toLowerCase() === surveyData.name?.toLowerCase()
+      );
+      
+      if (duplicate) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'A survey with this email address or name already exists. You can edit your existing survey by accessing your personal dashboard.',
+          existingEmail: duplicate.emailAddress
+        });
+      }
+      
       const newSurvey = {
         id: surveys.length > 0 ? Math.max(...surveys.map(s => s.id)) + 1 : 1,
         ...surveyData,
@@ -401,6 +429,185 @@ app.post('/api/survey', async (req, res) => {
         message: 'Error creating survey: ' + error.message 
       });
     }
+  }
+});
+
+// Get survey by email (for personal dashboard)
+app.get('/api/survey/email/:email', async (req, res) => {
+  try {
+    const email = decodeURIComponent(req.params.email);
+    
+    if (useDatabase && pool) {
+      const result = await pool.query(
+        'SELECT * FROM surveys WHERE LOWER(email_address) = LOWER($1) ORDER BY created_at DESC LIMIT 1',
+        [email]
+      );
+      
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Survey not found for this email address' });
+      }
+      
+      // Convert snake_case to camelCase
+      const survey = {
+        id: result.rows[0].id,
+        name: result.rows[0].name,
+        permanentAddress: result.rows[0].permanent_address,
+        mobileNumber: result.rows[0].mobile_number,
+        emailAddress: result.rows[0].email_address,
+        dateOfBirth: result.rows[0].date_of_birth,
+        age: result.rows[0].age,
+        civilStatus: result.rows[0].civil_status,
+        sex: result.rows[0].sex,
+        currentLocation: result.rows[0].current_location,
+        courseGraduated: result.rows[0].course_graduated,
+        schoolYearGraduated: result.rows[0].school_year_graduated,
+        maxAcademicAchievement: result.rows[0].max_academic_achievement,
+        trainings: typeof result.rows[0].trainings === 'string' ? JSON.parse(result.rows[0].trainings) : result.rows[0].trainings,
+        civilService: result.rows[0].civil_service,
+        letLicense: result.rows[0].let_license,
+        otherPRCLicense: result.rows[0].other_prc_license,
+        professionalOrganizations: result.rows[0].professional_organizations,
+        isEmployed: result.rows[0].is_employed,
+        employmentNature: result.rows[0].employment_nature,
+        employmentClassification: result.rows[0].employment_classification,
+        jobTitle: result.rows[0].job_title,
+        placeOfWork: result.rows[0].place_of_work,
+        monthlyIncome: result.rows[0].monthly_income,
+        additionalRevenueSources: result.rows[0].additional_revenue_sources,
+        ratings: typeof result.rows[0].ratings === 'string' ? JSON.parse(result.rows[0].ratings) : result.rows[0].ratings,
+        isAlumni: result.rows[0].is_alumni,
+        interestedAlumni: result.rows[0].interested_alumni,
+        schoolRating: result.rows[0].school_rating,
+        systemRating: result.rows[0].system_rating,
+        schoolFeedback: result.rows[0].school_feedback,
+        systemFeedback: result.rows[0].system_feedback,
+        createdAt: result.rows[0].created_at
+      };
+      
+      res.json({ success: true, data: survey });
+    } else {
+      // Fallback to in-memory
+      const survey = surveys.find(s => s.emailAddress?.toLowerCase() === email.toLowerCase());
+      if (!survey) {
+        return res.status(404).json({ success: false, message: 'Survey not found for this email address' });
+      }
+      res.json({ success: true, data: survey });
+    }
+  } catch (error) {
+    console.error('Error fetching survey by email:', error);
+    res.status(500).json({ success: false, message: 'Error fetching survey' });
+  }
+});
+
+// Update survey by ID
+app.put('/api/survey/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const surveyData = req.body;
+    
+    if (useDatabase && pool) {
+      const result = await pool.query(`
+        UPDATE surveys SET
+          name = $1, permanent_address = $2, mobile_number = $3, email_address = $4,
+          date_of_birth = $5, age = $6, civil_status = $7, sex = $8, current_location = $9,
+          course_graduated = $10, school_year_graduated = $11, max_academic_achievement = $12,
+          trainings = $13, civil_service = $14, let_license = $15, other_prc_license = $16,
+          professional_organizations = $17, is_employed = $18, employment_nature = $19,
+          employment_classification = $20, job_title = $21, place_of_work = $22,
+          monthly_income = $23, additional_revenue_sources = $24, ratings = $25,
+          is_alumni = $26, interested_alumni = $27, school_rating = $28, system_rating = $29,
+          school_feedback = $30, system_feedback = $31
+        WHERE id = $32
+        RETURNING *
+      `, [
+        surveyData.name,
+        surveyData.permanentAddress || null,
+        surveyData.mobileNumber || null,
+        surveyData.emailAddress,
+        surveyData.dateOfBirth || null,
+        surveyData.age ? parseInt(surveyData.age) : null,
+        surveyData.civilStatus || null,
+        surveyData.sex || null,
+        surveyData.currentLocation || null,
+        surveyData.courseGraduated || null,
+        surveyData.schoolYearGraduated,
+        surveyData.maxAcademicAchievement || null,
+        JSON.stringify(surveyData.trainings || []),
+        surveyData.civilService || null,
+        surveyData.letLicense || null,
+        surveyData.otherPRCLicense || null,
+        surveyData.professionalOrganizations || null,
+        surveyData.isEmployed || null,
+        surveyData.employmentNature || null,
+        surveyData.employmentClassification || null,
+        surveyData.jobTitle || null,
+        surveyData.placeOfWork || null,
+        surveyData.monthlyIncome || null,
+        surveyData.additionalRevenueSources || null,
+        JSON.stringify(surveyData.ratings || {}),
+        surveyData.isAlumni || null,
+        surveyData.interestedAlumni || null,
+        surveyData.schoolRating || null,
+        surveyData.systemRating || null,
+        surveyData.schoolFeedback || null,
+        surveyData.systemFeedback || null,
+        id
+      ]);
+      
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Survey not found' });
+      }
+      
+      // Convert snake_case to camelCase for response
+      const updatedSurvey = {
+        id: result.rows[0].id,
+        name: result.rows[0].name,
+        permanentAddress: result.rows[0].permanent_address,
+        mobileNumber: result.rows[0].mobile_number,
+        emailAddress: result.rows[0].email_address,
+        dateOfBirth: result.rows[0].date_of_birth,
+        age: result.rows[0].age,
+        civilStatus: result.rows[0].civil_status,
+        sex: result.rows[0].sex,
+        currentLocation: result.rows[0].current_location,
+        courseGraduated: result.rows[0].course_graduated,
+        schoolYearGraduated: result.rows[0].school_year_graduated,
+        maxAcademicAchievement: result.rows[0].max_academic_achievement,
+        trainings: typeof result.rows[0].trainings === 'string' ? JSON.parse(result.rows[0].trainings) : result.rows[0].trainings,
+        civilService: result.rows[0].civil_service,
+        letLicense: result.rows[0].let_license,
+        otherPRCLicense: result.rows[0].other_prc_license,
+        professionalOrganizations: result.rows[0].professional_organizations,
+        isEmployed: result.rows[0].is_employed,
+        employmentNature: result.rows[0].employment_nature,
+        employmentClassification: result.rows[0].employment_classification,
+        jobTitle: result.rows[0].job_title,
+        placeOfWork: result.rows[0].place_of_work,
+        monthlyIncome: result.rows[0].monthly_income,
+        additionalRevenueSources: result.rows[0].additional_revenue_sources,
+        ratings: typeof result.rows[0].ratings === 'string' ? JSON.parse(result.rows[0].ratings) : result.rows[0].ratings,
+        isAlumni: result.rows[0].is_alumni,
+        interestedAlumni: result.rows[0].interested_alumni,
+        schoolRating: result.rows[0].school_rating,
+        systemRating: result.rows[0].system_rating,
+        schoolFeedback: result.rows[0].school_feedback,
+        systemFeedback: result.rows[0].system_feedback,
+        createdAt: result.rows[0].created_at
+      };
+      
+      res.json({ success: true, message: 'Survey updated successfully', data: updatedSurvey });
+    } else {
+      // Fallback to in-memory
+      const index = surveys.findIndex(s => s.id === id);
+      if (index === -1) {
+        return res.status(404).json({ success: false, message: 'Survey not found' });
+      }
+      surveys[index] = { ...surveys[index], ...surveyData };
+      res.json({ success: true, message: 'Survey updated successfully', data: surveys[index] });
+    }
+  } catch (error) {
+    console.error('Error updating survey:', error);
+    res.status(500).json({ success: false, message: 'Error updating survey' });
   }
 });
 
