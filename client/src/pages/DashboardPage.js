@@ -8,7 +8,7 @@ const API_URL = process.env.NODE_ENV === 'production'
   ? '/api' 
   : 'http://localhost:3000/api';
 
-const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
+const COLORS = ['#11823b', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
 
 function DashboardPage() {
   const [stats, setStats] = useState(null);
@@ -205,7 +205,7 @@ function DashboardPage() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="value" fill="#10b981" name="Number of Graduates" />
+                  <Bar dataKey="value" fill="#11823b" name="Number of Graduates" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

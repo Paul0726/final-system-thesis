@@ -168,7 +168,7 @@ function AdminPage() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Employed': return '#10b981';
+      case 'Employed': return '#11823b';
       case 'Self-Employed': return '#3b82f6';
       case 'Further Studies': return '#8b5cf6';
       case 'Unemployed': return '#f59e0b';
