@@ -849,17 +849,18 @@ app.delete('/api/surveys/:id', async (req, res) => {
 
         const email = surveyResult.rows[0].email_address;
 
-        // First, update or delete users that reference this survey
-        // Set survey_id to NULL for users referencing this survey
-        await client.query('UPDATE users SET survey_id = NULL WHERE survey_id = $1', [id]);
-        console.log(`✅ Updated users table: Set survey_id to NULL for survey ${id}`);
+        // Delete user accounts associated with this survey
+        // First, delete users that reference this survey by survey_id
+        const usersBySurveyId = await client.query('DELETE FROM users WHERE survey_id = $1 RETURNING email', [id]);
+        console.log(`✅ Deleted ${usersBySurveyId.rows.length} user account(s) referencing survey ${id}`);
 
-        // Optionally, you can also delete the user accounts if you want
-        // Uncomment the next line if you want to delete user accounts when survey is deleted
-        // if (email) {
-        //   await client.query('DELETE FROM users WHERE LOWER(email) = LOWER($1)', [email]);
-        //   console.log(`✅ Deleted user account for email: ${email}`);
-        // }
+        // Also delete user account by email (in case survey_id wasn't set but email matches)
+        if (email) {
+          const usersByEmail = await client.query('DELETE FROM users WHERE LOWER(email) = LOWER($1) RETURNING id', [email]);
+          if (usersByEmail.rows.length > 0) {
+            console.log(`✅ Deleted ${usersByEmail.rows.length} user account(s) with email: ${email}`);
+          }
+        }
 
         // Now delete the survey (should work since we've removed the foreign key references)
         const deleteResult = await client.query('DELETE FROM surveys WHERE id = $1 RETURNING *', [id]);
