@@ -202,7 +202,7 @@ function SurveyPage() {
       <div className="survey-page">
         <div className="alumni-modal-overlay">
           <div className="alumni-modal">
-            <h2>🎓 Alumni Verification</h2>
+            <h2>Alumni Verification</h2>
             {interestedAlumni === '' ? (
               <>
                 <p>Are you already an alumni of this institution?</p>
@@ -736,7 +736,7 @@ function SurveyPage() {
                       checked={formData.schoolRating === star}
                       onChange={(e) => setFormData(prev => ({ ...prev, schoolRating: parseInt(e.target.value) }))}
                     />
-                    <span className="star">⭐</span>
+                    <span className="star">★</span>
                   </label>
                 ))}
                 <span className="rating-value">{formData.schoolRating > 0 ? `${formData.schoolRating} / 5` : 'Not rated'}</span>
@@ -766,7 +766,7 @@ function SurveyPage() {
                       checked={formData.systemRating === star}
                       onChange={(e) => setFormData(prev => ({ ...prev, systemRating: parseInt(e.target.value) }))}
                     />
-                    <span className="star">⭐</span>
+                    <span className="star">★</span>
                   </label>
                 ))}
                 <span className="rating-value">{formData.systemRating > 0 ? `${formData.systemRating} / 5` : 'Not rated'}</span>

@@ -518,12 +518,17 @@
 
 .star-label input[type="radio"]:checked ~ .star,
 .star-label:hover .star {
-  filter: brightness(1.2);
+  color: #fbbf24;
+  transform: scale(1.1);
+  text-shadow: 0 0 2px rgba(251, 191, 36, 0.5);
 }
 
 .star {
   display: inline-block;
-  transition: all 0.2s;
+  font-size: 2rem;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .rating-value {

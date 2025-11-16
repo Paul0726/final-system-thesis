@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { StarRating } from '../utils/helpers';
 import './AdminPage.css';
 
 const API_URL = process.env.NODE_ENV === 'production' 
@@ -182,7 +183,7 @@ function AdminPage() {
         <div className="admin-container">
           <div className="login-container">
             <div className="login-box">
-              <h2>🔐 Admin Login</h2>
+              <h2>Admin Login</h2>
               <p>Request OTP to access admin panel</p>
               
               {!otpSent ? (
@@ -252,7 +253,7 @@ function AdminPage() {
             <Link to="/" className="back-link">← Back to Home</Link>
             <button onClick={handleLogout} className="logout-btn">Logout</button>
           </div>
-          <h1>👨‍💼 Admin Panel</h1>
+          <h1>Admin Panel</h1>
           <p>Manage BSIT Graduate Survey Data</p>
         </header>
 
@@ -260,7 +261,7 @@ function AdminPage() {
           <div className="search-bar">
             <input
               type="text"
-              placeholder="🔍 Search by name or email..."
+              placeholder="Search by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
@@ -307,7 +308,13 @@ function AdminPage() {
             <div className="loading">Loading surveys...</div>
           ) : surveys.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">📭</div>
+              <div className="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </div>
               <h3>No Surveys Yet</h3>
               <p>There are no survey responses in the database.</p>
               <p>Submit a survey first to see data here.</p>
@@ -317,7 +324,12 @@ function AdminPage() {
             </div>
           ) : filteredSurveys.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">🔍</div>
+              <div className="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="M21 21l-4.35-4.35"></path>
+                </svg>
+              </div>
               <h3>No Results Found</h3>
               <p>No surveys match your search or filter criteria.</p>
               <button onClick={() => { setSearchTerm(''); setFilterStatus(''); }} className="btn-primary" style={{ marginTop: '20px' }}>
@@ -385,7 +397,11 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
             </span>
             {(survey.interestedAlumni === 'Yes' || survey.isAlumni === 'Yes') && (
               <span className="alumni-badge" title="Alumni Registration">
-                🎓 Alumni
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Alumni
               </span>
             )}
             <button
@@ -396,7 +412,10 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
               className="btn-delete"
               title="Delete"
             >
-              🗑️
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+              </svg>
             </button>
             <span className="expand-icon">{expanded ? '▼' : '▶'}</span>
           </div>
@@ -445,8 +464,8 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
               <h4>Alumni & Ratings</h4>
               <p><strong>Is Alumni:</strong> {survey.isAlumni || 'N/A'}</p>
               <p><strong>Interested in Alumni:</strong> {survey.interestedAlumni || 'N/A'}</p>
-              <p><strong>School Rating:</strong> {survey.schoolRating ? '⭐'.repeat(survey.schoolRating) + ` (${survey.schoolRating}/5)` : 'N/A'}</p>
-              <p><strong>System Rating:</strong> {survey.systemRating ? '⭐'.repeat(survey.systemRating) + ` (${survey.systemRating}/5)` : 'N/A'}</p>
+              <p><strong>School Rating:</strong> {survey.schoolRating ? <><StarRating rating={survey.schoolRating} size="small" /> <span>({survey.schoolRating}/5)</span></> : 'N/A'}</p>
+              <p><strong>System Rating:</strong> {survey.systemRating ? <><StarRating rating={survey.systemRating} size="small" /> <span>({survey.systemRating}/5)</span></> : 'N/A'}</p>
               <p><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</p>
               <p><strong>System Feedback:</strong> {survey.systemFeedback || 'N/A'}</p>
             </div>

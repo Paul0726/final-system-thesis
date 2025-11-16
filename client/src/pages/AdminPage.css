@@ -254,18 +254,27 @@
 }
 
 .btn-delete {
-  padding: 8px 12px;
+  padding: 8px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
   background: transparent;
   transition: all 0.3s;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-delete:hover {
   background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
   transform: scale(1.1);
+}
+
+.btn-delete svg {
+  width: 18px;
+  height: 18px;
 }
 
 .loading,
@@ -277,8 +286,18 @@
 }
 
 .empty-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .empty-state h3 {
@@ -627,6 +646,13 @@
   font-weight: 600;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.alumni-badge svg {
+  flex-shrink: 0;
 }
 
 .survey-card-details {
@@ -669,6 +695,10 @@
   margin: 8px 0;
   color: #374151;
   line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .detail-section strong {

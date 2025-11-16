@@ -122,7 +122,7 @@ function DashboardPage() {
       <div className="dashboard-container">
         <header className="dashboard-header">
           <Link to="/" className="back-link">← Back to Home</Link>
-          <h1>📊 Public Dashboard</h1>
+          <h1>Public Dashboard</h1>
           <p>BSIT Graduate Statistics and Insights</p>
         </header>
 
