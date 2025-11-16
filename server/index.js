@@ -309,17 +309,20 @@ app.post('/api/admin/create-users-table', async (req, res) => {
 app.get('/api/feedbacks', async (req, res) => {
   try {
     if (useDatabase && pool) {
+      // Get unique feedbacks per person (by email_address) - only the latest one per person
       const result = await pool.query(`
-        SELECT name, school_rating, system_rating, school_feedback, system_feedback, created_at
+        SELECT DISTINCT ON (LOWER(email_address)) 
+          name, email_address, school_rating, system_rating, school_feedback, system_feedback, created_at
         FROM surveys
         WHERE (school_feedback IS NOT NULL AND school_feedback != '') 
            OR (system_feedback IS NOT NULL AND system_feedback != '')
-        ORDER BY created_at DESC
+        ORDER BY LOWER(email_address), created_at DESC
         LIMIT 50
       `);
       
       const feedbacks = result.rows.map(row => ({
         name: row.name,
+        email: row.email_address,
         schoolRating: row.school_rating,
         systemRating: row.system_rating,
         schoolFeedback: row.school_feedback,

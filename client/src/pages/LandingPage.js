@@ -21,7 +21,18 @@ function LandingPage() {
     try {
       const response = await axios.get(`${API_URL}/feedbacks`);
       if (response.data.success) {
-        setFeedbacks(response.data.data || []);
+        const feedbacksData = response.data.data || [];
+        
+        // Additional client-side filtering to ensure unique feedbacks per email
+        const uniqueFeedbacks = feedbacksData.reduce((acc, feedback) => {
+          const email = feedback.email?.toLowerCase() || feedback.name?.toLowerCase();
+          if (!acc.find(f => (f.email?.toLowerCase() || f.name?.toLowerCase()) === email)) {
+            acc.push(feedback);
+          }
+          return acc;
+        }, []);
+        
+        setFeedbacks(uniqueFeedbacks);
         setRatings(response.data.ratings || { school: 0, system: 0, total: 0 });
       }
     } catch (error) {
@@ -127,7 +138,7 @@ function LandingPage() {
             <div className="feedback-scroll-container">
               <div className="feedback-scroll">
                 {feedbacks.map((feedback, index) => (
-                  <div key={index} className="feedback-card">
+                  <div key={feedback.email || index} className="feedback-card">
                     <div className="feedback-header">
                       <h4>{maskName(feedback.name)}</h4>
                       <div className="feedback-ratings">
@@ -157,9 +168,9 @@ function LandingPage() {
                     )}
                   </div>
                 ))}
-                {/* Duplicate for seamless scroll */}
-                {feedbacks.map((feedback, index) => (
-                  <div key={`dup-${index}`} className="feedback-card">
+                {/* Only duplicate for seamless scroll if there are multiple unique feedbacks */}
+                {feedbacks.length > 1 && feedbacks.map((feedback, index) => (
+                  <div key={`dup-${feedback.email || index}`} className="feedback-card">
                     <div className="feedback-header">
                       <h4>{maskName(feedback.name)}</h4>
                       <div className="feedback-ratings">

@@ -512,8 +512,12 @@
 .feedback-scroll {
   display: flex;
   gap: 20px;
-  animation: scroll 30s linear infinite;
   width: fit-content;
+}
+
+/* Only animate if there are multiple feedbacks */
+.feedback-scroll:has(.feedback-card:nth-child(2)) {
+  animation: scroll 30s linear infinite;
 }
 
 .feedback-scroll:hover {
@@ -527,6 +531,12 @@
   100% {
     transform: translateX(-50%);
   }
+}
+
+/* If only one feedback, center it */
+.feedback-scroll-container:has(.feedback-scroll:not(:has(.feedback-card:nth-child(2)))) .feedback-scroll {
+  justify-content: center;
+  width: 100%;
 }
 
 .feedback-card {
