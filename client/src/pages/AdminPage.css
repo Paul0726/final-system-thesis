@@ -1,6 +1,6 @@
 .admin-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%);
   background-attachment: fixed;
   padding: 20px;
   width: 100%;
@@ -156,8 +156,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: #11823b;
+  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1);
 }
 
 .filter-bar {
@@ -179,24 +179,24 @@
 }
 
 .filter-select:hover {
-  border-color: #d1fae5;
+  border-color: #dce3c7;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #10b981;
+  border-color: #11823b;
   box-shadow: 
-    0 0 0 4px rgba(16, 185, 129, 0.1),
-    0 2px 8px rgba(16, 185, 129, 0.15);
+    0 0 0 4px rgba(17, 130, 59, 0.1),
+    0 2px 8px rgba(17, 130, 59, 0.15);
   transform: translateY(-1px);
 }
 
 .admin-stats {
   margin-left: auto;
   padding: 12px 20px;
-  background: #f0fdf4;
+  background: #dce3c7;
   border-radius: 10px;
-  color: #059669;
+  color: #11823b;
   font-weight: 600;
 }
 
@@ -225,12 +225,12 @@
 }
 
 .surveys-table th {
-  background: #f0fdf4;
-  color: #059669;
+  background: #dce3c7;
+  color: #11823b;
   padding: 15px;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid #10b981;
+  border-bottom: 2px solid #11823b;
 }
 
 .surveys-table td {
@@ -334,24 +334,24 @@
 
 .btn-secondary {
   background: white;
-  color: #059669;
-  border: 2px solid #10b981;
+  color: #11823b;
+  border: 2px solid #11823b;
 }
 
 .btn-secondary:hover {
-  background: #f0fdf4;
+  background: #dce3c7;
   transform: translateY(-2px);
 }
 
 .btn-refresh {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #11823b 0%, #11823b 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.4);
 }
 
 .btn-refresh:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.5);
 }
 
 @media (max-width: 968px) {
@@ -401,7 +401,7 @@
 }
 
 .login-box h2 {
-  color: #059669;
+  color: #11823b;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -414,8 +414,8 @@
 }
 
 .otp-request-info {
-  background: #f0fdf4;
-  border: 2px solid #10b981;
+  background: #dce3c7;
+  border: 2px solid #11823b;
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 25px;
@@ -423,15 +423,15 @@
 }
 
 .otp-request-info p {
-  color: #059669;
+  color: #11823b;
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.6;
 }
 
 .otp-sent-message {
-  background: #f0fdf4;
-  border: 2px solid #10b981;
+  background: #dce3c7;
+  border: 2px solid #11823b;
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 25px;
@@ -439,7 +439,7 @@
 }
 
 .otp-sent-message p {
-  color: #059669;
+  color: #11823b;
   margin: 5px 0;
   font-size: 0.95rem;
   line-height: 1.6;
@@ -450,7 +450,7 @@
   font-size: 1.5rem;
   letter-spacing: 10px;
   font-weight: 600;
-  color: #059669;
+  color: #11823b;
 }
 
 .login-form {
@@ -480,8 +480,8 @@
 
 .login-form input:focus {
   outline: none;
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: #11823b;
+  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1);
 }
 
 .login-form small {
@@ -490,7 +490,7 @@
 }
 
 .login-form .btn-primary {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #11823b 0%, #11823b 100%);
   color: white;
   padding: 12px 30px;
   border: none;
@@ -503,7 +503,7 @@
 
 .login-form .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.4);
 }
 
 .login-form .btn-primary:disabled {
@@ -513,9 +513,9 @@
 
 .login-form .btn-secondary {
   background: white;
-  color: #059669;
+  color: #11823b;
   padding: 12px 30px;
-  border: 2px solid #10b981;
+  border: 2px solid #11823b;
   border-radius: 10px;
   font-size: 1rem;
   font-weight: 600;
@@ -524,7 +524,7 @@
 }
 
 .login-form .btn-secondary:hover {
-  background: #f0fdf4;
+  background: #dce3c7;
 }
 
 .header-top {
@@ -547,7 +547,7 @@
 
 .logout-btn:hover {
   background: white;
-  color: #059669;
+  color: #11823b;
 }
 
 /* Survey Card Styles */
@@ -579,7 +579,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #10b981, #34d399);
+  background: linear-gradient(90deg, #11823b, #11823b);
   transform: scaleX(0);
   transition: transform 0.4s;
 }
@@ -589,10 +589,10 @@
 }
 
 .survey-card:hover {
-  border-color: #10b981;
+  border-color: #11823b;
   box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.2),
-    0 0 0 1px rgba(16, 185, 129, 0.1);
+    0 8px 24px rgba(17, 130, 59, 0.2),
+    0 0 0 1px rgba(17, 130, 59, 0.1);
   transform: translateY(-4px);
 }
 
@@ -603,7 +603,7 @@
 }
 
 .survey-card-header:hover {
-  background: #f0fdf4;
+  background: #dce3c7;
 }
 
 .survey-card-main {
@@ -614,7 +614,7 @@
 }
 
 .survey-card-main h3 {
-  color: #059669;
+  color: #11823b;
   margin: 0 0 5px 0;
   font-size: 1.3rem;
 }
@@ -633,7 +633,7 @@
 
 .expand-icon {
   font-size: 1.2rem;
-  color: #059669;
+  color: #11823b;
   font-weight: bold;
 }
 
@@ -676,7 +676,7 @@
   -webkit-backdrop-filter: blur(10px);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-left: 4px solid #10b981;
+  border-left: 4px solid #11823b;
 }
 
 .detail-section.full-width {
@@ -684,10 +684,10 @@
 }
 
 .detail-section h4 {
-  color: #059669;
+  color: #11823b;
   margin: 0 0 15px 0;
   font-size: 1.1rem;
-  border-bottom: 2px solid #10b981;
+  border-bottom: 2px solid #11823b;
   padding-bottom: 10px;
 }
 
@@ -702,7 +702,7 @@
 }
 
 .detail-section strong {
-  color: #059669;
+  color: #11823b;
   min-width: 180px;
   display: inline-block;
 }
@@ -712,7 +712,7 @@
   background: white;
   border-radius: 8px;
   margin-bottom: 10px;
-  border-left: 3px solid #10b981;
+  border-left: 3px solid #11823b;
 }
 
 .training-item p {
