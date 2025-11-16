@@ -49,6 +49,11 @@ function LandingPage() {
                 Start Survey Now
               </Link>
               <p className="cta-subtext">It only takes 5-10 minutes to complete</p>
+              <div className="cta-secondary">
+                <Link to="/dashboard" className="btn-secondary">
+                  View Dashboard
+                </Link>
+              </div>
             </div>
           </div>
 
