@@ -274,7 +274,20 @@ function PersonalDashboard() {
             </div>
             <div className="form-group">
               <label>Monthly Income</label>
-              <input type="text" name="monthlyIncome" value={formData.monthlyIncome || ''} onChange={handleChange} />
+              <select name="monthlyIncome" value={formData.monthlyIncome || ''} onChange={handleChange}>
+                <option value="">Select...</option>
+                <option value="Less than ₱10,000">Less than ₱10,000</option>
+                <option value="₱10,000 – ₱19,999">₱10,000 – ₱19,999</option>
+                <option value="₱20,000 – ₱29,999">₱20,000 – ₱29,999</option>
+                <option value="₱30,000 – ₱39,999">₱30,000 – ₱39,999</option>
+                <option value="₱40,000 – ₱49,999">₱40,000 – ₱49,999</option>
+                <option value="₱50,000 – ₱59,999">₱50,000 – ₱59,999</option>
+                <option value="₱60,000 – ₱69,999">₱60,000 – ₱69,999</option>
+                <option value="₱70,000 – ₱79,999">₱70,000 – ₱79,999</option>
+                <option value="₱80,000 – ₱89,999">₱80,000 – ₱89,999</option>
+                <option value="₱90,000 – ₱99,999">₱90,000 – ₱99,999</option>
+                <option value="₱100,000 and above">₱100,000 and above</option>
+              </select>
             </div>
           </div>
 

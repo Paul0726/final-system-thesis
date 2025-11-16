@@ -52,10 +52,26 @@ function DashboardPage() {
     return acc;
   }, {});
 
-  const incomeChartData = Object.entries(incomeData).map(([name, value]) => ({
-    name: name.replace('₱', 'P'),
-    value
-  }));
+  // Function to extract numeric value from income range for sorting
+  const getIncomeSortValue = (incomeRange) => {
+    if (!incomeRange) return 0;
+    if (incomeRange.includes('Less than')) return 0;
+    if (incomeRange.includes('and above')) {
+      // Extract the number before "and above"
+      const match = incomeRange.match(/₱([\d,]+)/);
+      return match ? parseInt(match[1].replace(/,/g, '')) : 999999;
+    }
+    // Extract the first number from range (e.g., "₱10,000 – ₱19,999" -> 10000)
+    const match = incomeRange.match(/₱([\d,]+)/);
+    return match ? parseInt(match[1].replace(/,/g, '')) : 0;
+  };
+
+  const incomeChartData = Object.entries(incomeData)
+    .sort((a, b) => getIncomeSortValue(a[0]) - getIncomeSortValue(b[0]))
+    .map(([name, value]) => ({
+      name: name.replace('₱', 'P'),
+      value
+    }));
 
   const courseData = surveys.reduce((acc, survey) => {
     if (survey.courseGraduated) {
@@ -240,14 +256,14 @@ function DashboardPage() {
             <div className="chart-card">
               <h2>Monthly Income Distribution</h2>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={incomeChartData}>
+                <LineChart data={incomeChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="value" fill="#11823b" name="Number of Graduates" />
-                </BarChart>
+                  <Line type="monotone" dataKey="value" stroke="#11823b" strokeWidth={2} name="Number of Graduates" />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           )}
