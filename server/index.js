@@ -833,14 +833,34 @@ app.delete('/api/surveys/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     
     if (useDatabase && pool) {
-      const result = await pool.query('DELETE FROM surveys WHERE id = $1 RETURNING *', [id]);
-      if (result.rows.length === 0) {
+      // First, get the survey to find associated email
+      const surveyResult = await pool.query('SELECT email_address FROM surveys WHERE id = $1', [id]);
+      
+      if (surveyResult.rows.length === 0) {
         return res.status(404).json({ success: false, message: 'Survey not found' });
       }
+
+      const email = surveyResult.rows[0].email_address;
+
+      // Delete the survey (this will also cascade to users table due to ON DELETE SET NULL)
+      const deleteResult = await pool.query('DELETE FROM surveys WHERE id = $1 RETURNING *', [id]);
+      
+      if (deleteResult.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Survey not found' });
+      }
+
+      // Also delete the user account associated with this survey (optional - you can keep users even if survey is deleted)
+      // Uncomment the next lines if you want to delete user accounts when survey is deleted
+      // if (email) {
+      //   await pool.query('DELETE FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+      // }
+
+      console.log(`✅ Survey ${id} deleted successfully (email: ${email})`);
+      
       res.json({
         success: true,
-        message: 'Survey deleted successfully',
-        data: result.rows[0]
+        message: 'Survey and associated feedback deleted successfully',
+        data: deleteResult.rows[0]
       });
     } else {
       // Fallback to in-memory
@@ -857,7 +877,24 @@ app.delete('/api/surveys/:id', async (req, res) => {
     }
   } catch (error) {
     console.error('Error deleting survey:', error);
-    res.status(500).json({ success: false, message: 'Error deleting survey' });
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    
+    // Provide more detailed error message
+    let errorMessage = 'Error deleting survey';
+    if (error.code === '23503') {
+      errorMessage = 'Cannot delete survey: It is referenced by other records';
+    } else if (error.code === '23505') {
+      errorMessage = 'Database constraint violation';
+    } else {
+      errorMessage = `Error deleting survey: ${error.message}`;
+    }
+    
+    res.status(500).json({ 
+      success: false, 
+      message: errorMessage,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
