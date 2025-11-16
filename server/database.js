@@ -61,19 +61,7 @@ if (process.env.DATABASE_URL) {
           }
         }
         
-        // Create users table for respondent accounts
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            email VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            survey_id INTEGER REFERENCES surveys(id),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          )
-        `);
-
-        // Create surveys table
+        // Create surveys table FIRST (users table references it)
         await pool.query(`
           CREATE TABLE IF NOT EXISTS surveys (
             id SERIAL PRIMARY KEY,
@@ -123,6 +111,25 @@ if (process.env.DATABASE_URL) {
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_feedback TEXT`);
         } catch (err) {
           // Columns might already exist, ignore error
+        }
+
+        // Create users table for respondent accounts (AFTER surveys table)
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            survey_id INTEGER REFERENCES surveys(id) ON DELETE SET NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `);
+
+        // Create index on email for faster lookups
+        try {
+          await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email))`);
+        } catch (err) {
+          // Index might already exist, ignore error
         }
 
         console.log('✅ Database tables initialized');

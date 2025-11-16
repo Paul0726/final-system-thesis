@@ -217,6 +217,46 @@ app.post('/api/user/verify-otp', async (req, res) => {
   }
 });
 
+// Initialize users table if it doesn't exist (fallback)
+const ensureUsersTable = async () => {
+  if (useDatabase && pool) {
+    try {
+      // First ensure surveys table exists
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS surveys (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          email_address VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      
+      // Then create users table
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          survey_id INTEGER REFERENCES surveys(id) ON DELETE SET NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      
+      // Create index on email for faster lookups
+      await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email))`);
+      console.log('✅ Users table ensured');
+    } catch (error) {
+      console.error('⚠️ Error ensuring users table:', error.message);
+    }
+  }
+};
+
+// Ensure users table exists on startup
+setTimeout(() => {
+  ensureUsersTable();
+}, 3000);
+
 // Get feedbacks and ratings for landing page
 app.get('/api/feedbacks', async (req, res) => {
   try {
