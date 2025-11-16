@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import './PersonalDashboard.css';
 
