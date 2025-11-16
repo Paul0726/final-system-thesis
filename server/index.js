@@ -94,6 +94,129 @@ app.post('/api/admin/verify-otp', async (req, res) => {
   }
 });
 
+// User Authentication Routes (for respondents)
+// User Registration
+app.post('/api/user/register', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password are required' });
+    }
+
+    // Check if user already exists
+    if (useDatabase && pool) {
+      const existingUser = await pool.query('SELECT id FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+      if (existingUser.rows.length > 0) {
+        return res.status(400).json({ success: false, message: 'Email already registered. Please login instead.' });
+      }
+
+      // Hash password (simple hash for now, in production use bcrypt)
+      const crypto = require('crypto');
+      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+      // Check if survey exists for this email
+      const surveyResult = await pool.query('SELECT id FROM surveys WHERE LOWER(email_address) = LOWER($1) ORDER BY created_at DESC LIMIT 1', [email]);
+      const surveyId = surveyResult.rows.length > 0 ? surveyResult.rows[0].id : null;
+
+      // Create user account
+      const result = await pool.query(
+        'INSERT INTO users (email, password, survey_id) VALUES ($1, $2, $3) RETURNING id, email',
+        [email, hashedPassword, surveyId]
+      );
+
+      res.json({ success: true, message: 'Account created successfully. Please login.', userId: result.rows[0].id });
+    } else {
+      // Fallback to in-memory (not recommended for production)
+      res.status(503).json({ success: false, message: 'User registration requires database. Please contact administrator.' });
+    }
+  } catch (error) {
+    console.error('Error registering user:', error);
+    if (error.code === '23505') { // Unique constraint violation
+      return res.status(400).json({ success: false, message: 'Email already registered. Please login instead.' });
+    }
+    res.status(500).json({ success: false, message: 'Error creating account' });
+  }
+});
+
+// User Login (send OTP)
+app.post('/api/user/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password are required' });
+    }
+
+    if (useDatabase && pool) {
+      // Verify password
+      const crypto = require('crypto');
+      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+      
+      const userResult = await pool.query('SELECT id, email FROM users WHERE LOWER(email) = LOWER($1) AND password = $2', [email, hashedPassword]);
+      
+      if (userResult.rows.length === 0) {
+        return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      }
+
+      // Send OTP
+      const result = await sendOTP(email);
+      if (result.success) {
+        res.json({ success: true, message: 'OTP sent to your email' });
+      } else {
+        res.status(500).json({ success: false, message: result.message });
+      }
+    } else {
+      res.status(503).json({ success: false, message: 'User login requires database. Please contact administrator.' });
+    }
+  } catch (error) {
+    console.error('Error in user login:', error);
+    res.status(500).json({ success: false, message: 'Error processing login' });
+  }
+});
+
+// User OTP Verification
+app.post('/api/user/verify-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: 'Email and OTP are required' });
+    }
+
+    // Verify OTP
+    const result = verifyOTP(email, otp);
+    if (result.success) {
+      // Get user info
+      if (useDatabase && pool) {
+        const userResult = await pool.query('SELECT id, email, survey_id FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+        if (userResult.rows.length > 0) {
+          const user = userResult.rows[0];
+          // Generate simple token (in production use JWT)
+          const token = Buffer.from(`${user.id}:${email}:${Date.now()}`).toString('base64');
+          res.json({ 
+            success: true, 
+            message: 'Login successful', 
+            token: token,
+            email: user.email,
+            userId: user.id,
+            surveyId: user.survey_id
+          });
+        } else {
+          res.status(404).json({ success: false, message: 'User not found' });
+        }
+      } else {
+        res.status(503).json({ success: false, message: 'Authentication requires database' });
+      }
+    } else {
+      res.status(401).json({ success: false, message: result.message });
+    }
+  } catch (error) {
+    console.error('Error verifying user OTP:', error);
+    res.status(500).json({ success: false, message: 'Error verifying OTP' });
+  }
+});
+
 // Get feedbacks and ratings for landing page
 app.get('/api/feedbacks', async (req, res) => {
   try {
@@ -595,6 +718,11 @@ app.put('/api/survey/:id', async (req, res) => {
         createdAt: result.rows[0].created_at
       };
       
+      // Update user's survey_id if email matches
+      if (useDatabase && pool && surveyData.emailAddress) {
+        await pool.query('UPDATE users SET survey_id = $1 WHERE LOWER(email) = LOWER($2)', [id, surveyData.emailAddress]);
+      }
+
       res.json({ success: true, message: 'Survey updated successfully', data: updatedSurvey });
     } else {
       // Fallback to in-memory

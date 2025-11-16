@@ -61,6 +61,18 @@ if (process.env.DATABASE_URL) {
           }
         }
         
+        // Create users table for respondent accounts
+        await pool.query(`
+          CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            survey_id INTEGER REFERENCES surveys(id),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `);
+
         // Create surveys table
         await pool.query(`
           CREATE TABLE IF NOT EXISTS surveys (

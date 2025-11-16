@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PersonalDashboard.css';
 
@@ -9,12 +9,25 @@ const API_URL = process.env.NODE_ENV === 'production'
 
 function PersonalDashboard() {
   const [searchParams] = useSearchParams();
-  const [email, setEmail] = useState(searchParams.get('email') || '');
+  const [email, setEmail] = useState(searchParams.get('email') || localStorage.getItem('userEmail') || '');
   const [survey, setSurvey] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check authentication
+    const token = localStorage.getItem('userToken');
+    const storedEmail = localStorage.getItem('userEmail');
+    if (token && storedEmail) {
+      setIsAuthenticated(true);
+      if (storedEmail) {
+        setEmail(storedEmail);
+      }
+    }
+  }, []);
 
   const fetchSurvey = async () => {
     setFetching(true);
@@ -69,6 +82,25 @@ function PersonalDashboard() {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="personal-dashboard-page">
+        <div className="personal-dashboard-container">
+          <div className="email-access-form">
+            <h2>Authentication Required</h2>
+            <p>Please login to access your personal dashboard.</p>
+            <Link to="/login" className="btn-primary" style={{ marginTop: '20px', display: 'inline-block' }}>
+              Go to Login Page
+            </Link>
+            <Link to="/" className="btn-secondary" style={{ marginTop: '15px', display: 'inline-block' }}>
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!email) {
     return (
       <div className="personal-dashboard-page">
@@ -76,20 +108,9 @@ function PersonalDashboard() {
           <div className="email-access-form">
             <h2>Access Your Personal Dashboard</h2>
             <p>Enter your email address to access and edit your survey responses.</p>
-            <form onSubmit={(e) => { e.preventDefault(); fetchSurvey(); }}>
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="email-input"
-              />
-              <button type="submit" className="btn-primary" disabled={fetching}>
-                {fetching ? 'Loading...' : 'Access Dashboard'}
-              </button>
-            </form>
-            {message && <p className="error-message">{message}</p>}
+            <Link to="/login" className="btn-primary" style={{ marginTop: '20px', display: 'inline-block' }}>
+              Login to Access
+            </Link>
           </div>
         </div>
       </div>

@@ -395,13 +395,27 @@ function SurveyCard({ survey, index, onDelete, getStatusColor }) {
             >
               {surveyStatus || 'N/A'}
             </span>
-            {(survey.interestedAlumni === 'Yes' || survey.isAlumni === 'Yes') && (
-              <span className="alumni-badge" title="Alumni Registration">
+            {survey.isAlumni === 'Yes' && (
+              <span className="alumni-badge" title="Alumni">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
                   <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                   <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                 </svg>
                 Alumni
+              </span>
+            )}
+            {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
+              <span className="alumni-interest-badge" title="Wants to Register as Alumni">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                Wants to Register
+              </span>
+            )}
+            {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
+              <span className="alumni-no-badge" title="Not Alumni">
+                Not Alumni
               </span>
             )}
             <button

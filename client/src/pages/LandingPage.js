@@ -53,6 +53,9 @@ function LandingPage() {
                 <Link to="/dashboard" className="btn-secondary">
                   View Dashboard
                 </Link>
+                <Link to="/login" className="btn-secondary" style={{ marginTop: '15px' }}>
+                  Access My Dashboard
+                </Link>
               </div>
             </div>
           </div>

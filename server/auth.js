@@ -27,19 +27,26 @@ const sendOTP = async (email) => {
       expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
     };
 
+    // Determine if this is admin or user OTP
+    const isAdmin = email === 'johnpauld750@gmail.com';
+    const subject = isAdmin 
+      ? 'Admin Login OTP - BSIT Graduate Tracer System'
+      : 'Login OTP - BSIT Graduate Tracer System';
+    const title = isAdmin ? 'Admin Login OTP' : 'Login OTP';
+    
     await transporter.sendMail({
       from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
       to: email,
-      subject: 'Admin Login OTP - BSIT Graduate Tracer System',
+      subject: subject,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb;">
           <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h2 style="color: #059669; margin-bottom: 20px;">🔐 Admin Login OTP</h2>
+            <h2 style="color: #11823b; margin-bottom: 20px;">${title}</h2>
             <p style="color: #374151; font-size: 16px; line-height: 1.6;">
-              Your OTP for admin login is:
+              Your OTP for login is:
             </p>
-            <div style="background-color: #f0fdf4; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-              <h1 style="color: #059669; font-size: 36px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+            <div style="background-color: #dce3c7; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+              <h1 style="color: #11823b; font-size: 36px; margin: 0; letter-spacing: 5px;">${otp}</h1>
             </div>
             <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
               This OTP will expire in 10 minutes. Do not share this code with anyone.
