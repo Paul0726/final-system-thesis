@@ -131,3 +131,6 @@ GROUP BY is_employed, employment_nature;
 
 **I-try mo i-click ang "Database" tab sa Postgres service!** 🚀
 
+
+
+

@@ -122,3 +122,6 @@ postgresql://user:password@host:port/database
 
 **I-follow mo lang ang steps sa taas para i-link manually ang database!** 🔗
 
+
+
+

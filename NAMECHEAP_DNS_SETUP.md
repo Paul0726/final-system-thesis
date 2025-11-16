@@ -197,3 +197,6 @@ CNAME Record  www     zqsz8m4v.up.railway.app       Automatic (optional)
 
 **Ready? I-follow mo lang ang steps sa taas!** 🚀
 
+
+
+
