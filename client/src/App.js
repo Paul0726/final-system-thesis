@@ -45,6 +45,7 @@ const LoadingSpinner = () => (
 );
 
 function App() {
+  // Updated: 2025-11-18 - IT Field feature added
   return (
     <Router>
       <div className="App">
