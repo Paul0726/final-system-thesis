@@ -14,7 +14,11 @@
     "**/*.json",
     "**/*.jsx",
     "**/*.css"
-  ]
+  ],
+  "source": {
+    "repo": "paul0726/final-system-thesis",
+    "branch": "main"
+  }
 }
 
 
