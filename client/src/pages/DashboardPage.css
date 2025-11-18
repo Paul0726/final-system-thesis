@@ -28,38 +28,44 @@
   will-change: opacity, transform;
 }
 
-/* Disable heavy effects on mobile/low-end devices */
+/* AGGRESSIVE MOBILE OPTIMIZATIONS - Disable ALL heavy effects */
 @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .dashboard-page::before {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    animation: none;
+    display: none !important;
   }
   
   .dashboard-page::after {
-    animation: none;
+    display: none !important;
   }
   
   .dashboard-page {
-    background-attachment: scroll;
+    background-attachment: scroll !important;
+    background: #11823b !important; /* Solid color instead of gradient */
   }
   
   .chart-card {
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    padding: 20px !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    padding: 15px !important;
   }
   
   /* Reduce chart complexity on mobile */
   .charts-grid {
     grid-template-columns: 1fr !important;
-    gap: 20px !important;
+    gap: 15px !important;
   }
   
-  /* Optimize chart rendering on mobile */
+  /* Disable all chart animations */
   .recharts-wrapper {
-    transform: translateZ(0);
-    will-change: transform;
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  /* Disable all transitions */
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }
 

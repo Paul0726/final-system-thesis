@@ -28,20 +28,25 @@
   will-change: opacity, transform;
 }
 
-/* Disable heavy effects on mobile/low-end devices */
+/* AGGRESSIVE MOBILE OPTIMIZATIONS - Disable ALL effects */
 @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .landing-page::before {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    animation: none;
+    display: none !important;
   }
   
   .landing-page::after {
-    animation: none;
+    display: none !important;
   }
   
   .landing-page {
-    background-attachment: scroll;
+    background-attachment: scroll !important;
+    background: #11823b !important; /* Solid color */
+  }
+  
+  /* Disable all transitions */
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
