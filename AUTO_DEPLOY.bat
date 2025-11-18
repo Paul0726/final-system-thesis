@@ -17,7 +17,7 @@ echo [OK] Files added!
 echo.
 
 echo [2/3] Committing changes...
-git commit -m "Auto deploy: System updates and optimizations"
+git commit -m "Auto deploy: System updates and optimizations - %date% %time%"
 if errorlevel 1 (
     echo [WARNING] No changes to commit or commit failed
     echo.
