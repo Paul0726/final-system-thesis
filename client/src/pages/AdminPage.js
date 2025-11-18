@@ -107,6 +107,7 @@ function AdminPage() {
   const toggleReports = () => {
     if (!showReports) {
       fetchReports();
+      fetchReportsCount(); // Refresh count when opening
     }
     setShowReports(!showReports);
   };
