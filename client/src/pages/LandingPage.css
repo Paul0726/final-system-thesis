@@ -1053,6 +1053,26 @@
     width: 100%;
   }
 
+  .cta-secondary {
+    gap: 15px;
+  }
+
+  .cta-buttons-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-about,
+  .btn-support {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .cta-secondary .btn-secondary {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .ratings-section {
     padding: 30px 20px;
   }
