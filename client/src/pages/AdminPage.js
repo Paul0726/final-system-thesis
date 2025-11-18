@@ -313,6 +313,7 @@ function AdminPage() {
     yPosition = addText(`Employment Classification: ${survey.employmentClassification || 'N/A'}`, margin, yPosition, maxWidth, 10);
     yPosition = addText(`Job Title: ${survey.jobTitle || 'N/A'}`, margin, yPosition, maxWidth, 10);
     yPosition = addText(`Place of Work: ${survey.placeOfWork || 'N/A'}`, margin, yPosition, maxWidth, 10);
+    yPosition = addText(`IT Field: ${survey.isITField || 'N/A'}`, margin, yPosition, maxWidth, 10);
     yPosition = addText(`Monthly Income: ${survey.monthlyIncome || 'N/A'}`, margin, yPosition, maxWidth, 10);
     yPosition = addText(`Additional Revenue Sources: ${survey.additionalRevenueSources || 'N/A'}`, margin, yPosition, maxWidth, 10);
     yPosition += 5;
@@ -851,6 +852,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
               <p><strong>Employment Classification:</strong> {survey.employmentClassification || 'N/A'}</p>
               <p><strong>Job Title:</strong> {survey.jobTitle || 'N/A'}</p>
               <p><strong>Place of Work:</strong> {survey.placeOfWork || 'N/A'}</p>
+              <p><strong>IT Field:</strong> {survey.isITField || 'N/A'}</p>
               <p><strong>Monthly Income:</strong> {survey.monthlyIncome || 'N/A'}</p>
               <p><strong>Additional Revenue Sources:</strong> {survey.additionalRevenueSources || 'N/A'}</p>
             </div>
