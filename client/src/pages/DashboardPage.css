@@ -321,6 +321,29 @@
   transform: translateY(-2px);
 }
 
+/* AGGRESSIVE MOBILE OPTIMIZATIONS - Simplify chart cards */
+@media (max-width: 768px) {
+  .chart-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    padding: 15px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    transition: none !important;
+  }
+  
+  .chart-card:hover {
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .chart-card h2 {
+    font-size: 1.2rem !important;
+    margin-bottom: 8px !important;
+  }
+}
+
 .chart-card h2 {
   color: #11823b;
   font-size: 1.5rem;

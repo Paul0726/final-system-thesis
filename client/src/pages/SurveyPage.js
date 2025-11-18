@@ -11,6 +11,24 @@ function SurveyPage() {
   const [showAlumniModal, setShowAlumniModal] = useState(true);
   const [isAlumni, setIsAlumni] = useState('');
   const [interestedAlumni, setInterestedAlumni] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Detect mobile for performance optimization
+  React.useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isAndroid = /android/i.test(userAgent);
+      setIsMobile(isAndroid || window.innerWidth < 768);
+    };
+    checkMobile();
+    const handleResize = () => {
+      let timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(checkMobile, 150);
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   const [formData, setFormData] = useState({
     // A. Individual Information
