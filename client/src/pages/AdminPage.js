@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { StarRating } from '../utils/helpers';
 import jsPDF from 'jspdf';
+import { useDebounce } from '../utils/debounce';
 import './AdminPage.css';
 
 const API_URL = process.env.NODE_ENV === 'production' 
   ? '/api' 
   : 'http://localhost:3000/api';
+
+// Pagination constants for performance
+const ITEMS_PER_PAGE = 20; // Show 20 items per page for better performance
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +26,10 @@ function AdminPage() {
   const [filterStatus, setFilterStatus] = useState('');
   const [sortBy, setSortBy] = useState('year'); // 'year', 'name', 'gender'
   const [filterGender, setFilterGender] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Debounce search term for better performance (300ms delay)
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   useEffect(() => {
     // Check if already authenticated
@@ -116,61 +124,77 @@ function AdminPage() {
     }
   };
 
-  // Extract last name for sorting
-  const getLastName = (name) => {
+  // Extract last name for sorting (memoized)
+  const getLastName = useCallback((name) => {
     if (!name) return '';
     const parts = name.trim().split(' ');
     return parts[parts.length - 1] || '';
-  };
+  }, []);
 
-  const filteredSurveys = surveys
-    .filter(survey => {
-      const matchesSearch = !searchTerm || 
-        (survey.name && survey.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (survey.emailAddress && survey.emailAddress.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      // Determine status from isEmployed and employmentNature
-      let surveyStatus = '';
-      if (survey.isEmployed === 'Yes') {
-        if (survey.employmentNature === 'Self-Employed') {
-          surveyStatus = 'Self-Employed';
-        } else if (survey.employmentNature === 'Further Studies') {
-          surveyStatus = 'Further Studies';
-        } else if (survey.employmentNature === 'Government Sector' || survey.employmentNature === 'Private Sector') {
-          surveyStatus = 'Employed';
-        } else {
-          surveyStatus = 'Employed';
+  // Memoize filtered and sorted surveys for performance
+  const filteredSurveys = useMemo(() => {
+    return surveys
+      .filter(survey => {
+        const matchesSearch = !debouncedSearchTerm || 
+          (survey.name && survey.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())) ||
+          (survey.emailAddress && survey.emailAddress.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
+        
+        // Determine status from isEmployed and employmentNature
+        let surveyStatus = '';
+        if (survey.isEmployed === 'Yes') {
+          if (survey.employmentNature === 'Self-Employed') {
+            surveyStatus = 'Self-Employed';
+          } else if (survey.employmentNature === 'Further Studies') {
+            surveyStatus = 'Further Studies';
+          } else if (survey.employmentNature === 'Government Sector' || survey.employmentNature === 'Private Sector') {
+            surveyStatus = 'Employed';
+          } else {
+            surveyStatus = 'Employed';
+          }
+        } else if (survey.isEmployed === 'No' || survey.employmentNature === 'Not Currently Employed') {
+          surveyStatus = 'Unemployed';
         }
-      } else if (survey.isEmployed === 'No' || survey.employmentNature === 'Not Currently Employed') {
-        surveyStatus = 'Unemployed';
-      }
-      
-      const matchesStatus = !filterStatus || surveyStatus === filterStatus || !surveyStatus;
-      const matchesGender = !filterGender || (survey.sex && survey.sex.toLowerCase() === filterGender.toLowerCase());
-      
-      return matchesSearch && matchesStatus && matchesGender;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'year') {
-        // Sort by graduation year (newest first, 2018-2024)
-        const yearA = parseInt(a.schoolYearGraduated) || 0;
-        const yearB = parseInt(b.schoolYearGraduated) || 0;
-        return yearB - yearA; // Descending (newest first)
-      } else if (sortBy === 'name') {
-        // Sort alphabetically by last name
-        const lastNameA = getLastName(a.name).toLowerCase();
-        const lastNameB = getLastName(b.name).toLowerCase();
-        return lastNameA.localeCompare(lastNameB);
-      } else if (sortBy === 'gender') {
-        // Sort by gender (Male first, then Female)
-        const genderA = (a.sex || '').toLowerCase();
-        const genderB = (b.sex || '').toLowerCase();
-        if (genderA === 'male' && genderB !== 'male') return -1;
-        if (genderA !== 'male' && genderB === 'male') return 1;
+        
+        const matchesStatus = !filterStatus || surveyStatus === filterStatus || !surveyStatus;
+        const matchesGender = !filterGender || (survey.sex && survey.sex.toLowerCase() === filterGender.toLowerCase());
+        
+        return matchesSearch && matchesStatus && matchesGender;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'year') {
+          // Sort by graduation year (newest first, 2018-2024)
+          const yearA = parseInt(a.schoolYearGraduated) || 0;
+          const yearB = parseInt(b.schoolYearGraduated) || 0;
+          return yearB - yearA; // Descending (newest first)
+        } else if (sortBy === 'name') {
+          // Sort alphabetically by last name
+          const lastNameA = getLastName(a.name).toLowerCase();
+          const lastNameB = getLastName(b.name).toLowerCase();
+          return lastNameA.localeCompare(lastNameB);
+        } else if (sortBy === 'gender') {
+          // Sort by gender (Male first, then Female)
+          const genderA = (a.sex || '').toLowerCase();
+          const genderB = (b.sex || '').toLowerCase();
+          if (genderA === 'male' && genderB !== 'male') return -1;
+          if (genderA !== 'male' && genderB === 'male') return 1;
+          return 0;
+        }
         return 0;
-      }
-      return 0;
-    });
+      });
+  }, [surveys, debouncedSearchTerm, filterStatus, filterGender, sortBy, getLastName]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredSurveys.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedSurveys = useMemo(() => {
+    return filteredSurveys.slice(startIndex, endIndex);
+  }, [filteredSurveys, startIndex, endIndex]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm, filterStatus, filterGender, sortBy]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -605,18 +629,72 @@ function AdminPage() {
               </button>
             </div>
           ) : (
-            <div className="surveys-list">
-              {filteredSurveys.map((survey, index) => (
-                <SurveyCard 
-                  key={survey.id || index} 
-                  survey={survey} 
-                  index={index} 
-                  onDelete={handleDelete} 
-                  getStatusColor={getStatusColor}
-                  onDownloadPDF={generatePDF}
-                />
-              ))}
-            </div>
+            <>
+              <div className="surveys-list">
+                {paginatedSurveys.map((survey, index) => (
+                  <SurveyCard 
+                    key={survey.id || index} 
+                    survey={survey} 
+                    index={index} 
+                    onDelete={handleDelete} 
+                    getStatusColor={getStatusColor}
+                    onDownloadPDF={generatePDF}
+                  />
+                ))}
+              </div>
+              
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="pagination" style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginTop: '30px',
+                  flexWrap: 'wrap'
+                }}>
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    style={{
+                      padding: '8px 16px',
+                      border: '1px solid #11823b',
+                      background: currentPage === 1 ? '#f0f0f0' : 'white',
+                      color: currentPage === 1 ? '#999' : '#11823b',
+                      borderRadius: '8px',
+                      cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                      fontSize: '14px'
+                    }}
+                  >
+                    Previous
+                  </button>
+                  
+                  <span style={{ 
+                    padding: '8px 16px',
+                    color: '#11823b',
+                    fontWeight: '500'
+                  }}>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    style={{
+                      padding: '8px 16px',
+                      border: '1px solid #11823b',
+                      background: currentPage === totalPages ? '#f0f0f0' : 'white',
+                      color: currentPage === totalPages ? '#999' : '#11823b',
+                      borderRadius: '8px',
+                      cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                      fontSize: '14px'
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -639,8 +717,8 @@ function AdminPage() {
   );
 }
 
-// Survey Card Component
-function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
+// Survey Card Component (Memoized for performance)
+const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
   const [expanded, setExpanded] = useState(false);
   
   // Determine status
@@ -806,7 +884,7 @@ function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) 
       )}
     </div>
   );
-}
+});
 
 export default AdminPage;
 

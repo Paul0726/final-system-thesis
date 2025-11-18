@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './SurveyPage.css';
@@ -71,15 +71,15 @@ function SurveyPage() {
   const [accountPassword, setAccountPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-  };
+  }, []);
 
-  const handleRatingChange = (section, question, value) => {
+  const handleRatingChange = useCallback((section, question, value) => {
     setFormData(prev => ({
       ...prev,
       ratings: {
@@ -90,30 +90,32 @@ function SurveyPage() {
         }
       }
     }));
-  };
+  }, []);
 
-  const handleTrainingChange = (index, field, value) => {
-    const newTrainings = [...formData.trainings];
-    newTrainings[index][field] = value;
-    setFormData(prev => ({
-      ...prev,
-      trainings: newTrainings
-    }));
-  };
+  const handleTrainingChange = useCallback((index, field, value) => {
+    setFormData(prev => {
+      const newTrainings = [...prev.trainings];
+      newTrainings[index][field] = value;
+      return {
+        ...prev,
+        trainings: newTrainings
+      };
+    });
+  }, []);
 
-  const addTraining = () => {
+  const addTraining = useCallback(() => {
     setFormData(prev => ({
       ...prev,
       trainings: [...prev.trainings, { title: '', duration: '', trainer: '' }]
     }));
-  };
+  }, []);
 
-  const removeTraining = (index) => {
+  const removeTraining = useCallback((index) => {
     setFormData(prev => ({
       ...prev,
       trainings: prev.trainings.filter((_, i) => i !== index)
     }));
-  };
+  }, []);
 
   const handleAlumniModal = () => {
     if (isAlumni === 'Yes') {

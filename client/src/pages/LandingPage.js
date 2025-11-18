@@ -212,35 +212,70 @@ function LandingPage() {
           <div className="developers-grid">
             <div className="developer-card">
               <div className="developer-image">
-                <img src="/John Paul Dequilla.jpg" alt="John Paul Dequilla" />
+                <img 
+                  src="/John Paul Dequilla.jpg" 
+                  alt="John Paul Dequilla" 
+                  loading="lazy"
+                  decoding="async"
+                  width="150"
+                  height="150"
+                />
               </div>
               <h3>John Paul Dequilla</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
               <div className="developer-image">
-                <img src="/Marc Paul Adarlo.jpg" alt="Marc Paul Adarlo" />
+                <img 
+                  src="/Marc Paul Adarlo.jpg" 
+                  alt="Marc Paul Adarlo" 
+                  loading="lazy"
+                  decoding="async"
+                  width="150"
+                  height="150"
+                />
               </div>
               <h3>Marc Paul Adarlo</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
               <div className="developer-image">
-                <img src="/Arben Antonio.jpg" alt="Arben Antonio" />
+                <img 
+                  src="/Arben Antonio.jpg" 
+                  alt="Arben Antonio" 
+                  loading="lazy"
+                  decoding="async"
+                  width="150"
+                  height="150"
+                />
               </div>
               <h3>Arben Antonio</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
               <div className="developer-image">
-                <img src="/Angel Bert Guiral.jpg" alt="Angel Bert Guiral" />
+                <img 
+                  src="/Angel Bert Guiral.jpg" 
+                  alt="Angel Bert Guiral" 
+                  loading="lazy"
+                  decoding="async"
+                  width="150"
+                  height="150"
+                />
               </div>
               <h3>Angel Bert Guiral</h3>
               <p className="developer-role">Developer</p>
             </div>
             <div className="developer-card">
               <div className="developer-image">
-                <img src="/Lucky Lim Arielle.jpg" alt="Lucky Arielle Lim" />
+                <img 
+                  src="/Lucky Lim Arielle.jpg" 
+                  alt="Lucky Arielle Lim" 
+                  loading="lazy"
+                  decoding="async"
+                  width="150"
+                  height="150"
+                />
               </div>
               <h3>Lucky Arielle Lim</h3>
               <p className="developer-role">Developer</p>
