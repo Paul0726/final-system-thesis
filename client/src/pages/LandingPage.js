@@ -65,27 +65,31 @@ function LandingPage() {
               </Link>
               <p className="cta-subtext">It only takes 5-10 minutes to complete</p>
               <div className="cta-secondary">
-                <Link to="/about" className="btn-about">
-                  <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                  </svg>
-                  About System & Manual
-                </Link>
-                <Link to="/technical-support" className="btn-support">
-                  <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    <line x1="9" y1="10" x2="15" y2="10"></line>
-                    <line x1="9" y1="14" x2="13" y2="14"></line>
-                  </svg>
-                  Technical Support
-                </Link>
-                <Link to="/dashboard" className="btn-secondary">
-                  View Dashboard
-                </Link>
-                <Link to="/login" className="btn-secondary" style={{ marginTop: '15px' }}>
-                  Access My Dashboard
-                </Link>
+                <div className="cta-buttons-row">
+                  <Link to="/about" className="btn-about">
+                    <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    About System & Manual
+                  </Link>
+                  <Link to="/technical-support" className="btn-support">
+                    <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      <line x1="9" y1="10" x2="15" y2="10"></line>
+                      <line x1="9" y1="14" x2="13" y2="14"></line>
+                    </svg>
+                    Technical Support
+                  </Link>
+                </div>
+                <div className="cta-buttons-row">
+                  <Link to="/dashboard" className="btn-secondary">
+                    View Dashboard
+                  </Link>
+                  <Link to="/login" className="btn-secondary">
+                    Access My Dashboard
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

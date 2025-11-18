@@ -238,13 +238,30 @@
   margin-top: 25px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
   align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.cta-buttons-row:first-child {
+  margin-bottom: 5px;
 }
 
 .cta-secondary .btn-secondary {
   padding: 14px 40px;
   font-size: 1rem;
+  min-width: 200px;
 }
 
 .btn-about {
@@ -266,6 +283,9 @@
   border: none;
   cursor: pointer;
   text-align: center;
+  min-width: 220px;
+  flex: 1;
+  max-width: 300px;
 }
 
 .btn-icon {
@@ -301,6 +321,9 @@
   border: none;
   cursor: pointer;
   text-align: center;
+  min-width: 220px;
+  flex: 1;
+  max-width: 300px;
 }
 
 .btn-support:hover {
