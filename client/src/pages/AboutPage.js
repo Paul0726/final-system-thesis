@@ -128,6 +128,28 @@ function AboutPage() {
                   <li>Search and filter survey data</li>
                   <li>Export data to PDF</li>
                   <li>Manage survey records</li>
+                  <li>View and manage technical support reports</li>
+                  <li>Receive email notifications for new reports</li>
+                </ul>
+              </div>
+
+              <div className="feature-item">
+                <h3>
+                  <svg className="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    <line x1="9" y1="10" x2="15" y2="10"></line>
+                    <line x1="9" y1="14" x2="13" y2="14"></line>
+                  </svg>
+                  Technical Support
+                </h3>
+                <p>Report issues and get help:</p>
+                <ul>
+                  <li>Submit technical support reports</li>
+                  <li>Report bugs, performance issues, or feature requests</li>
+                  <li>Set priority levels (Low, Medium, High, Critical)</li>
+                  <li>Reports sent to admin email automatically</li>
+                  <li>Admin can view all reports in Admin Panel</li>
+                  <li>Notification badge shows unread reports count</li>
                 </ul>
               </div>
             </div>

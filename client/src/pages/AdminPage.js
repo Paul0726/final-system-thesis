@@ -28,6 +28,12 @@ function AdminPage() {
   const [filterGender, setFilterGender] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   
+  // Technical Support Reports
+  const [showReports, setShowReports] = useState(false);
+  const [reports, setReports] = useState([]);
+  const [reportsLoading, setReportsLoading] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  
   // Debounce search term for better performance (300ms delay)
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -37,8 +43,73 @@ function AdminPage() {
     if (authToken === 'admin-token') {
       setIsAuthenticated(true);
       fetchSurveys();
+      fetchReportsCount();
     }
   }, []);
+
+  // Fetch unread reports count
+  const fetchReportsCount = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/technical-support/reports/count`);
+      if (response.data.success) {
+        setUnreadCount(response.data.count || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching reports count:', error);
+    }
+  };
+
+  // Fetch all reports
+  const fetchReports = async () => {
+    try {
+      setReportsLoading(true);
+      const response = await axios.get(`${API_URL}/technical-support/reports`);
+      if (response.data.success) {
+        setReports(response.data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      alert('Failed to fetch reports');
+    } finally {
+      setReportsLoading(false);
+    }
+  };
+
+  // Mark report as read
+  const markAsRead = async (reportId) => {
+    try {
+      await axios.put(`${API_URL}/technical-support/reports/${reportId}/read`);
+      setReports(reports.map(r => r.id === reportId ? { ...r, is_read: true } : r));
+      setUnreadCount(Math.max(0, unreadCount - 1));
+    } catch (error) {
+      console.error('Error marking report as read:', error);
+    }
+  };
+
+  // Delete report
+  const deleteReport = async (reportId) => {
+    if (!window.confirm('Are you sure you want to delete this report?')) return;
+    
+    try {
+      await axios.delete(`${API_URL}/technical-support/reports/${reportId}`);
+      const wasUnread = reports.find(r => r.id === reportId && !r.is_read);
+      setReports(reports.filter(r => r.id !== reportId));
+      if (wasUnread) {
+        setUnreadCount(Math.max(0, unreadCount - 1));
+      }
+    } catch (error) {
+      console.error('Error deleting report:', error);
+      alert('Failed to delete report');
+    }
+  };
+
+  // Toggle reports view
+  const toggleReports = () => {
+    if (!showReports) {
+      fetchReports();
+    }
+    setShowReports(!showReports);
+  };
 
   const handleSendOTP = async () => {
     try {
@@ -700,6 +771,17 @@ function AdminPage() {
         </div>
 
         <div className="admin-actions">
+          <button onClick={toggleReports} className="btn-reports">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <line x1="9" y1="10" x2="15" y2="10"></line>
+              <line x1="9" y1="14" x2="13" y2="14"></line>
+            </svg>
+            Technical Support Reports
+            {unreadCount > 0 && (
+              <span className="notification-badge">{unreadCount}</span>
+            )}
+          </button>
           <Link to="/dashboard" className="btn-secondary">View Dashboard</Link>
           <button onClick={fetchSurveys} className="btn-refresh">🔄 Refresh</button>
           {filteredSurveys.length > 0 && (
@@ -713,6 +795,88 @@ function AdminPage() {
             </button>
           )}
         </div>
+
+        {/* Technical Support Reports Section */}
+        {showReports && (
+          <div className="reports-section">
+            <div className="reports-header">
+              <h2>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" style={{ marginRight: '10px', verticalAlign: 'middle' }}>
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  <line x1="9" y1="10" x2="15" y2="10"></line>
+                  <line x1="9" y1="14" x2="13" y2="14"></line>
+                </svg>
+                Technical Support Reports
+                {unreadCount > 0 && (
+                  <span className="reports-count">({unreadCount} unread)</span>
+                )}
+              </h2>
+              <button onClick={fetchReports} className="btn-refresh-small" title="Refresh reports">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <polyline points="1 20 1 14 7 14"></polyline>
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+              </button>
+            </div>
+
+            {reportsLoading ? (
+              <div className="loading-message">Loading reports...</div>
+            ) : reports.length === 0 ? (
+              <div className="empty-message">No reports yet.</div>
+            ) : (
+              <div className="reports-list">
+                {reports.map((report) => (
+                  <div key={report.id} className={`report-card ${!report.is_read ? 'unread' : ''}`}>
+                    <div className="report-header">
+                      <div className="report-meta">
+                        <div className="report-priority">
+                          <span className={`priority-badge priority-${report.priority?.toLowerCase() || 'medium'}`}>
+                            {report.priority || 'Medium'}
+                          </span>
+                          <span className="report-type">{report.issue_type}</span>
+                        </div>
+                        <div className="report-date">
+                          {new Date(report.created_at).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      </div>
+                      {!report.is_read && (
+                        <span className="unread-indicator">New</span>
+                      )}
+                    </div>
+                    <div className="report-content">
+                      <h3>{report.subject}</h3>
+                      <div className="report-info">
+                        <p><strong>Reporter:</strong> {report.name}</p>
+                        <p><strong>Email:</strong> {report.email}</p>
+                      </div>
+                      <div className="report-description">
+                        <strong>Description:</strong>
+                        <p>{report.description}</p>
+                      </div>
+                    </div>
+                    <div className="report-actions">
+                      {!report.is_read && (
+                        <button onClick={() => markAsRead(report.id)} className="btn-mark-read">
+                          Mark as Read
+                        </button>
+                      )}
+                      <button onClick={() => deleteReport(report.id)} className="btn-delete-report">
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

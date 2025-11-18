@@ -110,10 +110,26 @@ if (process.env.DATABASE_URL) {
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_rating INTEGER`);
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS school_feedback TEXT`);
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_feedback TEXT`);
-          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_it_field VARCHAR(10)`);
-        } catch (err) {
-          // Columns might already exist, ignore error
-        }
+        await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_it_field VARCHAR(10)`);
+      } catch (err) {
+        // Columns might already exist, ignore error
+      }
+
+      // Create technical_support_reports table
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS technical_support_reports (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          subject VARCHAR(500) NOT NULL,
+          issue_type VARCHAR(100) NOT NULL,
+          description TEXT NOT NULL,
+          priority VARCHAR(20) DEFAULT 'Medium',
+          is_read BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      console.log('✅ Technical support reports table created/verified');
 
         // Create users table for respondent accounts (AFTER surveys table)
         console.log('🔄 Creating users table...');

@@ -1068,6 +1068,28 @@ app.post('/api/technical-support', async (req, res) => {
       priority: priority || 'Medium'
     };
 
+    // Save to database if available
+    if (useDatabase && pool) {
+      try {
+        await pool.query(
+          `INSERT INTO technical_support_reports (name, email, subject, issue_type, description, priority)
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [
+            reportData.name,
+            reportData.email,
+            reportData.subject,
+            reportData.issueType,
+            reportData.description,
+            reportData.priority
+          ]
+        );
+        console.log('✅ Technical support report saved to database');
+      } catch (dbError) {
+        console.error('Error saving report to database:', dbError);
+        // Continue to send email even if database save fails
+      }
+    }
+
     const result = await sendTechnicalSupportReport(reportData);
 
     if (result.success) {
@@ -1087,6 +1109,77 @@ app.post('/api/technical-support', async (req, res) => {
       success: false,
       message: 'An error occurred while processing your report. Please try again later.'
     });
+  }
+});
+
+// Get Technical Support Reports (Admin only)
+app.get('/api/technical-support/reports', async (req, res) => {
+  try {
+    if (useDatabase && pool) {
+      const result = await pool.query(
+        `SELECT id, name, email, subject, issue_type, description, priority, is_read, created_at
+         FROM technical_support_reports
+         ORDER BY created_at DESC`
+      );
+      res.json({ success: true, data: result.rows });
+    } else {
+      res.json({ success: true, data: [] });
+    }
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch reports' });
+  }
+});
+
+// Get unread reports count (Admin only)
+app.get('/api/technical-support/reports/count', async (req, res) => {
+  try {
+    if (useDatabase && pool) {
+      const result = await pool.query(
+        `SELECT COUNT(*) as count FROM technical_support_reports WHERE is_read = FALSE`
+      );
+      res.json({ success: true, count: parseInt(result.rows[0].count) });
+    } else {
+      res.json({ success: true, count: 0 });
+    }
+  } catch (error) {
+    console.error('Error fetching reports count:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch reports count' });
+  }
+});
+
+// Mark report as read (Admin only)
+app.put('/api/technical-support/reports/:id/read', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (useDatabase && pool) {
+      await pool.query(
+        `UPDATE technical_support_reports SET is_read = TRUE WHERE id = $1`,
+        [id]
+      );
+      res.json({ success: true, message: 'Report marked as read' });
+    } else {
+      res.json({ success: true, message: 'Report marked as read' });
+    }
+  } catch (error) {
+    console.error('Error marking report as read:', error);
+    res.status(500).json({ success: false, message: 'Failed to mark report as read' });
+  }
+});
+
+// Delete report (Admin only)
+app.delete('/api/technical-support/reports/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (useDatabase && pool) {
+      await pool.query(`DELETE FROM technical_support_reports WHERE id = $1`, [id]);
+      res.json({ success: true, message: 'Report deleted successfully' });
+    } else {
+      res.json({ success: true, message: 'Report deleted successfully' });
+    }
+  } catch (error) {
+    console.error('Error deleting report:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete report' });
   }
 });
 
