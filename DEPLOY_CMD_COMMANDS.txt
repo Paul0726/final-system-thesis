@@ -1,0 +1,101 @@
+========================================
+  EXACT CMD COMMANDS PARA SA DEPLOYMENT
+========================================
+
+I-copy at i-paste mo lang ang commands na ito sa Command Prompt (CMD):
+
+
+STEP 1: Pumunta sa project folder
+-----------------------------------
+cd /d "C:\final system thesis"
+
+
+STEP 2: I-check ang current status
+-----------------------------------
+git status
+
+
+STEP 3: I-add ang lahat ng changes
+-----------------------------------
+git add .
+
+
+STEP 4: I-commit ang changes
+-----------------------------------
+git commit -m "Deploy: Latest system updates and changes"
+
+
+STEP 5: I-push sa GitHub (Railway auto-deploy)
+-----------------------------------
+git push origin main
+
+
+STEP 6: I-verify na na-push
+-----------------------------------
+git log --oneline -1
+
+
+========================================
+  ALTERNATIVE: KUNG WALANG CHANGES
+========================================
+
+Kung walang changes, gumawa ng empty commit:
+
+STEP 1: Pumunta sa project folder
+-----------------------------------
+cd /d "C:\final system thesis"
+
+
+STEP 2: Gumawa ng empty commit
+-----------------------------------
+git commit --allow-empty -m "Force deploy: Trigger Railway redeployment"
+
+
+STEP 3: I-push sa GitHub
+-----------------------------------
+git push origin main
+
+
+========================================
+  ONE-LINER COMMAND (LAHAT SA ISANG COMMAND)
+========================================
+
+I-copy mo lang ito at i-paste sa CMD:
+
+cd /d "C:\final system thesis" && git add . && git commit -m "Deploy: Latest updates" && git push origin main
+
+
+========================================
+  KUNG MAY ERROR SA PUSH
+========================================
+
+Kung may error, i-try mo ito:
+
+git push origin main --force
+
+(WARNING: --force ay overwrite ang remote, gamitin lang kung sure ka)
+
+
+========================================
+  VERIFY DEPLOYMENT
+========================================
+
+Pagkatapos mag-push, i-check mo:
+
+1. Pumunta sa: https://railway.app
+2. I-click ang project mo
+3. I-check ang "Deployments" tab
+4. Dapat may bagong deployment na nagsimula
+
+
+========================================
+  TROUBLESHOOTING
+========================================
+
+Kung hindi pa rin nag-deploy:
+
+1. I-check ang Railway Settings → Source
+2. I-verify ang GitHub connection
+3. I-reconnect ang GitHub integration
+4. I-try manual redeploy sa Railway dashboard
+
