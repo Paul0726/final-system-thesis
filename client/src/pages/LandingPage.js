@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { maskName, StarRating } from '../utils/helpers';
+import { StarRating } from '../utils/helpers';
 import './LandingPage.css';
 
 const API_URL = process.env.NODE_ENV === 'production' 
@@ -10,37 +10,22 @@ const API_URL = process.env.NODE_ENV === 'production'
 
 function LandingPage() {
   const [showPrivacy, setShowPrivacy] = useState(false);
-  const [feedbacks, setFeedbacks] = useState([]);
   const [ratings, setRatings] = useState({ school: 0, system: 0, total: 0 });
 
   useEffect(() => {
-    fetchFeedbacks();
+    fetchRatings();
   }, []);
 
-  const fetchFeedbacks = async () => {
+  const fetchRatings = async () => {
     try {
       const response = await axios.get(`${API_URL}/feedbacks`, {
         timeout: 10000 // 10 second timeout for slow connections
       });
       if (response.data.success) {
-        const feedbacksData = response.data.data || [];
-        
-        // Additional client-side filtering to ensure unique feedbacks per email
-        // Limit to last 50 feedbacks for better performance on low-end devices
-        const limitedFeedbacks = feedbacksData.slice(0, 50);
-        const uniqueFeedbacks = limitedFeedbacks.reduce((acc, feedback) => {
-          const email = feedback.email?.toLowerCase() || feedback.name?.toLowerCase();
-          if (!acc.find(f => (f.email?.toLowerCase() || f.name?.toLowerCase()) === email)) {
-            acc.push(feedback);
-          }
-          return acc;
-        }, []);
-        
-        setFeedbacks(uniqueFeedbacks);
         setRatings(response.data.ratings || { school: 0, system: 0, total: 0 });
       }
     } catch (error) {
-      console.error('Error fetching feedbacks:', error);
+      console.error('Error fetching ratings:', error);
     }
   };
 
@@ -153,80 +138,6 @@ function LandingPage() {
             </div>
           </div>
         </div>
-
-        {/* Feedback Section */}
-        {feedbacks.length > 0 && (
-          <div className="feedback-section">
-            <h2>What Our Graduates Say</h2>
-            <div className="feedback-scroll-container">
-              <div className="feedback-scroll">
-                {feedbacks.map((feedback, index) => (
-                  <div key={feedback.email || index} className="feedback-card">
-                    <div className="feedback-header">
-                      <h4>{maskName(feedback.name)}</h4>
-                      <div className="feedback-ratings">
-                        {feedback.schoolRating > 0 && (
-                          <span className="feedback-rating">
-                            School: <StarRating rating={feedback.schoolRating} size="small" />
-                          </span>
-                        )}
-                        {feedback.systemRating > 0 && (
-                          <span className="feedback-rating">
-                            System: <StarRating rating={feedback.systemRating} size="small" />
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {feedback.schoolFeedback && (
-                      <div className="feedback-item">
-                        <strong>About School:</strong>
-                        <p>"{feedback.schoolFeedback}"</p>
-                      </div>
-                    )}
-                    {feedback.systemFeedback && (
-                      <div className="feedback-item">
-                        <strong>About System:</strong>
-                        <p>"{feedback.systemFeedback}"</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {/* Only duplicate for seamless scroll if there are multiple unique feedbacks */}
-                {feedbacks.length > 1 && feedbacks.map((feedback, index) => (
-                  <div key={`dup-${feedback.email || index}`} className="feedback-card">
-                    <div className="feedback-header">
-                      <h4>{maskName(feedback.name)}</h4>
-                      <div className="feedback-ratings">
-                        {feedback.schoolRating > 0 && (
-                          <span className="feedback-rating">
-                            School: <StarRating rating={feedback.schoolRating} size="small" />
-                          </span>
-                        )}
-                        {feedback.systemRating > 0 && (
-                          <span className="feedback-rating">
-                            System: <StarRating rating={feedback.systemRating} size="small" />
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {feedback.schoolFeedback && (
-                      <div className="feedback-item">
-                        <strong>About School:</strong>
-                        <p>"{feedback.schoolFeedback}"</p>
-                      </div>
-                    )}
-                    {feedback.systemFeedback && (
-                      <div className="feedback-item">
-                        <strong>About System:</strong>
-                        <p>"{feedback.systemFeedback}"</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Developers Section */}
         <div className="developers-section">
