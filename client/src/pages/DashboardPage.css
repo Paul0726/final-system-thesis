@@ -267,6 +267,37 @@
     0 0 0 1px rgba(17, 130, 59, 0.1);
 }
 
+/* AGGRESSIVE MOBILE OPTIMIZATIONS - Simplify stat cards */
+@media (max-width: 768px) {
+  .stat-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    padding: 15px !important;
+    gap: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: none !important;
+  }
+  
+  .stat-card::before {
+    display: none !important;
+  }
+  
+  .stat-card:hover {
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .stat-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .stat-info h3 {
+    font-size: 1.5rem !important;
+  }
+}
+
 .stat-icon {
   width: 48px;
   height: 48px;
