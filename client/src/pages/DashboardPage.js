@@ -13,6 +13,20 @@ const COLORS = ['#11823b', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'
 function DashboardPage() {
   const [stats, setStats] = useState(null);
   const [surveys, setSurveys] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detect mobile device for performance optimization
+    const checkMobile = () => {
+      const isMobileDevice = window.innerWidth < 768 || 
+                            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     fetchStats();
@@ -267,105 +281,165 @@ function DashboardPage() {
             </div>
           )}
 
-          {/* Income Distribution */}
+          {/* Income Distribution - Mobile: Simple List, Desktop: Chart */}
           {incomeChartData.length > 0 && (
             <div className="chart-card">
               <h2>Monthly Income Distribution</h2>
-              <ResponsiveContainer width="100%" height={window.innerWidth < 768 ? 250 : 300}>
-                <LineChart data={incomeChartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="name" 
-                    angle={window.innerWidth < 768 ? -90 : -45} 
-                    textAnchor="end" 
-                    height={window.innerWidth < 768 ? 120 : 100}
-                    tick={{ fontSize: window.innerWidth < 768 ? 10 : 12 }}
-                  />
-                  <YAxis tick={{ fontSize: window.innerWidth < 768 ? 10 : 12 }} />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#11823b" strokeWidth={2} name="Number of Graduates" />
-                </LineChart>
-              </ResponsiveContainer>
+              {isMobile ? (
+                <div className="mobile-data-list">
+                  {incomeChartData.map((item, index) => (
+                    <div key={index} className="data-item">
+                      <div className="data-label">{item.name}</div>
+                      <div className="data-value"><strong>{item.value}</strong></div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={incomeChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="value" stroke="#11823b" strokeWidth={2} name="Number of Graduates" />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
             </div>
           )}
 
-          {/* Course Graduated */}
+          {/* Course Graduated - Mobile: Simple List, Desktop: Chart */}
           {courseChartData.length > 0 && (
             <div className="chart-card">
               <h2>Course Graduated Distribution</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={courseChartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#3b82f6" name="Number of Graduates" />
-                </BarChart>
-              </ResponsiveContainer>
+              {isMobile ? (
+                <div className="mobile-data-list">
+                  {courseChartData.map((item, index) => (
+                    <div key={index} className="data-item">
+                      <div className="data-label">{item.name}</div>
+                      <div className="data-value"><strong>{item.value}</strong></div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={courseChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#3b82f6" name="Number of Graduates" />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
             </div>
           )}
 
-          {/* Year Graduated */}
+          {/* Year Graduated - Mobile: Simple List, Desktop: Chart */}
           {yearChartData.length > 0 && (
             <div className="chart-card">
               <h2>Graduation Year Distribution</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={yearChartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} name="Number of Graduates" />
-                </LineChart>
-              </ResponsiveContainer>
+              {isMobile ? (
+                <div className="mobile-data-list">
+                  {yearChartData.map((item, index) => (
+                    <div key={index} className="data-item">
+                      <div className="data-label">{item.name}</div>
+                      <div className="data-value"><strong>{item.value}</strong></div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={yearChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} name="Number of Graduates" />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
             </div>
           )}
 
-          {/* Average Ratings */}
+          {/* Average Ratings - Mobile: Simple List, Desktop: Chart */}
           {ratingData.length > 0 && (
             <div className="chart-card">
               <h2>Average Satisfaction Ratings</h2>
               <p className="chart-subtitle">Scale: 1 (Disagree) to 5 (Strongly Agree)</p>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={ratingData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                  <YAxis domain={[0, 5]} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="value" fill="#f59e0b" name="Average Rating" />
-                </BarChart>
-              </ResponsiveContainer>
+              {isMobile ? (
+                <div className="mobile-data-list">
+                  {ratingData.map((item, index) => (
+                    <div key={index} className="data-item">
+                      <div className="data-label">{item.name}</div>
+                      <div className="data-value">
+                        <strong>{item.value.toFixed(2)}</strong> / 5.00
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={ratingData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis domain={[0, 5]} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#f59e0b" name="Average Rating" />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
             </div>
           )}
 
-          {/* Employment Nature */}
+          {/* Employment Nature - Mobile: Simple List, Desktop: Chart */}
           {employmentNatureChartData.length > 0 && (
             <div className="chart-card">
               <h2>Employment Nature Distribution</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={employmentNatureChartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {employmentNatureChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
+              {isMobile ? (
+                <div className="mobile-data-list">
+                  {employmentNatureChartData.map((item, index) => {
+                    const total = employmentNatureChartData.reduce((sum, d) => sum + d.value, 0);
+                    const percentage = ((item.value / total) * 100).toFixed(0);
+                    return (
+                      <div key={index} className="data-item">
+                        <div className="data-label">
+                          <span className="data-color" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                          <span>{item.name}</span>
+                        </div>
+                        <div className="data-value">
+                          <strong>{item.value}</strong> ({percentage}%)
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={employmentNatureChartData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {employmentNatureChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
             </div>
           )}
         </div>
