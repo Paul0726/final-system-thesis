@@ -495,52 +495,61 @@ function DashboardPage() {
           )}
 
           {/* IT Field Distribution - Mobile: Simple List, Desktop: Chart */}
-          {itFieldChartData.length > 0 && (
-            <div className="chart-card">
-              <h2>IT Field Distribution</h2>
-              <p className="chart-subtitle">Based on current employment status</p>
-              {isMobile ? (
-                <div className="mobile-data-list">
-                  {itFieldChartData.map((item, index) => {
-                    const total = itFieldChartData.reduce((sum, d) => sum + d.value, 0);
-                    const percentage = ((item.value / total) * 100).toFixed(0);
-                    return (
-                      <div key={index} className="data-item">
-                        <div className="data-label">
-                          <span className="data-color" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                          <span>{item.name}</span>
+          <div className="chart-card">
+            <h2>IT Field Distribution</h2>
+            <p className="chart-subtitle">Based on current employment status</p>
+            {itFieldChartData.length > 0 ? (
+              <>
+                {isMobile ? (
+                  <div className="mobile-data-list">
+                    {itFieldChartData.map((item, index) => {
+                      const total = itFieldChartData.reduce((sum, d) => sum + d.value, 0);
+                      const percentage = ((item.value / total) * 100).toFixed(0);
+                      return (
+                        <div key={index} className="data-item">
+                          <div className="data-label">
+                            <span className="data-color" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                            <span>{item.name}</span>
+                          </div>
+                          <div className="data-value">
+                            <strong>{item.value}</strong> ({percentage}%)
+                          </div>
                         </div>
-                        <div className="data-value">
-                          <strong>{item.value}</strong> ({percentage}%)
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={itFieldChartData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {itFieldChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
-            </div>
-          )}
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={itFieldChartData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={100}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {itFieldChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '40px 20px', color: '#6b7280' }}>
+                <p>No data available yet.</p>
+                <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>
+                  IT Field data will appear here once surveys with employment information are submitted.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="dashboard-actions">
