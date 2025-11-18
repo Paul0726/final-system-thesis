@@ -58,6 +58,7 @@ function SurveyPage() {
     employmentClassification: '',
     jobTitle: '',
     placeOfWork: '',
+    isITField: '',
     monthlyIncome: '',
     additionalRevenueSources: '',
     
@@ -652,6 +653,14 @@ function SurveyPage() {
                   <div className="radio-group">
                     <label><input type="radio" name="placeOfWork" value="Local" checked={formData.placeOfWork === 'Local'} onChange={handleChange} required /> Local</label>
                     <label><input type="radio" name="placeOfWork" value="Abroad" checked={formData.placeOfWork === 'Abroad'} onChange={handleChange} required /> Abroad</label>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>1.e. Is your work in the IT (Information Technology) field? *</label>
+                  <div className="radio-group">
+                    <label><input type="radio" name="isITField" value="Yes" checked={formData.isITField === 'Yes'} onChange={handleChange} required /> Yes</label>
+                    <label><input type="radio" name="isITField" value="No" checked={formData.isITField === 'No'} onChange={handleChange} required /> No</label>
                   </div>
                 </div>
               </>

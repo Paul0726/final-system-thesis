@@ -419,6 +419,7 @@ app.get('/api/surveys', async (req, res) => {
         employmentClassification: row.employment_classification,
         jobTitle: row.job_title,
         placeOfWork: row.place_of_work,
+        isITField: row.is_it_field,
         monthlyIncome: row.monthly_income,
         additionalRevenueSources: row.additional_revenue_sources,
         ratings: typeof row.ratings === 'string' ? JSON.parse(row.ratings) : row.ratings,
@@ -511,9 +512,9 @@ app.post('/api/survey', async (req, res) => {
           civil_status, sex, current_location, course_graduated, school_year_graduated,
           max_academic_achievement, trainings, civil_service, let_license, other_prc_license,
           professional_organizations, is_employed, employment_nature, employment_classification,
-          job_title, place_of_work, monthly_income, additional_revenue_sources, ratings,
+          job_title, place_of_work, is_it_field, monthly_income, additional_revenue_sources, ratings,
           is_alumni, interested_alumni, school_rating, system_rating, school_feedback, system_feedback
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
         RETURNING *
       `, [
         surveyData.name,
@@ -538,6 +539,7 @@ app.post('/api/survey', async (req, res) => {
         surveyData.employmentClassification || null,
         surveyData.jobTitle || null,
         surveyData.placeOfWork || null,
+        surveyData.isITField || null,
         surveyData.monthlyIncome || null,
         surveyData.additionalRevenueSources || null,
         JSON.stringify(surveyData.ratings || {}),
@@ -759,10 +761,10 @@ app.put('/api/survey/:id', async (req, res) => {
           trainings = $13, civil_service = $14, let_license = $15, other_prc_license = $16,
           professional_organizations = $17, is_employed = $18, employment_nature = $19,
           employment_classification = $20, job_title = $21, place_of_work = $22,
-          monthly_income = $23, additional_revenue_sources = $24, ratings = $25,
-          is_alumni = $26, interested_alumni = $27, school_rating = $28, system_rating = $29,
-          school_feedback = $30, system_feedback = $31
-        WHERE id = $32
+          is_it_field = $23, monthly_income = $24, additional_revenue_sources = $25, ratings = $26,
+          is_alumni = $27, interested_alumni = $28, school_rating = $29, system_rating = $30,
+          school_feedback = $31, system_feedback = $32
+        WHERE id = $33
         RETURNING *
       `, [
         surveyData.name,
@@ -787,6 +789,7 @@ app.put('/api/survey/:id', async (req, res) => {
         surveyData.employmentClassification || null,
         surveyData.jobTitle || null,
         surveyData.placeOfWork || null,
+        surveyData.isITField || null,
         surveyData.monthlyIncome || null,
         surveyData.additionalRevenueSources || null,
         JSON.stringify(surveyData.ratings || {}),

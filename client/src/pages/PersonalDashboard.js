@@ -273,6 +273,14 @@ function PersonalDashboard() {
               <input type="text" name="placeOfWork" value={formData.placeOfWork || ''} onChange={handleChange} />
             </div>
             <div className="form-group">
+              <label>Is your work in the IT (Information Technology) field?</label>
+              <select name="isITField" value={formData.isITField || ''} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div className="form-group">
               <label>Monthly Income</label>
               <select name="monthlyIncome" value={formData.monthlyIncome || ''} onChange={handleChange}>
                 <option value="">Select...</option>
