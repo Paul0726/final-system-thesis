@@ -254,30 +254,50 @@ function DashboardPage() {
         )}
 
         <div className="charts-grid">
-          {/* Employment Status Pie Chart */}
+          {/* Employment Status - Mobile: Simple List, Desktop: Chart */}
           {employmentData.length > 0 && (
             <div className="chart-card">
               <h2>Employment Status Distribution</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={employmentData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {employmentData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
+              {isMobile ? (
+                <div className="mobile-data-list">
+                  {employmentData.map((item, index) => {
+                    const total = employmentData.reduce((sum, d) => sum + d.value, 0);
+                    const percentage = ((item.value / total) * 100).toFixed(0);
+                    return (
+                      <div key={index} className="data-item">
+                        <div className="data-label">
+                          <span className="data-color" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                          <span>{item.name}</span>
+                        </div>
+                        <div className="data-value">
+                          <strong>{item.value}</strong> ({percentage}%)
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={employmentData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {employmentData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
             </div>
           )}
 
