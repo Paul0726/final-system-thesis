@@ -9,6 +9,7 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const PersonalDashboard = lazy(() => import('./pages/PersonalDashboard'));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 
 // Loading component
 const LoadingSpinner = () => (
@@ -57,6 +58,7 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/personal-dashboard" element={<PersonalDashboard />} />
             <Route path="/login" element={<UserLogin />} />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </Suspense>
       </div>

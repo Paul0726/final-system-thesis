@@ -65,6 +65,9 @@ function LandingPage() {
               </Link>
               <p className="cta-subtext">It only takes 5-10 minutes to complete</p>
               <div className="cta-secondary">
+                <Link to="/about" className="btn-about">
+                  📖 About System & Manual
+                </Link>
                 <Link to="/dashboard" className="btn-secondary">
                   View Dashboard
                 </Link>
