@@ -282,6 +282,35 @@
   background: linear-gradient(135deg, #f59e0b 0%, #f59e0b 100%);
 }
 
+.btn-support {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 16px 48px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 
+    0 4px 14px rgba(59, 130, 246, 0.4),
+    0 0 0 0 rgba(59, 130, 246, 0);
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-support:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 24px rgba(59, 130, 246, 0.5),
+    0 0 0 4px rgba(59, 130, 246, 0.1);
+  background: linear-gradient(135deg, #3b82f6 0%, #3b82f6 100%);
+}
+
 .landing-features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { sendOTP, verifyOTP } = require('./auth');
+const { sendOTP, verifyOTP, sendTechnicalSupportReport } = require('./auth');
 require('dotenv').config();
 
 // Try to load database, fallback to in-memory if not available
@@ -1034,6 +1034,59 @@ app.get('/api/stats', async (req, res) => {
       furtherStudies: surveys.filter(s => s.employmentNature === 'Further Studies').length
     };
     res.json({ success: true, data: stats });
+  }
+});
+
+// Technical Support Report Route
+app.post('/api/technical-support', async (req, res) => {
+  try {
+    const { name, email, subject, issueType, description, priority } = req.body;
+
+    // Validation
+    if (!name || !email || !subject || !issueType || !description) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please fill in all required fields'
+      });
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address'
+      });
+    }
+
+    const reportData = {
+      name: name.trim(),
+      email: email.trim(),
+      subject: subject.trim(),
+      issueType: issueType.trim(),
+      description: description.trim(),
+      priority: priority || 'Medium'
+    };
+
+    const result = await sendTechnicalSupportReport(reportData);
+
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Your report has been submitted successfully. We will review it and contact you if needed.'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: result.message || 'Failed to submit report. Please try again later.'
+      });
+    }
+  } catch (error) {
+    console.error('Error processing technical support report:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while processing your report. Please try again later.'
+    });
   }
 });
 
