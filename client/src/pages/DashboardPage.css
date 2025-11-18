@@ -47,6 +47,19 @@
   .chart-card {
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
+    padding: 20px !important;
+  }
+  
+  /* Reduce chart complexity on mobile */
+  .charts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  /* Optimize chart rendering on mobile */
+  .recharts-wrapper {
+    transform: translateZ(0);
+    will-change: transform;
   }
 }
 

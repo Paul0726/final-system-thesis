@@ -19,12 +19,16 @@ function LandingPage() {
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get(`${API_URL}/feedbacks`);
+      const response = await axios.get(`${API_URL}/feedbacks`, {
+        timeout: 10000 // 10 second timeout for slow connections
+      });
       if (response.data.success) {
         const feedbacksData = response.data.data || [];
         
         // Additional client-side filtering to ensure unique feedbacks per email
-        const uniqueFeedbacks = feedbacksData.reduce((acc, feedback) => {
+        // Limit to last 50 feedbacks for better performance on low-end devices
+        const limitedFeedbacks = feedbacksData.slice(0, 50);
+        const uniqueFeedbacks = limitedFeedbacks.reduce((acc, feedback) => {
           const email = feedback.email?.toLowerCase() || feedback.name?.toLowerCase();
           if (!acc.find(f => (f.email?.toLowerCase() || f.name?.toLowerCase()) === email)) {
             acc.push(feedback);

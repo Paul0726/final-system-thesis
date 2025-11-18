@@ -21,7 +21,9 @@ function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get(`${API_URL}/stats`);
+      const response = await axios.get(`${API_URL}/stats`, {
+        timeout: 10000 // 10 second timeout for slow connections
+      });
       setStats(response.data.data);
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -30,7 +32,9 @@ function DashboardPage() {
 
   const fetchSurveys = async () => {
     try {
-      const response = await axios.get(`${API_URL}/surveys`);
+      const response = await axios.get(`${API_URL}/surveys`, {
+        timeout: 15000 // 15 second timeout for slow connections
+      });
       setSurveys(response.data.data || []);
     } catch (error) {
       console.error('Error fetching surveys:', error);
@@ -267,11 +271,17 @@ function DashboardPage() {
           {incomeChartData.length > 0 && (
             <div className="chart-card">
               <h2>Monthly Income Distribution</h2>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={window.innerWidth < 768 ? 250 : 300}>
                 <LineChart data={incomeChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                  <YAxis />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={window.innerWidth < 768 ? -90 : -45} 
+                    textAnchor="end" 
+                    height={window.innerWidth < 768 ? 120 : 100}
+                    tick={{ fontSize: window.innerWidth < 768 ? 10 : 12 }}
+                  />
+                  <YAxis tick={{ fontSize: window.innerWidth < 768 ? 10 : 12 }} />
                   <Tooltip />
                   <Legend />
                   <Line type="monotone" dataKey="value" stroke="#11823b" strokeWidth={2} name="Number of Graduates" />
