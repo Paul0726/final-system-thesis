@@ -142,11 +142,22 @@
 }
 
 .survey-header h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   font-size: clamp(2rem, 5vw, 2.8rem);
   margin-bottom: 15px;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   font-weight: 700;
   letter-spacing: -0.5px;
+}
+
+.survey-header-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: white;
 }
 
 .survey-header p {

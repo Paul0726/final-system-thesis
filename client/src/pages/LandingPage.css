@@ -255,7 +255,10 @@
   font-size: 1.1rem;
   font-weight: 600;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   box-shadow: 
     0 4px 14px rgba(245, 158, 11, 0.4),
     0 0 0 0 rgba(245, 158, 11, 0);
@@ -263,6 +266,12 @@
   border: none;
   cursor: pointer;
   text-align: center;
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .btn-about:hover {

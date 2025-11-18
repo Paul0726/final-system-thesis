@@ -89,7 +89,33 @@
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+.section-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: #11823b;
+}
+
+.inline-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+  color: #11823b;
+  flex-shrink: 0;
+}
+
+.feature-item h3,
+.security-item h3,
+.usage-item h3,
+.note-item h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .section-content {

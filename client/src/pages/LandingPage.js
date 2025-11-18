@@ -66,7 +66,11 @@ function LandingPage() {
               <p className="cta-subtext">It only takes 5-10 minutes to complete</p>
               <div className="cta-secondary">
                 <Link to="/about" className="btn-about">
-                  📖 About System & Manual
+                  <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                  About System & Manual
                 </Link>
                 <Link to="/dashboard" className="btn-secondary">
                   View Dashboard
