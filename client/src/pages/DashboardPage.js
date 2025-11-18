@@ -177,6 +177,23 @@ function DashboardPage() {
     }));
   }, [surveys]);
 
+  // IT Field Distribution Chart Data
+  const itFieldChartData = useMemo(() => {
+    const itFieldData = surveys.reduce((acc, survey) => {
+      // Only count if they are employed
+      if (survey.isEmployed === 'Yes' && survey.isITField) {
+        const field = survey.isITField === 'Yes' ? 'IT Field' : 'Non-IT Field';
+        acc[field] = (acc[field] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    return Object.entries(itFieldData).map(([name, value]) => ({
+      name,
+      value
+    }));
+  }, [surveys]);
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-container">
