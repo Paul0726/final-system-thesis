@@ -1,6 +1,6 @@
 {
   "name": "final-system-thesis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Web application for thesis system",
   "main": "server/index.js",
   "scripts": {
