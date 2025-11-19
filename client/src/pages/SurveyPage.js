@@ -118,33 +118,6 @@ function SurveyPage() {
     }));
   }, []);
 
-  const handleAlumniModal = useCallback(() => {
-    if (isAlumni === 'Yes') {
-      setFormData(prev => ({ ...prev, isAlumni: 'Yes' }));
-      setShowAlumniModal(false);
-    } else if (isAlumni === 'No') {
-      if (interestedAlumni === '') {
-        // Show interested question - don't close modal yet
-        return;
-      } else if (interestedAlumni === 'Yes') {
-        setFormData(prev => ({ 
-          ...prev, 
-          isAlumni: 'No',
-          interestedAlumni: 'Yes'
-        }));
-        alert('Thank you for your interest! Your survey responses will be used as your alumni information.');
-        setShowAlumniModal(false);
-      } else if (interestedAlumni === 'No') {
-        setFormData(prev => ({ 
-          ...prev, 
-          isAlumni: 'No',
-          interestedAlumni: 'No'
-        }));
-        setShowAlumniModal(false);
-      }
-    }
-  }, [isAlumni, interestedAlumni]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
