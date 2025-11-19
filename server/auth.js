@@ -3,6 +3,7 @@ require('dotenv').config();
 
 // Store OTPs temporarily (in production, use Redis or database)
 const otpStore = {};
+const passwordResetOTPStore = {};
 
 // Create transporter for Gmail
 const transporter = nodemailer.createTransport({
@@ -179,7 +180,74 @@ const sendTechnicalSupportReport = async (reportData) => {
   }
 };
 
-module.exports = { sendOTP, verifyOTP, sendTechnicalSupportReport };
+// Send OTP for password reset
+const sendPasswordResetOTP = async (email) => {
+  try {
+    const otp = generateOTP();
+    passwordResetOTPStore[email] = {
+      otp: otp,
+      expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
+    };
+
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      to: email,
+      subject: 'Password Reset OTP - BSIT Graduate Tracer System',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #11823b; margin-bottom: 20px;">Password Reset OTP</h2>
+            <p style="color: #374151; font-size: 16px; line-height: 1.6;">
+              You requested to reset your password. Your OTP code is:
+            </p>
+            <div style="background-color: #dce3c7; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+              <h1 style="color: #11823b; font-size: 36px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+            </div>
+            <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
+              This OTP will expire in 10 minutes. Do not share this code with anyone.
+            </p>
+            <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
+              If you did not request a password reset, please ignore this email and your password will remain unchanged.
+            </p>
+          </div>
+        </div>
+      `
+    });
+
+    return { success: true, message: 'Password reset OTP sent successfully' };
+  } catch (error) {
+    console.error('Error sending password reset OTP:', error);
+    return { success: false, message: 'Failed to send password reset OTP' };
+  }
+};
+
+// Verify password reset OTP
+const verifyPasswordResetOTP = (email, otp) => {
+  const stored = passwordResetOTPStore[email];
+  
+  if (!stored) {
+    return { success: false, message: 'OTP not found. Please request a new one.' };
+  }
+
+  if (Date.now() > stored.expiresAt) {
+    delete passwordResetOTPStore[email];
+    return { success: false, message: 'OTP has expired. Please request a new one.' };
+  }
+
+  if (stored.otp !== otp) {
+    return { success: false, message: 'Invalid OTP. Please try again.' };
+  }
+
+  // OTP verified, but don't delete it yet - keep it for password reset
+  return { success: true, message: 'OTP verified successfully' };
+};
+
+// Clear password reset OTP after successful password reset
+const clearPasswordResetOTP = (email) => {
+  delete passwordResetOTPStore[email];
+};
+
+module.exports = { sendOTP, verifyOTP, sendTechnicalSupportReport, sendPasswordResetOTP, verifyPasswordResetOTP, clearPasswordResetOTP };
 
 
 

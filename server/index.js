@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { sendOTP, verifyOTP, sendTechnicalSupportReport } = require('./auth');
+const { sendOTP, verifyOTP, sendTechnicalSupportReport, sendPasswordResetOTP, verifyPasswordResetOTP, clearPasswordResetOTP } = require('./auth');
 require('dotenv').config();
 
 // Try to load database, fallback to in-memory if not available
@@ -214,6 +214,109 @@ app.post('/api/user/verify-otp', async (req, res) => {
   } catch (error) {
     console.error('Error verifying user OTP:', error);
     res.status(500).json({ success: false, message: 'Error verifying OTP' });
+  }
+});
+
+// Forgot Password - Send OTP
+app.post('/api/user/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+
+    if (useDatabase && pool) {
+      // Check if user exists
+      const userResult = await pool.query('SELECT id, email FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+      
+      if (userResult.rows.length === 0) {
+        // Don't reveal if email exists or not for security
+        return res.json({ success: true, message: 'If the email exists, a password reset OTP has been sent.' });
+      }
+
+      // Send password reset OTP
+      const result = await sendPasswordResetOTP(email);
+      if (result.success) {
+        res.json({ success: true, message: 'Password reset OTP sent to your email' });
+      } else {
+        res.status(500).json({ success: false, message: result.message });
+      }
+    } else {
+      res.status(503).json({ success: false, message: 'Password reset requires database. Please contact administrator.' });
+    }
+  } catch (error) {
+    console.error('Error in forgot password:', error);
+    res.status(500).json({ success: false, message: 'Error processing password reset request' });
+  }
+});
+
+// Verify Password Reset OTP (separate from login OTP)
+app.post('/api/user/verify-password-reset-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: 'Email and OTP are required' });
+    }
+
+    // Verify password reset OTP
+    const result = verifyPasswordResetOTP(email, otp);
+    if (result.success) {
+      res.json({ success: true, message: 'OTP verified successfully' });
+    } else {
+      res.status(401).json({ success: false, message: result.message });
+    }
+  } catch (error) {
+    console.error('Error verifying password reset OTP:', error);
+    res.status(500).json({ success: false, message: 'Error verifying OTP' });
+  }
+});
+
+// Verify OTP and Reset Password
+app.post('/api/user/reset-password', async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Email, OTP, and new password are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
+    }
+
+    // Verify OTP
+    const otpResult = verifyPasswordResetOTP(email, otp);
+    if (!otpResult.success) {
+      return res.status(401).json({ success: false, message: otpResult.message });
+    }
+
+    if (useDatabase && pool) {
+      // Check if user exists
+      const userResult = await pool.query('SELECT id FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+      
+      if (userResult.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      // Hash new password
+      const crypto = require('crypto');
+      const hashedPassword = crypto.createHash('sha256').update(newPassword).digest('hex');
+
+      // Update password
+      await pool.query('UPDATE users SET password = $1 WHERE LOWER(email) = LOWER($2)', [hashedPassword, email]);
+
+      // Clear the OTP after successful password reset
+      clearPasswordResetOTP(email);
+
+      res.json({ success: true, message: 'Password reset successfully. Please login with your new password.' });
+    } else {
+      res.status(503).json({ success: false, message: 'Password reset requires database. Please contact administrator.' });
+    }
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ success: false, message: 'Error resetting password' });
   }
 });
 
