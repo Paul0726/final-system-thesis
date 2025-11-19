@@ -75,6 +75,46 @@ button, a, input, select, textarea {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Global input/textarea/select text color - ensure readability */
+input, textarea, select {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
+/* Ensure all white background elements have dark text */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+textarea,
+select {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="number"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
 /* AGGRESSIVE MOBILE OPTIMIZATIONS - Disable ALL animations and effects */
 @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   html {
@@ -109,6 +149,19 @@ button, a, input, select, textarea {
   /* Disable hover effects on mobile */
   *:hover {
     transform: none !important;
+  }
+  
+  /* Ensure all input fields have readable text on mobile */
+  input, textarea, select {
+    color: #1f2937 !important;
+    background-color: #ffffff !important;
+    -webkit-text-fill-color: #1f2937 !important;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: #9ca3af !important;
   }
 }
 

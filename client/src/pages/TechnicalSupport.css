@@ -79,6 +79,7 @@
   padding: 50px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   margin-bottom: 30px;
+  color: #1f2937;
 }
 
 .support-info {
@@ -154,7 +155,14 @@
   font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.3s;
-  background: white;
+  background: white !important;
+  color: #1f2937 !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
 }
 
 .form-group input:focus,

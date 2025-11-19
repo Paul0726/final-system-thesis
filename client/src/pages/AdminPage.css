@@ -181,6 +181,7 @@
     0 0 0 1px rgba(255, 255, 255, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.9);
+  color: #1f2937;
 }
 
 .search-bar {
@@ -205,6 +206,13 @@
   border-radius: 10px;
   font-size: 1rem;
   transition: all 0.3s;
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+.search-input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
 }
 
 .search-input:focus {
@@ -225,7 +233,8 @@
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   font-size: 1rem;
-  background: white;
+  background: white !important;
+  color: #1f2937 !important;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 200px;
@@ -266,6 +275,7 @@
   border: 1px solid rgba(255, 255, 255, 0.9);
   margin-bottom: 30px;
   overflow-x: auto;
+  color: #1f2937;
 }
 
 .surveys-table {
@@ -721,6 +731,7 @@
     0 4px 16px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(255, 255, 255, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: #1f2937;
 }
 
 .survey-card::before {
