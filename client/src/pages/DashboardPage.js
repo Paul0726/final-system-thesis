@@ -74,8 +74,7 @@ function DashboardPage() {
     return stats ? [
     { name: 'Employed', value: stats.employed || 0 },
     { name: 'Self-Employed', value: stats.selfEmployed || 0 },
-    { name: 'Unemployed', value: stats.unemployed || 0 },
-    { name: 'LET License', value: stats.letLicense || 0 }
+    { name: 'Unemployed', value: stats.unemployed || 0 }
   ].filter(item => item.value > 0) : [];
   }, [stats]);
 
