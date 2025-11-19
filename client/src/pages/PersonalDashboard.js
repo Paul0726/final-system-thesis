@@ -119,6 +119,7 @@ function PersonalDashboard() {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [survey]);
 
   const handleChange = (e) => {
