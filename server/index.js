@@ -988,17 +988,18 @@ app.get('/api/stats', async (req, res) => {
       `);
       const unemployed = parseInt(unemployedResult.rows[0].count);
 
-      const furtherStudiesResult = await pool.query(`
-        SELECT COUNT(*) as count FROM surveys WHERE employment_nature = 'Further Studies'
+      const letLicenseResult = await pool.query(`
+        SELECT COUNT(*) as count FROM surveys 
+        WHERE let_license IS NOT NULL AND let_license LIKE 'Yes%'
       `);
-      const furtherStudies = parseInt(furtherStudiesResult.rows[0].count);
+      const letLicense = parseInt(letLicenseResult.rows[0].count);
 
       const stats = {
         totalGraduates,
         employed,
         selfEmployed,
         unemployed,
-        furtherStudies
+        letLicense
       };
 
       res.json({ success: true, data: stats });
@@ -1014,7 +1015,9 @@ app.get('/api/stats', async (req, res) => {
         unemployed: surveys.filter(s => {
           return s.isEmployed === 'No' || s.employmentNature === 'Not Currently Employed';
         }).length,
-        furtherStudies: surveys.filter(s => s.employmentNature === 'Further Studies').length
+        letLicense: surveys.filter(s => {
+          return s.letLicense && (s.letLicense.startsWith('Yes') || s.letLicense.toLowerCase().includes('yes'));
+        }).length
       };
       res.json({ success: true, data: stats });
     }
@@ -1031,7 +1034,9 @@ app.get('/api/stats', async (req, res) => {
       unemployed: surveys.filter(s => {
         return s.isEmployed === 'No' || s.employmentNature === 'Not Currently Employed';
       }).length,
-      furtherStudies: surveys.filter(s => s.employmentNature === 'Further Studies').length
+      letLicense: surveys.filter(s => {
+        return s.letLicense && (s.letLicense.startsWith('Yes') || s.letLicense.toLowerCase().includes('yes'));
+      }).length
     };
     res.json({ success: true, data: stats });
   }

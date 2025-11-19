@@ -216,8 +216,6 @@ function AdminPage() {
         if (survey.isEmployed === 'Yes') {
           if (survey.employmentNature === 'Self-Employed') {
             surveyStatus = 'Self-Employed';
-          } else if (survey.employmentNature === 'Further Studies') {
-            surveyStatus = 'Further Studies';
           } else if (survey.employmentNature === 'Government Sector' || survey.employmentNature === 'Private Sector') {
             surveyStatus = 'Employed';
           } else {
@@ -272,7 +270,6 @@ function AdminPage() {
     switch (status) {
       case 'Employed': return '#11823b';
       case 'Self-Employed': return '#3b82f6';
-      case 'Further Studies': return '#8b5cf6';
       case 'Unemployed': return '#f59e0b';
       default: return '#6b7280';
     }
@@ -641,7 +638,6 @@ function AdminPage() {
               <option value="">All Status</option>
               <option value="Employed">Employed</option>
               <option value="Self-Employed">Self-Employed</option>
-              <option value="Further Studies">Further Studies</option>
               <option value="Unemployed">Unemployed</option>
             </select>
             <select
@@ -892,8 +888,6 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
   if (survey.isEmployed === 'Yes') {
     if (survey.employmentNature === 'Self-Employed') {
       surveyStatus = 'Self-Employed';
-    } else if (survey.employmentNature === 'Further Studies') {
-      surveyStatus = 'Further Studies';
     } else {
       surveyStatus = 'Employed';
     }

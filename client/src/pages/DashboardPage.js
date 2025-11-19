@@ -72,11 +72,11 @@ function DashboardPage() {
   // Memoize chart data computations for better performance
   const employmentData = useMemo(() => {
     return stats ? [
-      { name: 'Employed', value: stats.employed || 0 },
-      { name: 'Self-Employed', value: stats.selfEmployed || 0 },
-      { name: 'Unemployed', value: stats.unemployed || 0 },
-      { name: 'Further Studies', value: stats.furtherStudies || 0 }
-    ].filter(item => item.value > 0) : [];
+    { name: 'Employed', value: stats.employed || 0 },
+    { name: 'Self-Employed', value: stats.selfEmployed || 0 },
+    { name: 'Unemployed', value: stats.unemployed || 0 },
+    { name: 'LET License', value: stats.letLicense || 0 }
+  ].filter(item => item.value > 0) : [];
   }, [stats]);
 
   // Function to extract numeric value from income range for sorting
@@ -92,84 +92,84 @@ function DashboardPage() {
   };
 
   const incomeChartData = useMemo(() => {
-    const incomeData = surveys.reduce((acc, survey) => {
-      if (survey.monthlyIncome) {
-        acc[survey.monthlyIncome] = (acc[survey.monthlyIncome] || 0) + 1;
-      }
-      return acc;
-    }, {});
+  const incomeData = surveys.reduce((acc, survey) => {
+    if (survey.monthlyIncome) {
+      acc[survey.monthlyIncome] = (acc[survey.monthlyIncome] || 0) + 1;
+    }
+    return acc;
+  }, {});
 
     return Object.entries(incomeData)
       .sort((a, b) => getIncomeSortValue(a[0]) - getIncomeSortValue(b[0]))
       .map(([name, value]) => ({
-        name: name.replace('₱', 'P'),
-        value
-      }));
+    name: name.replace('₱', 'P'),
+    value
+  }));
   }, [surveys]);
 
   const courseChartData = useMemo(() => {
-    const courseData = surveys.reduce((acc, survey) => {
-      if (survey.courseGraduated) {
-        const course = survey.courseGraduated.includes('Multimedia') ? 'BSIT Multimedia' :
-                       survey.courseGraduated.includes('Animation') ? 'BSIT Animation' : 
-                       survey.courseGraduated.includes('BSIT') ? 'BSIT' : survey.courseGraduated;
-        acc[course] = (acc[course] || 0) + 1;
-      }
-      return acc;
-    }, {});
+  const courseData = surveys.reduce((acc, survey) => {
+    if (survey.courseGraduated) {
+      const course = survey.courseGraduated.includes('Multimedia') ? 'BSIT Multimedia' :
+                     survey.courseGraduated.includes('Animation') ? 'BSIT Animation' : 
+                     survey.courseGraduated.includes('BSIT') ? 'BSIT' : survey.courseGraduated;
+      acc[course] = (acc[course] || 0) + 1;
+    }
+    return acc;
+  }, {});
 
     return Object.entries(courseData).map(([name, value]) => ({
+    name,
+    value
+  }));
+  }, [surveys]);
+
+  const yearChartData = useMemo(() => {
+  const yearData = surveys.reduce((acc, survey) => {
+    if (survey.schoolYearGraduated) {
+      acc[survey.schoolYearGraduated] = (acc[survey.schoolYearGraduated] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+    return Object.entries(yearData)
+    .sort((a, b) => a[0] - b[0])
+    .map(([name, value]) => ({
       name,
       value
     }));
   }, [surveys]);
 
-  const yearChartData = useMemo(() => {
-    const yearData = surveys.reduce((acc, survey) => {
-      if (survey.schoolYearGraduated) {
-        acc[survey.schoolYearGraduated] = (acc[survey.schoolYearGraduated] || 0) + 1;
-      }
-      return acc;
-    }, {});
-
-    return Object.entries(yearData)
-      .sort((a, b) => a[0] - b[0])
-      .map(([name, value]) => ({
-        name,
-        value
-      }));
-  }, [surveys]);
-
   // Calculate average ratings (memoized)
   const calculateAverageRating = useMemo(() => {
     return (section) => {
-      const ratings = surveys
-        .filter(s => s.ratings && s.ratings[section])
-        .flatMap(s => Object.values(s.ratings[section]))
-        .filter(r => r && !isNaN(parseFloat(r)))
-        .map(r => parseFloat(r));
-      
-      if (ratings.length === 0) return 0;
-      return (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2);
-    };
+    const ratings = surveys
+      .filter(s => s.ratings && s.ratings[section])
+      .flatMap(s => Object.values(s.ratings[section]))
+      .filter(r => r && !isNaN(parseFloat(r)))
+      .map(r => parseFloat(r));
+    
+    if (ratings.length === 0) return 0;
+    return (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2);
+  };
   }, [surveys]);
 
   const ratingData = useMemo(() => {
     return [
-      { name: 'Job Placement', value: parseFloat(calculateAverageRating('jobPlacement')) },
-      { name: 'IT Field', value: parseFloat(calculateAverageRating('itField')) },
-      { name: 'Competitive Edge', value: parseFloat(calculateAverageRating('competitiveEdge')) },
-      { name: 'Workplace', value: parseFloat(calculateAverageRating('workplace')) }
-    ].filter(item => item.value > 0);
+    { name: 'Job Placement', value: parseFloat(calculateAverageRating('jobPlacement')) },
+    { name: 'IT Field', value: parseFloat(calculateAverageRating('itField')) },
+    { name: 'Competitive Edge', value: parseFloat(calculateAverageRating('competitiveEdge')) },
+    { name: 'Workplace', value: parseFloat(calculateAverageRating('workplace')) }
+  ].filter(item => item.value > 0);
   }, [calculateAverageRating]);
 
   const employmentNatureChartData = useMemo(() => {
-    const employmentNatureData = surveys.reduce((acc, survey) => {
-      if (survey.employmentNature) {
-        acc[survey.employmentNature] = (acc[survey.employmentNature] || 0) + 1;
-      }
-      return acc;
-    }, {});
+  const employmentNatureData = surveys.reduce((acc, survey) => {
+    if (survey.employmentNature) {
+      acc[survey.employmentNature] = (acc[survey.employmentNature] || 0) + 1;
+    }
+    return acc;
+  }, {});
 
     return Object.entries(employmentNatureData).map(([name, value]) => ({
       name,
@@ -189,9 +189,9 @@ function DashboardPage() {
     }, {});
 
     return Object.entries(itFieldData).map(([name, value]) => ({
-      name,
-      value
-    }));
+    name,
+    value
+  }));
   }, [surveys]);
 
   return (
@@ -265,8 +265,8 @@ function DashboardPage() {
                 </svg>
               </div>
               <div className="stat-info">
-                <h3>{stats.furtherStudies || 0}</h3>
-                <p>Further Studies</p>
+                <h3>{stats.letLicense || 0}</h3>
+                <p>LET License</p>
               </div>
             </div>
             <div className="stat-card">
@@ -308,26 +308,26 @@ function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={employmentData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {employmentData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={employmentData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {employmentData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
               )}
             </div>
           )}
@@ -346,16 +346,16 @@ function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={incomeChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
                     <Line type="monotone" dataKey="value" stroke="#11823b" strokeWidth={2} name="Number of Graduates" />
                   </LineChart>
-                </ResponsiveContainer>
+              </ResponsiveContainer>
               )}
             </div>
           )}
@@ -374,16 +374,16 @@ function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={courseChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#3b82f6" name="Number of Graduates" />
-                  </BarChart>
-                </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={courseChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="value" fill="#3b82f6" name="Number of Graduates" />
+                </BarChart>
+              </ResponsiveContainer>
               )}
             </div>
           )}
@@ -402,16 +402,16 @@ function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={yearChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} name="Number of Graduates" />
-                  </LineChart>
-                </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={yearChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} name="Number of Graduates" />
+                </LineChart>
+              </ResponsiveContainer>
               )}
             </div>
           )}
@@ -433,16 +433,16 @@ function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={ratingData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                    <YAxis domain={[0, 5]} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#f59e0b" name="Average Rating" />
-                  </BarChart>
-                </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={ratingData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                  <YAxis domain={[0, 5]} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="value" fill="#f59e0b" name="Average Rating" />
+                </BarChart>
+              </ResponsiveContainer>
               )}
             </div>
           )}
@@ -470,26 +470,26 @@ function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={employmentNatureChartData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {employmentNatureChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={employmentNatureChartData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {employmentNatureChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
               )}
             </div>
           )}

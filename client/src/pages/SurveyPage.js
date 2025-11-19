@@ -96,11 +96,11 @@ function SurveyPage() {
   const handleTrainingChange = useCallback((index, field, value) => {
     setFormData(prev => {
       const newTrainings = [...prev.trainings];
-      newTrainings[index][field] = value;
+    newTrainings[index][field] = value;
       return {
-        ...prev,
-        trainings: newTrainings
-      };
+      ...prev,
+      trainings: newTrainings
+  };
     });
   }, []);
 
@@ -118,7 +118,7 @@ function SurveyPage() {
     }));
   }, []);
 
-  const handleAlumniModal = () => {
+  const handleAlumniModal = useCallback(() => {
     if (isAlumni === 'Yes') {
       setFormData(prev => ({ ...prev, isAlumni: 'Yes' }));
       setShowAlumniModal(false);
@@ -143,7 +143,7 @@ function SurveyPage() {
         setShowAlumniModal(false);
       }
     }
-  };
+  }, [isAlumni, interestedAlumni]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -270,17 +270,26 @@ function SurveyPage() {
                 <p>Are you already an alumni of this institution?</p>
                 <div className="modal-buttons">
                   <button 
+                    type="button"
                     className="btn-primary" 
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setIsAlumni('Yes');
-                      handleAlumniModal();
+                      setTimeout(() => {
+                        setFormData(prev => ({ ...prev, isAlumni: 'Yes' }));
+                        setShowAlumniModal(false);
+                      }, 0);
                     }}
                   >
                     Yes, I am an Alumni
                   </button>
                   <button 
+                    type="button"
                     className="btn-secondary" 
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setIsAlumni('No');
                       setInterestedAlumni('pending');
                     }}
@@ -295,19 +304,40 @@ function SurveyPage() {
                 <p className="modal-note">If yes, your survey responses will be used as your alumni information.</p>
                 <div className="modal-buttons">
                   <button 
+                    type="button"
                     className="btn-primary" 
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setInterestedAlumni('Yes');
-                      handleAlumniModal();
+                      setTimeout(() => {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          isAlumni: 'No',
+                          interestedAlumni: 'Yes'
+                        }));
+                        alert('Thank you for your interest! Your survey responses will be used as your alumni information.');
+                        setShowAlumniModal(false);
+                      }, 0);
                     }}
                   >
                     Yes, I'm Interested
                   </button>
                   <button 
+                    type="button"
                     className="btn-secondary" 
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setInterestedAlumni('No');
-                      handleAlumniModal();
+                      setTimeout(() => {
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          isAlumni: 'No',
+                          interestedAlumni: 'No'
+                        }));
+                        setShowAlumniModal(false);
+                      }, 0);
                     }}
                   >
                     No, Not Interested
