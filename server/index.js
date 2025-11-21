@@ -1210,7 +1210,7 @@ app.delete('/api/surveys/:id', authenticateAdmin, async (req, res) => {
   }
 });
 
-// Get statistics
+// Get statistics (Public endpoint - returns aggregated data only, no personal info)
 app.get('/api/stats', async (req, res) => {
   try {
     if (useDatabase && pool) {
@@ -1240,12 +1240,113 @@ app.get('/api/stats', async (req, res) => {
       `);
       const letLicense = parseInt(letLicenseResult.rows[0].count);
 
+      // Get aggregated chart data (no personal information)
+      const incomeResult = await pool.query(`
+        SELECT monthly_income, COUNT(*) as count 
+        FROM surveys 
+        WHERE monthly_income IS NOT NULL 
+        GROUP BY monthly_income
+        ORDER BY monthly_income
+      `);
+      const incomeChartData = incomeResult.rows.map(row => ({
+        name: row.monthly_income?.replace('₱', 'P') || row.monthly_income,
+        value: parseInt(row.count)
+      }));
+
+      const courseResult = await pool.query(`
+        SELECT course_graduated, COUNT(*) as count 
+        FROM surveys 
+        WHERE course_graduated IS NOT NULL 
+        GROUP BY course_graduated
+      `);
+      const courseChartData = courseResult.rows.map(row => {
+        const course = row.course_graduated?.includes('Multimedia') ? 'BSIT Multimedia' :
+                      row.course_graduated?.includes('Animation') ? 'BSIT Animation' : 
+                      row.course_graduated?.includes('BSIT') ? 'BSIT' : row.course_graduated;
+        return { name: course, value: parseInt(row.count) };
+      });
+
+      const yearResult = await pool.query(`
+        SELECT school_year_graduated, COUNT(*) as count 
+        FROM surveys 
+        WHERE school_year_graduated IS NOT NULL 
+        GROUP BY school_year_graduated
+        ORDER BY school_year_graduated
+      `);
+      const yearChartData = yearResult.rows.map(row => ({
+        name: row.school_year_graduated,
+        value: parseInt(row.count)
+      }));
+
+      const employmentNatureResult = await pool.query(`
+        SELECT employment_nature, COUNT(*) as count 
+        FROM surveys 
+        WHERE employment_nature IS NOT NULL 
+        GROUP BY employment_nature
+      `);
+      const employmentNatureChartData = employmentNatureResult.rows.map(row => ({
+        name: row.employment_nature,
+        value: parseInt(row.count)
+      }));
+
+      const itFieldResult = await pool.query(`
+        SELECT is_it_field, COUNT(*) as count 
+        FROM surveys 
+        WHERE is_employed = 'Yes' AND is_it_field IS NOT NULL 
+        GROUP BY is_it_field
+      `);
+      const itFieldChartData = itFieldResult.rows.map(row => ({
+        name: row.is_it_field === 'Yes' ? 'IT Field' : 'Non-IT Field',
+        value: parseInt(row.count)
+      }));
+
+      // Get ratings data (aggregated only)
+      const ratingsResult = await pool.query(`
+        SELECT ratings 
+        FROM surveys 
+        WHERE ratings IS NOT NULL
+      `);
+      
+      const calculateAverageRating = (section) => {
+        const ratings = ratingsResult.rows
+          .map(row => {
+            try {
+              const ratingData = typeof row.ratings === 'string' ? JSON.parse(row.ratings) : row.ratings;
+              return ratingData?.[section];
+            } catch {
+              return null;
+            }
+          })
+          .filter(r => r)
+          .flatMap(r => Object.values(r))
+          .filter(r => r && !isNaN(parseFloat(r)))
+          .map(r => parseFloat(r));
+        
+        if (ratings.length === 0) return 0;
+        return parseFloat((ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2));
+      };
+
+      const ratingData = [
+        { name: 'Job Placement', value: calculateAverageRating('jobPlacement') },
+        { name: 'IT Field', value: calculateAverageRating('itField') },
+        { name: 'Competitive Edge', value: calculateAverageRating('competitiveEdge') },
+        { name: 'Workplace', value: calculateAverageRating('workplace') }
+      ].filter(item => item.value > 0);
+
       const stats = {
         totalGraduates,
         employed,
         selfEmployed,
         unemployed,
-        letLicense
+        letLicense,
+        charts: {
+          income: incomeChartData,
+          course: courseChartData,
+          year: yearChartData,
+          employmentNature: employmentNatureChartData,
+          itField: itFieldChartData,
+          ratings: ratingData
+        }
       };
 
       res.json({ success: true, data: stats });
@@ -1263,7 +1364,15 @@ app.get('/api/stats', async (req, res) => {
         }).length,
         letLicense: surveys.filter(s => {
           return s.letLicense && (s.letLicense.startsWith('Yes') || s.letLicense.toLowerCase().includes('yes'));
-        }).length
+        }).length,
+        charts: {
+          income: [],
+          course: [],
+          year: [],
+          employmentNature: [],
+          itField: [],
+          ratings: []
+        }
       };
       res.json({ success: true, data: stats });
     }
@@ -1282,7 +1391,15 @@ app.get('/api/stats', async (req, res) => {
       }).length,
       letLicense: surveys.filter(s => {
         return s.letLicense && (s.letLicense.startsWith('Yes') || s.letLicense.toLowerCase().includes('yes'));
-      }).length
+      }).length,
+      charts: {
+        income: [],
+        course: [],
+        year: [],
+        employmentNature: [],
+        itField: [],
+        ratings: []
+      }
     };
     res.json({ success: true, data: stats });
   }

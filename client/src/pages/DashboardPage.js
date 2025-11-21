@@ -12,7 +12,6 @@ const COLORS = ['#11823b', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'
 
 function DashboardPage() {
   const [stats, setStats] = useState(null);
-  const [surveys, setSurveys] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -44,7 +43,6 @@ function DashboardPage() {
 
   useEffect(() => {
     fetchStats();
-    fetchSurveys();
   }, []);
 
   const fetchStats = async () => {
@@ -58,17 +56,6 @@ function DashboardPage() {
     }
   };
 
-  const fetchSurveys = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/surveys`, {
-        timeout: 15000 // 15 second timeout for slow connections
-      });
-      setSurveys(response.data.data || []);
-    } catch (error) {
-      console.error('Error fetching surveys:', error);
-    }
-  };
-
   // Memoize chart data computations for better performance
   const employmentData = useMemo(() => {
     return stats ? [
@@ -78,120 +65,31 @@ function DashboardPage() {
   ].filter(item => item.value > 0) : [];
   }, [stats]);
 
-  // Function to extract numeric value from income range for sorting
-  const getIncomeSortValue = (incomeRange) => {
-    if (!incomeRange) return 0;
-    if (incomeRange.includes('Less than')) return 0;
-    if (incomeRange.includes('and above')) {
-      const match = incomeRange.match(/₱([\d,]+)/);
-      return match ? parseInt(match[1].replace(/,/g, '')) : 999999;
-    }
-    const match = incomeRange.match(/₱([\d,]+)/);
-    return match ? parseInt(match[1].replace(/,/g, '')) : 0;
-  };
-
+  // Use chart data from stats API (no need to fetch individual surveys)
   const incomeChartData = useMemo(() => {
-  const incomeData = surveys.reduce((acc, survey) => {
-    if (survey.monthlyIncome) {
-      acc[survey.monthlyIncome] = (acc[survey.monthlyIncome] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
-    return Object.entries(incomeData)
-      .sort((a, b) => getIncomeSortValue(a[0]) - getIncomeSortValue(b[0]))
-      .map(([name, value]) => ({
-    name: name.replace('₱', 'P'),
-    value
-  }));
-  }, [surveys]);
+    return stats?.charts?.income || [];
+  }, [stats]);
 
   const courseChartData = useMemo(() => {
-  const courseData = surveys.reduce((acc, survey) => {
-    if (survey.courseGraduated) {
-      const course = survey.courseGraduated.includes('Multimedia') ? 'BSIT Multimedia' :
-                     survey.courseGraduated.includes('Animation') ? 'BSIT Animation' : 
-                     survey.courseGraduated.includes('BSIT') ? 'BSIT' : survey.courseGraduated;
-      acc[course] = (acc[course] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
-    return Object.entries(courseData).map(([name, value]) => ({
-    name,
-    value
-  }));
-  }, [surveys]);
+    return stats?.charts?.course || [];
+  }, [stats]);
 
   const yearChartData = useMemo(() => {
-  const yearData = surveys.reduce((acc, survey) => {
-    if (survey.schoolYearGraduated) {
-      acc[survey.schoolYearGraduated] = (acc[survey.schoolYearGraduated] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
-    return Object.entries(yearData)
-    .sort((a, b) => a[0] - b[0])
-    .map(([name, value]) => ({
-      name,
-      value
-    }));
-  }, [surveys]);
-
-  // Calculate average ratings (memoized)
-  const calculateAverageRating = useMemo(() => {
-    return (section) => {
-    const ratings = surveys
-      .filter(s => s.ratings && s.ratings[section])
-      .flatMap(s => Object.values(s.ratings[section]))
-      .filter(r => r && !isNaN(parseFloat(r)))
-      .map(r => parseFloat(r));
-    
-    if (ratings.length === 0) return 0;
-    return (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2);
-  };
-  }, [surveys]);
+    return stats?.charts?.year || [];
+  }, [stats]);
 
   const ratingData = useMemo(() => {
-    return [
-    { name: 'Job Placement', value: parseFloat(calculateAverageRating('jobPlacement')) },
-    { name: 'IT Field', value: parseFloat(calculateAverageRating('itField')) },
-    { name: 'Competitive Edge', value: parseFloat(calculateAverageRating('competitiveEdge')) },
-    { name: 'Workplace', value: parseFloat(calculateAverageRating('workplace')) }
-  ].filter(item => item.value > 0);
-  }, [calculateAverageRating]);
+    return stats?.charts?.ratings || [];
+  }, [stats]);
 
   const employmentNatureChartData = useMemo(() => {
-  const employmentNatureData = surveys.reduce((acc, survey) => {
-    if (survey.employmentNature) {
-      acc[survey.employmentNature] = (acc[survey.employmentNature] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
-    return Object.entries(employmentNatureData).map(([name, value]) => ({
-      name,
-      value
-    }));
-  }, [surveys]);
+    return stats?.charts?.employmentNature || [];
+  }, [stats]);
 
   // IT Field Distribution Chart Data
   const itFieldChartData = useMemo(() => {
-    const itFieldData = surveys.reduce((acc, survey) => {
-      // Only count if they are employed
-      if (survey.isEmployed === 'Yes' && survey.isITField) {
-        const field = survey.isITField === 'Yes' ? 'IT Field' : 'Non-IT Field';
-        acc[field] = (acc[field] || 0) + 1;
-      }
-      return acc;
-    }, {});
-
-    return Object.entries(itFieldData).map(([name, value]) => ({
-    name,
-    value
-  }));
-  }, [surveys]);
+    return stats?.charts?.itField || [];
+  }, [stats]);
 
   return (
     <div className="dashboard-page">
