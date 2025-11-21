@@ -1246,12 +1246,30 @@ app.get('/api/stats', async (req, res) => {
         FROM surveys 
         WHERE monthly_income IS NOT NULL 
         GROUP BY monthly_income
-        ORDER BY monthly_income
       `);
-      const incomeChartData = incomeResult.rows.map(row => ({
-        name: row.monthly_income?.replace('₱', 'P') || row.monthly_income,
-        value: parseInt(row.count)
-      }));
+      
+      // Function to extract numeric value from income range for sorting
+      const getIncomeSortValue = (incomeRange) => {
+        if (!incomeRange) return 0;
+        const range = incomeRange.replace('₱', 'P');
+        if (range.includes('Less than')) return 0;
+        if (range.includes('and above')) {
+          const match = range.match(/P([\d,]+)/);
+          return match ? parseInt(match[1].replace(/,/g, '')) : 999999;
+        }
+        // Extract first number from range (e.g., "P10,000 – P19,999" -> 10000)
+        const match = range.match(/P([\d,]+)/);
+        return match ? parseInt(match[1].replace(/,/g, '')) : 0;
+      };
+      
+      const incomeChartData = incomeResult.rows
+        .map(row => ({
+          name: row.monthly_income?.replace('₱', 'P') || row.monthly_income,
+          value: parseInt(row.count),
+          sortValue: getIncomeSortValue(row.monthly_income)
+        }))
+        .sort((a, b) => a.sortValue - b.sortValue)
+        .map(({ sortValue, ...item }) => item); // Remove sortValue from final output
 
       const courseResult = await pool.query(`
         SELECT course_graduated, COUNT(*) as count 
