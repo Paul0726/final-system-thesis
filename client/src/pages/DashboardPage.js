@@ -102,11 +102,7 @@ function DashboardPage() {
             Back to Home
           </Link>
           <div className="header-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="32" height="32">
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
+            <img src="/seal.png" alt="School Seal" className="header-seal" />
             <div>
               <h1>Public Dashboard</h1>
               <p>BSIT Graduate Statistics and Insights</p>

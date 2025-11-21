@@ -33,6 +33,9 @@ function LandingPage() {
     <div className="landing-page">
       <div className="landing-container">
         <header className="landing-header">
+          <div className="logo-container">
+            <img src="/seal.png" alt="School Seal" className="school-seal" />
+          </div>
           <h1>BSIT Graduate Tracer System</h1>
           <p className="landing-subtitle">Track and Monitor BSIT Graduates</p>
         </header>

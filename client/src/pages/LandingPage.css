@@ -118,6 +118,28 @@
   position: relative;
 }
 
+.logo-container {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.school-seal {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@media (max-width: 768px) {
+  .school-seal {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 .landing-header::after {
   content: '';
   position: absolute;

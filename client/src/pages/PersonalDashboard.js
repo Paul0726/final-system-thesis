@@ -281,8 +281,13 @@ function PersonalDashboard() {
           <div className="header-top">
             <Link to="/" className="back-link">← Back to Home</Link>
           </div>
-          <h1>My Personal Dashboard</h1>
-          <p>Edit your survey responses</p>
+          <div className="header-logo-title">
+            <img src="/seal.png" alt="School Seal" className="header-seal" />
+            <div>
+              <h1>My Personal Dashboard</h1>
+              <p>Edit your survey responses</p>
+            </div>
+          </div>
           {message && (
             <div className={`message ${message.includes('successfully') ? 'success' : 'error'}`}>
               {message}
