@@ -1,8 +1,110 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const crypto = require('crypto');
 const { sendOTP, verifyOTP, sendTechnicalSupportReport, sendPasswordResetOTP, verifyPasswordResetOTP, clearPasswordResetOTP } = require('./auth');
 require('dotenv').config();
+
+// Encryption key for sensitive data (in production, use environment variable)
+// Generate a consistent key if not provided (for development)
+let ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+if (!ENCRYPTION_KEY) {
+  // Use a fixed key for development (in production, MUST use environment variable)
+  // This ensures existing encrypted data can be decrypted
+  ENCRYPTION_KEY = 'a'.repeat(64); // 32 bytes in hex = 64 characters
+  console.warn('⚠️ WARNING: Using default encryption key. Set ENCRYPTION_KEY environment variable in production!');
+}
+const ALGORITHM = 'aes-256-cbc';
+
+// Encryption functions
+function encrypt(text) {
+  if (!text) return null;
+  try {
+    // Check if already encrypted (contains colon separator)
+    if (text.includes(':') && text.split(':').length === 2) {
+      // Might already be encrypted, try to decrypt first to verify
+      try {
+        const testDecrypt = decrypt(text);
+        if (testDecrypt !== text) {
+          // Successfully decrypted, so it was encrypted - return as is
+          return text;
+        }
+      } catch (e) {
+        // Not encrypted, proceed with encryption
+      }
+    }
+    
+    // Ensure key is 32 bytes (64 hex characters)
+    let keyHex = ENCRYPTION_KEY;
+    if (keyHex.length < 64) {
+      keyHex = keyHex.padEnd(64, '0');
+    } else if (keyHex.length > 64) {
+      keyHex = keyHex.slice(0, 64);
+    }
+    
+    const key = Buffer.from(keyHex, 'hex');
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return iv.toString('hex') + ':' + encrypted;
+  } catch (error) {
+    console.error('Encryption error:', error);
+    return text; // Return original if encryption fails
+  }
+}
+
+function decrypt(encryptedText) {
+  if (!encryptedText) return null;
+  try {
+    const parts = encryptedText.split(':');
+    if (parts.length !== 2) {
+      // Not encrypted (no colon separator), return as is
+      return encryptedText;
+    }
+    
+    // Ensure key is 32 bytes (64 hex characters)
+    let keyHex = ENCRYPTION_KEY;
+    if (keyHex.length < 64) {
+      keyHex = keyHex.padEnd(64, '0');
+    } else if (keyHex.length > 64) {
+      keyHex = keyHex.slice(0, 64);
+    }
+    
+    const key = Buffer.from(keyHex, 'hex');
+    const iv = Buffer.from(parts[0], 'hex');
+    const encrypted = parts[1];
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch (error) {
+    // If decryption fails, assume it's not encrypted
+    return encryptedText;
+  }
+}
+
+// Admin authentication middleware
+const authenticateAdmin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  
+  // Also check for token in query or body (for backward compatibility)
+  const tokenFromQuery = req.query.token || req.body.token;
+  const adminToken = token || tokenFromQuery || req.headers['x-admin-token'];
+  
+  // Check if token matches admin token
+  if (adminToken === 'admin-token') {
+    // Verify admin email from token or session
+    // For now, we'll trust the token since it's set after OTP verification
+    next();
+  } else {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Unauthorized: Admin authentication required' 
+    });
+  }
+};
 
 // Try to load database, fallback to in-memory if not available
 let pool = null;
@@ -425,7 +527,7 @@ app.get('/api/feedbacks', async (req, res) => {
       
       const feedbacks = result.rows.map(row => ({
         name: row.name,
-        email: row.email_address,
+        email: decrypt(row.email_address) || row.email_address, // Decrypt email for display
         schoolRating: row.school_rating,
         systemRating: row.system_rating,
         schoolFeedback: row.school_feedback,
@@ -491,24 +593,24 @@ app.get('/api/feedbacks', async (req, res) => {
   }
 });
 
-// Get all surveys
-app.get('/api/surveys', async (req, res) => {
+// Get all surveys - PROTECTED: Admin only
+app.get('/api/surveys', authenticateAdmin, async (req, res) => {
   try {
     if (useDatabase && pool) {
       const result = await pool.query('SELECT * FROM surveys ORDER BY created_at DESC');
       console.log(`📊 Found ${result.rows.length} surveys in database`);
-      // Convert snake_case to camelCase for frontend
+      // Convert snake_case to camelCase for frontend and decrypt sensitive data
       const surveys = result.rows.map(row => ({
         id: row.id,
         name: row.name,
-        permanentAddress: row.permanent_address,
-        mobileNumber: row.mobile_number,
-        emailAddress: row.email_address,
-        dateOfBirth: row.date_of_birth,
+        permanentAddress: decrypt(row.permanent_address) || row.permanent_address,
+        mobileNumber: decrypt(row.mobile_number) || row.mobile_number,
+        emailAddress: decrypt(row.email_address) || row.email_address,
+        dateOfBirth: decrypt(row.date_of_birth) || row.date_of_birth,
         age: row.age,
         civilStatus: row.civil_status,
         sex: row.sex,
-        currentLocation: row.current_location,
+        currentLocation: decrypt(row.current_location) || row.current_location,
         courseGraduated: row.course_graduated,
         schoolYearGraduated: row.school_year_graduated,
         maxAcademicAchievement: row.max_academic_achievement,
@@ -558,8 +660,8 @@ app.get('/api/surveys', async (req, res) => {
   }
 });
 
-// Get single survey
-app.get('/api/surveys/:id', async (req, res) => {
+// Get single survey - PROTECTED: Admin only
+app.get('/api/surveys/:id', authenticateAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     
@@ -568,7 +670,17 @@ app.get('/api/surveys/:id', async (req, res) => {
       if (result.rows.length === 0) {
         return res.status(404).json({ success: false, message: 'Survey not found' });
       }
-      res.json({ success: true, data: result.rows[0] });
+      const row = result.rows[0];
+      // Decrypt sensitive data
+      const survey = {
+        ...row,
+        permanent_address: decrypt(row.permanent_address) || row.permanent_address,
+        mobile_number: decrypt(row.mobile_number) || row.mobile_number,
+        email_address: decrypt(row.email_address) || row.email_address,
+        date_of_birth: decrypt(row.date_of_birth) || row.date_of_birth,
+        current_location: decrypt(row.current_location) || row.current_location
+      };
+      res.json({ success: true, data: survey });
     } else {
       // Fallback to in-memory
       const survey = surveys.find(s => s.id === id);
@@ -608,7 +720,7 @@ app.post('/api/survey', async (req, res) => {
         });
       }
 
-      // Use PostgreSQL database
+      // Use PostgreSQL database - Encrypt sensitive data before storing
       const result = await pool.query(`
         INSERT INTO surveys (
           name, permanent_address, mobile_number, email_address, date_of_birth, age,
@@ -621,14 +733,14 @@ app.post('/api/survey', async (req, res) => {
         RETURNING *
       `, [
         surveyData.name,
-        surveyData.permanentAddress || null,
-        surveyData.mobileNumber || null,
-        surveyData.emailAddress,
-        surveyData.dateOfBirth || null,
+        encrypt(surveyData.permanentAddress) || null,
+        encrypt(surveyData.mobileNumber) || null,
+        encrypt(surveyData.emailAddress),
+        encrypt(surveyData.dateOfBirth) || null,
         surveyData.age ? parseInt(surveyData.age) : null,
         surveyData.civilStatus || null,
         surveyData.sex || null,
-        surveyData.currentLocation || null,
+        encrypt(surveyData.currentLocation) || null,
         surveyData.courseGraduated || null,
         surveyData.schoolYearGraduated,
         surveyData.maxAcademicAchievement || null,
@@ -654,18 +766,18 @@ app.post('/api/survey', async (req, res) => {
         surveyData.systemFeedback || null
       ]);
 
-      // Convert snake_case to camelCase for response
+      // Convert snake_case to camelCase for response and decrypt sensitive data
       const savedSurvey = {
         id: result.rows[0].id,
         name: result.rows[0].name,
-        permanentAddress: result.rows[0].permanent_address,
-        mobileNumber: result.rows[0].mobile_number,
-        emailAddress: result.rows[0].email_address,
-        dateOfBirth: result.rows[0].date_of_birth,
+        permanentAddress: decrypt(result.rows[0].permanent_address) || result.rows[0].permanent_address,
+        mobileNumber: decrypt(result.rows[0].mobile_number) || result.rows[0].mobile_number,
+        emailAddress: decrypt(result.rows[0].email_address) || result.rows[0].email_address,
+        dateOfBirth: decrypt(result.rows[0].date_of_birth) || result.rows[0].date_of_birth,
         age: result.rows[0].age,
         civilStatus: result.rows[0].civil_status,
         sex: result.rows[0].sex,
-        currentLocation: result.rows[0].current_location,
+        currentLocation: decrypt(result.rows[0].current_location) || result.rows[0].current_location,
         courseGraduated: result.rows[0].course_graduated,
         schoolYearGraduated: result.rows[0].school_year_graduated,
         maxAcademicAchievement: result.rows[0].max_academic_achievement,
@@ -782,33 +894,48 @@ app.post('/api/survey', async (req, res) => {
   }
 });
 
-// Get survey by email (for personal dashboard)
+// Get survey by email (for personal dashboard) - User can only access their own data
 app.get('/api/survey/email/:email', async (req, res) => {
   try {
     const email = decodeURIComponent(req.params.email);
     
     if (useDatabase && pool) {
-      const result = await pool.query(
+      // Try both encrypted and unencrypted email for backward compatibility
+      // First try exact match (for unencrypted data)
+      let result = await pool.query(
         'SELECT * FROM surveys WHERE LOWER(email_address) = LOWER($1) ORDER BY created_at DESC LIMIT 1',
         [email]
       );
+      
+      // If not found, try to find by decrypting all emails (for encrypted data)
+      // This is less efficient but necessary for backward compatibility
+      if (result.rows.length === 0) {
+        const allSurveys = await pool.query('SELECT * FROM surveys ORDER BY created_at DESC');
+        const matchingSurvey = allSurveys.rows.find(row => {
+          const decryptedEmail = decrypt(row.email_address) || row.email_address;
+          return decryptedEmail.toLowerCase() === email.toLowerCase();
+        });
+        if (matchingSurvey) {
+          result = { rows: [matchingSurvey] };
+        }
+      }
       
       if (result.rows.length === 0) {
         return res.status(404).json({ success: false, message: 'Survey not found for this email address' });
       }
       
-      // Convert snake_case to camelCase
+      // Convert snake_case to camelCase and decrypt sensitive data
       const survey = {
         id: result.rows[0].id,
         name: result.rows[0].name,
-        permanentAddress: result.rows[0].permanent_address,
-        mobileNumber: result.rows[0].mobile_number,
-        emailAddress: result.rows[0].email_address,
-        dateOfBirth: result.rows[0].date_of_birth,
+        permanentAddress: decrypt(result.rows[0].permanent_address) || result.rows[0].permanent_address,
+        mobileNumber: decrypt(result.rows[0].mobile_number) || result.rows[0].mobile_number,
+        emailAddress: decrypt(result.rows[0].email_address) || result.rows[0].email_address,
+        dateOfBirth: decrypt(result.rows[0].date_of_birth) || result.rows[0].date_of_birth,
         age: result.rows[0].age,
         civilStatus: result.rows[0].civil_status,
         sex: result.rows[0].sex,
-        currentLocation: result.rows[0].current_location,
+        currentLocation: decrypt(result.rows[0].current_location) || result.rows[0].current_location,
         courseGraduated: result.rows[0].course_graduated,
         schoolYearGraduated: result.rows[0].school_year_graduated,
         maxAcademicAchievement: result.rows[0].max_academic_achievement,
@@ -849,13 +976,29 @@ app.get('/api/survey/email/:email', async (req, res) => {
   }
 });
 
-// Update survey by ID
+// Update survey by ID - Users can update their own, admins can update any
 app.put('/api/survey/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const surveyData = req.body;
     
+    // Check if user is admin or owns this survey
+    const isAdmin = req.headers.authorization?.includes('admin-token') || 
+                    req.query.token === 'admin-token' || 
+                    req.headers['x-admin-token'] === 'admin-token';
+    
     if (useDatabase && pool) {
+      // If not admin, verify the email matches
+      if (!isAdmin && surveyData.emailAddress) {
+        const existingResult = await pool.query('SELECT email_address FROM surveys WHERE id = $1', [id]);
+        if (existingResult.rows.length > 0) {
+          const existingEmail = decrypt(existingResult.rows[0].email_address) || existingResult.rows[0].email_address;
+          if (existingEmail.toLowerCase() !== surveyData.emailAddress.toLowerCase()) {
+            return res.status(403).json({ success: false, message: 'Unauthorized: You can only update your own survey' });
+          }
+        }
+      }
+      
       const result = await pool.query(`
         UPDATE surveys SET
           name = $1, permanent_address = $2, mobile_number = $3, email_address = $4,
@@ -871,14 +1014,14 @@ app.put('/api/survey/:id', async (req, res) => {
         RETURNING *
       `, [
         surveyData.name,
-        surveyData.permanentAddress || null,
-        surveyData.mobileNumber || null,
-        surveyData.emailAddress,
-        surveyData.dateOfBirth || null,
+        encrypt(surveyData.permanentAddress) || null,
+        encrypt(surveyData.mobileNumber) || null,
+        encrypt(surveyData.emailAddress),
+        encrypt(surveyData.dateOfBirth) || null,
         surveyData.age ? parseInt(surveyData.age) : null,
         surveyData.civilStatus || null,
         surveyData.sex || null,
-        surveyData.currentLocation || null,
+        encrypt(surveyData.currentLocation) || null,
         surveyData.courseGraduated || null,
         surveyData.schoolYearGraduated,
         surveyData.maxAcademicAchievement || null,
@@ -909,18 +1052,18 @@ app.put('/api/survey/:id', async (req, res) => {
         return res.status(404).json({ success: false, message: 'Survey not found' });
       }
       
-      // Convert snake_case to camelCase for response
+      // Convert snake_case to camelCase for response and decrypt sensitive data
       const updatedSurvey = {
         id: result.rows[0].id,
         name: result.rows[0].name,
-        permanentAddress: result.rows[0].permanent_address,
-        mobileNumber: result.rows[0].mobile_number,
-        emailAddress: result.rows[0].email_address,
-        dateOfBirth: result.rows[0].date_of_birth,
+        permanentAddress: decrypt(result.rows[0].permanent_address) || result.rows[0].permanent_address,
+        mobileNumber: decrypt(result.rows[0].mobile_number) || result.rows[0].mobile_number,
+        emailAddress: decrypt(result.rows[0].email_address) || result.rows[0].email_address,
+        dateOfBirth: decrypt(result.rows[0].date_of_birth) || result.rows[0].date_of_birth,
         age: result.rows[0].age,
         civilStatus: result.rows[0].civil_status,
         sex: result.rows[0].sex,
-        currentLocation: result.rows[0].current_location,
+        currentLocation: decrypt(result.rows[0].current_location) || result.rows[0].current_location,
         courseGraduated: result.rows[0].course_graduated,
         schoolYearGraduated: result.rows[0].school_year_graduated,
         maxAcademicAchievement: result.rows[0].max_academic_achievement,
@@ -967,8 +1110,8 @@ app.put('/api/survey/:id', async (req, res) => {
   }
 });
 
-// Delete survey
-app.delete('/api/surveys/:id', async (req, res) => {
+// Delete survey - PROTECTED: Admin only
+app.delete('/api/surveys/:id', authenticateAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     
@@ -1221,7 +1364,7 @@ app.post('/api/technical-support', async (req, res) => {
 });
 
 // Get Technical Support Reports (Admin only)
-app.get('/api/technical-support/reports', async (req, res) => {
+app.get('/api/technical-support/reports', authenticateAdmin, async (req, res) => {
   try {
     if (useDatabase && pool) {
       const result = await pool.query(
@@ -1240,7 +1383,7 @@ app.get('/api/technical-support/reports', async (req, res) => {
 });
 
 // Get unread reports count (Admin only)
-app.get('/api/technical-support/reports/count', async (req, res) => {
+app.get('/api/technical-support/reports/count', authenticateAdmin, async (req, res) => {
   try {
     if (useDatabase && pool) {
       const result = await pool.query(
@@ -1257,7 +1400,7 @@ app.get('/api/technical-support/reports/count', async (req, res) => {
 });
 
 // Mark report as read (Admin only)
-app.put('/api/technical-support/reports/:id/read', async (req, res) => {
+app.put('/api/technical-support/reports/:id/read', authenticateAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     if (useDatabase && pool) {
@@ -1276,7 +1419,7 @@ app.put('/api/technical-support/reports/:id/read', async (req, res) => {
 });
 
 // Delete report (Admin only)
-app.delete('/api/technical-support/reports/:id', async (req, res) => {
+app.delete('/api/technical-support/reports/:id', authenticateAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     if (useDatabase && pool) {

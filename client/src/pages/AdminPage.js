@@ -13,6 +13,26 @@ const API_URL = process.env.NODE_ENV === 'production'
 // Pagination constants for performance
 const ITEMS_PER_PAGE = 20; // Show 20 items per page for better performance
 
+// Create axios instance with default config for admin requests
+const adminAxios = axios.create({
+  baseURL: API_URL
+});
+
+// Add request interceptor to include admin token
+adminAxios.interceptors.request.use(
+  (config) => {
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken) {
+      config.headers['x-admin-token'] = adminToken;
+      config.headers['Authorization'] = `Bearer ${adminToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const email = 'johnpauld750@gmail.com'; // Admin email (hardcoded for security)
@@ -50,7 +70,7 @@ function AdminPage() {
   // Fetch unread reports count
   const fetchReportsCount = async () => {
     try {
-      const response = await axios.get(`${API_URL}/technical-support/reports/count`);
+      const response = await adminAxios.get('/technical-support/reports/count');
       if (response.data.success) {
         setUnreadCount(response.data.count || 0);
       }
@@ -63,7 +83,7 @@ function AdminPage() {
   const fetchReports = async () => {
     try {
       setReportsLoading(true);
-      const response = await axios.get(`${API_URL}/technical-support/reports`);
+      const response = await adminAxios.get('/technical-support/reports');
       if (response.data.success) {
         setReports(response.data.data || []);
       }
@@ -78,7 +98,7 @@ function AdminPage() {
   // Mark report as read
   const markAsRead = async (reportId) => {
     try {
-      await axios.put(`${API_URL}/technical-support/reports/${reportId}/read`);
+      await adminAxios.put(`/technical-support/reports/${reportId}/read`);
       setReports(reports.map(r => r.id === reportId ? { ...r, is_read: true } : r));
       setUnreadCount(Math.max(0, unreadCount - 1));
     } catch (error) {
@@ -91,7 +111,7 @@ function AdminPage() {
     if (!window.confirm('Are you sure you want to delete this report?')) return;
     
     try {
-      await axios.delete(`${API_URL}/technical-support/reports/${reportId}`);
+      await adminAxios.delete(`/technical-support/reports/${reportId}`);
       const wasUnread = reports.find(r => r.id === reportId && !r.is_read);
       setReports(reports.filter(r => r.id !== reportId));
       if (wasUnread) {
@@ -160,7 +180,7 @@ function AdminPage() {
   const fetchSurveys = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/surveys`);
+      const response = await adminAxios.get('/surveys');
       console.log('API Response:', response.data);
       const surveysData = response.data.data || [];
       console.log('Surveys data:', surveysData);
@@ -173,7 +193,12 @@ function AdminPage() {
     } catch (error) {
       console.error('Error fetching surveys:', error);
       console.error('Error details:', error.response?.data || error.message);
-      alert('Error loading surveys. Please check console for details.');
+      if (error.response?.status === 401) {
+        alert('Unauthorized: Please login again.');
+        handleLogout();
+      } else {
+        alert('Error loading surveys. Please check console for details.');
+      }
       setLoading(false);
     }
   };
@@ -181,7 +206,7 @@ function AdminPage() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this survey? This will also remove all associated feedbacks from the landing page.')) {
       try {
-        const response = await axios.delete(`${API_URL}/surveys/${id}`);
+        const response = await adminAxios.delete(`/surveys/${id}`);
         if (response.data.success) {
           fetchSurveys();
           alert('Survey and associated feedback deleted successfully!');
