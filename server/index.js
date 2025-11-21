@@ -154,7 +154,7 @@ app.post('/api/admin/send-otp', async (req, res) => {
     const { email } = req.body;
     
     // Only allow specific admin email
-    if (email !== 'johnpauld750@gmail.com') {
+    if (email !== 'dwcsjtracersystem@gmail.com') {
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 
@@ -177,7 +177,7 @@ app.post('/api/admin/verify-otp', async (req, res) => {
   try {
     const { email, otp } = req.body;
     
-    if (email !== 'johnpauld750@gmail.com') {
+    if (email !== 'dwcsjtracersystem@gmail.com') {
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 

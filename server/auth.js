@@ -9,7 +9,7 @@ const passwordResetOTPStore = {};
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+    user: process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com',
     pass: process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD
   }
 });
@@ -29,14 +29,14 @@ const sendOTP = async (email) => {
     };
 
     // Determine if this is admin or user OTP
-    const isAdmin = email === 'johnpauld750@gmail.com';
+    const isAdmin = email === 'dwcsjtracersystem@gmail.com';
     const subject = isAdmin 
       ? 'Admin Login OTP - BSIT Graduate Tracer System'
       : 'Login OTP - BSIT Graduate Tracer System';
     const title = isAdmin ? 'Admin Login OTP' : 'Login OTP';
     
     await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      from: process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com',
       to: email,
       subject: subject,
       html: `
@@ -92,7 +92,7 @@ const verifyOTP = (email, otp) => {
 // Send Technical Support Report to Admin
 const sendTechnicalSupportReport = async (reportData) => {
   try {
-    const adminEmail = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const adminEmail = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     const priorityColors = {
       'Low': '#6b7280',
       'Medium': '#f59e0b',
@@ -102,7 +102,7 @@ const sendTechnicalSupportReport = async (reportData) => {
     const priorityColor = priorityColors[reportData.priority] || '#6b7280';
 
     await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      from: process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com',
       to: adminEmail,
       subject: `[${reportData.priority}] Technical Support Report: ${reportData.subject}`,
       html: `
@@ -190,7 +190,7 @@ const sendPasswordResetOTP = async (email) => {
     };
 
     await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      from: process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com',
       to: email,
       subject: 'Password Reset OTP - BSIT Graduate Tracer System',
       html: `
