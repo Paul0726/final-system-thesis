@@ -57,18 +57,8 @@ function AdminPage() {
   // Debounce search term for better performance (300ms delay)
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  useEffect(() => {
-    // Check if already authenticated
-    const authToken = localStorage.getItem('adminToken');
-    if (authToken === 'admin-token') {
-      setIsAuthenticated(true);
-      fetchSurveys();
-      fetchReportsCount();
-    }
-  }, []);
-
   // Fetch unread reports count
-  const fetchReportsCount = async () => {
+  const fetchReportsCount = useCallback(async () => {
     try {
       const response = await adminAxios.get('/technical-support/reports/count');
       if (response.data.success) {
@@ -77,7 +67,47 @@ function AdminPage() {
     } catch (error) {
       console.error('Error fetching reports count:', error);
     }
-  };
+  }, []);
+
+  // Fetch all surveys
+  const fetchSurveys = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await adminAxios.get('/surveys');
+      console.log('API Response:', response.data);
+      const surveysData = response.data.data || [];
+      console.log('Surveys data:', surveysData);
+      console.log('Number of surveys:', surveysData.length);
+      if (surveysData.length > 0) {
+        console.log('First survey:', surveysData[0]);
+      }
+      setSurveys(surveysData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching surveys:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      if (error.response?.status === 401) {
+        alert('Unauthorized: Please login again.');
+        localStorage.removeItem('adminToken');
+        setIsAuthenticated(false);
+        setOtpSent(false);
+        setOtp('');
+      } else {
+        alert('Error loading surveys. Please check console for details.');
+      }
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Check if already authenticated
+    const authToken = localStorage.getItem('adminToken');
+    if (authToken === 'admin-token') {
+      setIsAuthenticated(true);
+      fetchSurveys();
+      fetchReportsCount();
+    }
+  }, [fetchSurveys, fetchReportsCount]);
 
   // Fetch all reports
   const fetchReports = async () => {
@@ -175,32 +205,6 @@ function AdminPage() {
     setIsAuthenticated(false);
     setOtpSent(false);
     setOtp('');
-  };
-
-  const fetchSurveys = async () => {
-    try {
-      setLoading(true);
-      const response = await adminAxios.get('/surveys');
-      console.log('API Response:', response.data);
-      const surveysData = response.data.data || [];
-      console.log('Surveys data:', surveysData);
-      console.log('Number of surveys:', surveysData.length);
-      if (surveysData.length > 0) {
-        console.log('First survey:', surveysData[0]);
-      }
-      setSurveys(surveysData);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching surveys:', error);
-      console.error('Error details:', error.response?.data || error.message);
-      if (error.response?.status === 401) {
-        alert('Unauthorized: Please login again.');
-        handleLogout();
-      } else {
-        alert('Error loading surveys. Please check console for details.');
-      }
-      setLoading(false);
-    }
   };
 
   const handleDelete = async (id) => {
