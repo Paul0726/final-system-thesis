@@ -35,14 +35,20 @@ const sendOTP = async (email) => {
       : 'Login OTP - BSIT Graduate Tracer System';
     const title = isAdmin ? 'Admin Login OTP' : 'Login OTP';
     
+    const gmailUser = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    
     await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      from: `"BSIT Graduate Tracer System" <${gmailUser}>`,
       to: email,
       subject: subject,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb;">
           <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h2 style="color: #11823b; margin-bottom: 20px;">${title}</h2>
+            <div style="text-align: center; margin-bottom: 30px;">
+              <img src="https://raw.githubusercontent.com/Paul0726/final-system-thesis/main/client/public/seal.png" alt="School Seal" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px;" />
+              <h2 style="color: #11823b; margin: 0; font-size: 24px;">BSIT Graduate Tracer System</h2>
+            </div>
+            <h2 style="color: #11823b; margin-bottom: 20px; border-bottom: 2px solid #dce3c7; padding-bottom: 10px;">${title}</h2>
             <p style="color: #374151; font-size: 16px; line-height: 1.6;">
               Your OTP for login is:
             </p>
@@ -55,6 +61,11 @@ const sendOTP = async (email) => {
             <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
               If you did not request this OTP, please ignore this email.
             </p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                This is an automated email from BSIT Graduate Tracer System.
+              </p>
+            </div>
           </div>
         </div>
       `
@@ -101,13 +112,19 @@ const sendTechnicalSupportReport = async (reportData) => {
     };
     const priorityColor = priorityColors[reportData.priority] || '#6b7280';
 
+    const gmailUser = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    
     await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      from: `"BSIT Graduate Tracer System" <${gmailUser}>`,
       to: adminEmail,
       subject: `[${reportData.priority}] Technical Support Report: ${reportData.subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb;">
           <div style="max-width: 700px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <img src="https://raw.githubusercontent.com/Paul0726/final-system-thesis/main/client/public/seal.png" alt="School Seal" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px;" />
+              <h2 style="color: #11823b; margin: 0; font-size: 24px;">BSIT Graduate Tracer System</h2>
+            </div>
             <h2 style="color: #11823b; margin-bottom: 20px; border-bottom: 3px solid #11823b; padding-bottom: 10px;">
               Technical Support Report
             </h2>
@@ -189,14 +206,20 @@ const sendPasswordResetOTP = async (email) => {
       expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
     };
 
+    const gmailUser = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    
     await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+      from: `"BSIT Graduate Tracer System" <${gmailUser}>`,
       to: email,
       subject: 'Password Reset OTP - BSIT Graduate Tracer System',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb;">
           <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h2 style="color: #11823b; margin-bottom: 20px;">Password Reset OTP</h2>
+            <div style="text-align: center; margin-bottom: 30px;">
+              <img src="https://raw.githubusercontent.com/Paul0726/final-system-thesis/main/client/public/seal.png" alt="School Seal" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px;" />
+              <h2 style="color: #11823b; margin: 0; font-size: 24px;">BSIT Graduate Tracer System</h2>
+            </div>
+            <h2 style="color: #11823b; margin-bottom: 20px; border-bottom: 2px solid #dce3c7; padding-bottom: 10px;">Password Reset OTP</h2>
             <p style="color: #374151; font-size: 16px; line-height: 1.6;">
               You requested to reset your password. Your OTP code is:
             </p>
@@ -209,6 +232,11 @@ const sendPasswordResetOTP = async (email) => {
             <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
               If you did not request a password reset, please ignore this email and your password will remain unchanged.
             </p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                This is an automated email from BSIT Graduate Tracer System.
+              </p>
+            </div>
           </div>
         </div>
       `
