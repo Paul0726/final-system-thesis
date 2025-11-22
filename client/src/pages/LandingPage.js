@@ -10,6 +10,7 @@ const API_URL = process.env.NODE_ENV === 'production'
 
 function LandingPage() {
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showDevelopers, setShowDevelopers] = useState(false);
   const [ratings, setRatings] = useState({ school: 0, system: 0, total: 0 });
 
   useEffect(() => {
@@ -146,7 +147,23 @@ function LandingPage() {
         <div className="developers-section">
           <h2>Meet the Developers</h2>
           <p className="developers-subtitle">Built with passion by BSIT students</p>
-          <div className="developers-grid">
+          {!showDevelopers && (
+            <button 
+              className="btn-show-developers"
+              onClick={() => setShowDevelopers(true)}
+            >
+              Show Developers
+            </button>
+          )}
+          {showDevelopers && (
+            <>
+              <button 
+                className="btn-hide-developers"
+                onClick={() => setShowDevelopers(false)}
+              >
+                Hide Developers
+              </button>
+              <div className="developers-grid">
             <div className="developer-card">
               <div className="developer-image">
                 <img 
@@ -217,7 +234,9 @@ function LandingPage() {
               <h3>Lucky Arielle Lim</h3>
               <p className="developer-role">Developer</p>
             </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="privacy-section">
