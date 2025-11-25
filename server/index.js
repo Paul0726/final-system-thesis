@@ -1286,6 +1286,10 @@ app.delete('/api/surveys/:id', authenticateAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ success: false, message: 'Invalid survey ID' });
+    }
+    
     if (useDatabase && pool) {
       // Start a transaction to ensure all deletions succeed or fail together
       const client = await pool.connect();
@@ -1293,76 +1297,94 @@ app.delete('/api/surveys/:id', authenticateAdmin, async (req, res) => {
       try {
         await client.query('BEGIN');
         
-        // First, get the survey to find associated email
+        // First, check if survey exists and get email (decrypt if needed)
         const surveyResult = await client.query('SELECT email_address FROM surveys WHERE id = $1', [id]);
         
         if (surveyResult.rows.length === 0) {
           await client.query('ROLLBACK');
+          client.release();
           return res.status(404).json({ success: false, message: 'Survey not found' });
         }
 
-        const email = surveyResult.rows[0].email_address;
+        const encryptedEmail = surveyResult.rows[0].email_address;
+        // Try to decrypt email (in case it's encrypted)
+        const email = decrypt(encryptedEmail) || encryptedEmail;
 
         // Delete user accounts associated with this survey
-        // First, delete users that reference this survey by survey_id
+        // First, delete users that reference this survey by survey_id (most reliable)
         const usersBySurveyId = await client.query('DELETE FROM users WHERE survey_id = $1 RETURNING email', [id]);
-        console.log(`✅ Deleted ${usersBySurveyId.rows.length} user account(s) referencing survey ${id}`);
+        console.log(`✅ Deleted ${usersBySurveyId.rows.length} user account(s) referencing survey ${id} by survey_id`);
 
         // Also delete user account by email (in case survey_id wasn't set but email matches)
+        // Try both encrypted and decrypted email to be safe
         if (email) {
+          // Try with decrypted email
           const usersByEmail = await client.query('DELETE FROM users WHERE LOWER(email) = LOWER($1) RETURNING id', [email]);
           if (usersByEmail.rows.length > 0) {
-            console.log(`✅ Deleted ${usersByEmail.rows.length} user account(s) with email: ${email}`);
+            console.log(`✅ Deleted ${usersByEmail.rows.length} user account(s) with decrypted email`);
+          }
+          
+          // Also try with encrypted email (in case user email is stored encrypted)
+          if (encryptedEmail !== email) {
+            const usersByEncryptedEmail = await client.query('DELETE FROM users WHERE LOWER(email) = LOWER($1) RETURNING id', [encryptedEmail]);
+            if (usersByEncryptedEmail.rows.length > 0) {
+              console.log(`✅ Deleted ${usersByEncryptedEmail.rows.length} user account(s) with encrypted email`);
+            }
           }
         }
 
-        // Now delete the survey (should work since we've removed the foreign key references)
+        // Now delete the survey from database (this is the main deletion)
         const deleteResult = await client.query('DELETE FROM surveys WHERE id = $1 RETURNING *', [id]);
         
         if (deleteResult.rows.length === 0) {
           await client.query('ROLLBACK');
-          return res.status(404).json({ success: false, message: 'Survey not found' });
+          client.release();
+          return res.status(404).json({ success: false, message: 'Survey not found or already deleted' });
         }
 
-        // Commit the transaction
+        // Commit the transaction - this makes the deletion permanent in the database
         await client.query('COMMIT');
         
-        console.log(`✅ Survey ${id} deleted successfully (email: ${email})`);
+        console.log(`✅ Survey ${id} deleted successfully from database (email: ${email || 'N/A'})`);
+        
+        client.release();
         
         res.json({
           success: true,
-          message: 'Survey and associated feedback deleted successfully',
-          data: deleteResult.rows[0]
+          message: 'Survey and associated user accounts deleted successfully from database',
+          data: {
+            id: deleteResult.rows[0].id,
+            deleted: true
+          }
         });
       } catch (error) {
         // Rollback the transaction on error
         await client.query('ROLLBACK');
-        throw error;
-      } finally {
-        // Release the client back to the pool
         client.release();
+        throw error;
       }
     } else {
-      // Fallback to in-memory
+      // Fallback to in-memory (for development/testing)
       const surveyIndex = surveys.findIndex(s => s.id === id);
       if (surveyIndex === -1) {
         return res.status(404).json({ success: false, message: 'Survey not found' });
       }
       const deletedSurvey = surveys.splice(surveyIndex, 1)[0];
+      console.log(`✅ Survey ${id} deleted from in-memory storage`);
       res.json({
         success: true,
-        message: 'Survey deleted successfully',
+        message: 'Survey deleted successfully (in-memory storage)',
         data: deletedSurvey
       });
     }
   } catch (error) {
-    console.error('Error deleting survey:', error);
+    console.error('❌ Error deleting survey:', error);
     console.error('Error details:', error.message);
     console.error('Error code:', error.code);
     console.error('Error stack:', error.stack);
     
     // Provide more detailed error message
-    let errorMessage = 'Error deleting survey';
+    let errorMessage = 'Error deleting survey from database';
     if (error.code === '23503') {
       errorMessage = 'Cannot delete survey: It is referenced by other records. Please contact administrator.';
     } else if (error.code === '23505') {

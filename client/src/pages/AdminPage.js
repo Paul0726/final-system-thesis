@@ -208,19 +208,28 @@ function AdminPage() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this survey? This will also remove all associated feedbacks from the landing page.')) {
+    if (!id) {
+      alert('Error: Invalid survey ID');
+      return;
+    }
+    
+    if (window.confirm('Are you sure you want to delete this survey? This will permanently remove it from the database and all associated user accounts.')) {
       try {
+        setLoading(true);
         const response = await adminAxios.delete(`/surveys/${id}`);
         if (response.data.success) {
-          fetchSurveys();
-          alert('Survey and associated feedback deleted successfully!');
+          // Refresh the surveys list to reflect the deletion
+          await fetchSurveys();
+          alert('✅ Survey deleted successfully from database!');
         } else {
           alert(response.data.message || 'Error deleting survey');
         }
       } catch (error) {
         console.error('Error deleting survey:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Error deleting survey';
-        alert(errorMessage);
+        const errorMessage = error.response?.data?.message || error.message || 'Error deleting survey from database';
+        alert(`❌ ${errorMessage}`);
+      } finally {
+        setLoading(false);
       }
     }
   };
