@@ -863,24 +863,100 @@ app.post('/api/survey', async (req, res) => {
     // Sanitize and validate survey data to prevent database errors
     const surveyData = sanitizeSurveyData(req.body);
     
+    // Comprehensive validation
+    const validationErrors = [];
+    
     // Required fields validation
-    if (!surveyData.name || !surveyData.emailAddress || !surveyData.schoolYearGraduated) {
-      return res.status(400).json({ success: false, message: 'Name, email address, and school year graduated are required' });
+    if (!surveyData.name || surveyData.name.trim().length < 2) {
+      validationErrors.push('Name is required and must be at least 2 characters');
+    }
+    
+    if (!surveyData.emailAddress) {
+      validationErrors.push('Email address is required');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(surveyData.emailAddress)) {
+      validationErrors.push('Invalid email address format');
+    }
+    
+    if (!surveyData.schoolYearGraduated) {
+      validationErrors.push('School year graduated is required');
+    } else if (!/^\d{4}-\d{4}$/.test(surveyData.schoolYearGraduated)) {
+      validationErrors.push('School year must be in format YYYY-YYYY (e.g., 2020-2021)');
+    }
+    
+    if (!surveyData.dateOfBirth) {
+      validationErrors.push('Date of birth is required');
+    } else {
+      const parsedDate = parseDate(surveyData.dateOfBirth);
+      if (!parsedDate) {
+        validationErrors.push('Invalid date of birth format');
+      } else {
+        const birthDate = new Date(parsedDate);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        if (age < 18 || age > 100) {
+          validationErrors.push('Age must be between 18-100 years');
+        }
+      }
+    }
+    
+    if (!surveyData.age || parseInt(surveyData.age) < 18 || parseInt(surveyData.age) > 100) {
+      validationErrors.push('Age is required and must be between 18-100');
+    }
+    
+    if (!surveyData.courseGraduated) {
+      validationErrors.push('Course graduated is required');
+    }
+    
+    if (!surveyData.civilStatus) {
+      validationErrors.push('Civil status is required');
+    }
+    
+    if (!surveyData.sex) {
+      validationErrors.push('Sex is required');
+    }
+    
+    // Account creation validation
+    if (surveyData.createAccount && surveyData.accountPassword) {
+      if (surveyData.accountPassword.length < 6) {
+        validationErrors.push('Password must be at least 6 characters long');
+      }
+    }
+    
+    if (validationErrors.length > 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Validation failed',
+        errors: validationErrors
+      });
     }
 
     if (useDatabase && pool) {
       // Check for duplicate email/name
-      const duplicateCheck = await pool.query(
-        'SELECT id, email_address, name FROM surveys WHERE LOWER(email_address) = LOWER($1) OR LOWER(name) = LOWER($2)',
-        [surveyData.emailAddress, surveyData.name]
-      );
-      
-      if (duplicateCheck.rows.length > 0) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'A survey with this email address or name already exists. You can edit your existing survey by accessing your personal dashboard.',
-          existingEmail: duplicateCheck.rows[0].email_address
+      // Since emails are encrypted, we need to check all surveys and decrypt
+      try {
+        const allSurveys = await pool.query('SELECT id, email_address, name FROM surveys');
+        const encryptedEmail = encrypt(surveyData.emailAddress);
+        
+        const duplicate = allSurveys.rows.find(row => {
+          const decryptedEmail = decrypt(row.email_address) || row.email_address;
+          const rowName = row.name || '';
+          return (
+            decryptedEmail.toLowerCase() === surveyData.emailAddress.toLowerCase() ||
+            rowName.toLowerCase() === surveyData.name.toLowerCase()
+          );
         });
+        
+        if (duplicate) {
+          const existingEmail = decrypt(duplicate.email_address) || duplicate.email_address;
+          return res.status(400).json({ 
+            success: false, 
+            message: 'A survey with this email address or name already exists. You can edit your existing survey by accessing your personal dashboard.',
+            existingEmail: existingEmail
+          });
+        }
+      } catch (duplicateError) {
+        console.error('Error checking duplicates:', duplicateError);
+        // Continue with submission if duplicate check fails (better to allow than block)
       }
 
       // Use PostgreSQL database - Encrypt sensitive data before storing
@@ -1036,27 +1112,47 @@ app.post('/api/survey', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error creating survey:', error);
-    // Fallback to in-memory on error
-    try {
-      const newSurvey = {
-        id: surveys.length > 0 ? Math.max(...surveys.map(s => s.id)) + 1 : 1,
-        ...surveyData,
-        createdAt: new Date().toISOString()
-      };
-      surveys.push(newSurvey);
-      
-      res.json({
-        success: true,
-        message: 'Survey submitted successfully (fallback to in-memory storage)',
-        data: newSurvey
-      });
-    } catch (fallbackError) {
-      res.status(500).json({ 
-        success: false, 
-        message: 'Error creating survey: ' + error.message 
-      });
+    console.error('❌ Error creating survey:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      constraint: error.constraint,
+      detail: error.detail
+    });
+    
+    // Provide user-friendly error messages
+    let errorMessage = 'Error creating survey. Please try again.';
+    let statusCode = 500;
+    
+    if (error.code === '23505') { // Unique constraint violation
+      errorMessage = 'A survey with this email address or name already exists. Please use a different email or name.';
+      statusCode = 400;
+    } else if (error.code === '23502') { // Not null violation
+      errorMessage = 'Required fields are missing. Please fill in all required fields.';
+      statusCode = 400;
+    } else if (error.code === '22007' || error.code === '22008') { // Invalid date format
+      errorMessage = 'Invalid date format. Please check your date of birth.';
+      statusCode = 400;
+    } else if (error.code === '23514') { // Check constraint violation
+      errorMessage = 'Invalid data format. Please check your input.';
+      statusCode = 400;
+    } else if (error.message && error.message.includes('value too long')) {
+      errorMessage = 'One or more fields are too long. Please shorten your input.';
+      statusCode = 400;
+    } else if (error.message && error.message.includes('invalid input syntax')) {
+      errorMessage = 'Invalid data format. Please check your input and try again.';
+      statusCode = 400;
+    } else if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
+      errorMessage = 'Database connection error. Please try again in a few moments.';
+      statusCode = 503;
     }
+    
+    res.status(statusCode).json({ 
+      success: false, 
+      message: errorMessage,
+      errors: error.response?.data?.errors || [],
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 

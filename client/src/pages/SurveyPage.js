@@ -118,19 +118,91 @@ function SurveyPage() {
     }));
   }, []);
 
+  // Comprehensive validation function
+  const validateForm = () => {
+    const errors = [];
+    
+    // Required fields validation
+    if (!formData.name || formData.name.trim().length < 2) {
+      errors.push('Name is required and must be at least 2 characters');
+    }
+    
+    if (!formData.emailAddress || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.emailAddress)) {
+      errors.push('Valid email address is required');
+    }
+    
+    if (!formData.dateOfBirth) {
+      errors.push('Date of birth is required');
+    } else {
+      const birthDate = new Date(formData.dateOfBirth);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      if (age < 18 || age > 100) {
+        errors.push('Please enter a valid date of birth (age must be between 18-100)');
+      }
+    }
+    
+    if (!formData.age || parseInt(formData.age) < 18 || parseInt(formData.age) > 100) {
+      errors.push('Age is required and must be between 18-100');
+    }
+    
+    if (!formData.schoolYearGraduated) {
+      errors.push('School year graduated is required');
+    } else if (!/^\d{4}-\d{4}$/.test(formData.schoolYearGraduated)) {
+      errors.push('School year must be in format YYYY-YYYY (e.g., 2020-2021)');
+    }
+    
+    if (!formData.courseGraduated) {
+      errors.push('Course graduated is required');
+    }
+    
+    if (!formData.civilStatus) {
+      errors.push('Civil status is required');
+    }
+    
+    if (!formData.sex) {
+      errors.push('Sex is required');
+    }
+    
+    // Account creation validation
+    if (createAccount) {
+      if (!accountPassword || accountPassword.length < 6) {
+        errors.push('Password must be at least 6 characters long');
+      }
+      if (accountPassword !== confirmPassword) {
+        errors.push('Passwords do not match');
+      }
+    }
+    
+    // Employment validation
+    if (formData.isEmployed === 'Yes') {
+      if (!formData.employmentNature) {
+        errors.push('Employment nature is required if you are employed');
+      }
+      if (!formData.jobTitle) {
+        errors.push('Job title is required if you are employed');
+      }
+      if (!formData.placeOfWork) {
+        errors.push('Place of work is required if you are employed');
+      }
+    }
+    
+    return errors;
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate account creation if enabled
-    if (createAccount) {
-      if (!accountPassword || accountPassword.length < 6) {
-        alert('Password must be at least 6 characters long');
-        return;
-      }
-      if (accountPassword !== confirmPassword) {
-        alert('Passwords do not match');
-        return;
-      }
+    // Prevent double submission
+    if (loading) {
+      return;
+    }
+    
+    // Validate form
+    const validationErrors = validateForm();
+    if (validationErrors.length > 0) {
+      alert('Please fix the following errors:\n\n' + validationErrors.join('\n'));
+      return;
     }
     
     setLoading(true);
@@ -159,32 +231,41 @@ function SurveyPage() {
         accountPassword: createAccount ? accountPassword : null
       };
       
-      const response = await axios.post(`${API_URL}/survey`, submitData);
+      const response = await axios.post(`${API_URL}/survey`, submitData, {
+        timeout: 30000 // 30 second timeout
+      });
+      
       if (response.data.success) {
         setSubmitted(true);
-        // If account was created, show message
-        if (createAccount && response.data.accountCreated) {
-          // Account creation message will be shown in the success screen
-        }
+        // Scroll to top to show success message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         alert('Error: ' + (response.data.message || 'Failed to submit survey'));
       }
     } catch (error) {
       console.error('Error submitting survey:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Error submitting survey. Please try again.';
+      
+      let errorMessage = 'Error submitting survey. Please try again.';
       const existingEmail = error.response?.data?.existingEmail;
       
-      if (error.response?.status === 400 && existingEmail) {
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Request timed out. Please check your internet connection and try again.';
+      } else if (error.response?.status === 400 && existingEmail) {
         // Duplicate found - show message with link to personal dashboard
         const confirmEdit = window.confirm(
-          errorMessage + '\n\nWould you like to access your personal dashboard to edit your existing survey?'
+          error.response.data.message + '\n\nWould you like to access your personal dashboard to edit your existing survey?'
         );
         if (confirmEdit) {
           window.location.href = `/personal-dashboard?email=${encodeURIComponent(existingEmail)}`;
         }
-      } else {
-        alert('Error: ' + errorMessage);
+        return; // Don't show error alert if user chose to go to dashboard
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
+      
+      alert('Error: ' + errorMessage);
     } finally {
       setLoading(false);
     }
@@ -919,7 +1000,17 @@ function SurveyPage() {
 
           <div className="form-actions">
             <button type="submit" className="btn-submit" disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit Survey'}
+              {loading ? (
+                <>
+                  <span style={{ display: 'inline-block', marginRight: '8px' }}>
+                    <svg className="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                      <path d="M12 2a10 10 0 0 1 10 10" opacity="0.75"/>
+                    </svg>
+                  </span>
+                  Submitting...
+                </>
+              ) : 'Submit Survey'}
             </button>
             <Link to="/" className="btn-cancel">Cancel</Link>
           </div>
