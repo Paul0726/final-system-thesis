@@ -1,0 +1,82 @@
+How to Include Philippine Qualifications Framework (PQF) in Review of Related Literature (RRL)
+
+STRUCTURE FOR RRL WITH PQF:
+
+1. INTRODUCTION TO QUALIFICATION FRAMEWORKS
+   - Start with general discussion about qualification frameworks
+   - Mention their importance in education and industry alignment
+   - Transition to Philippine context
+
+2. PHILIPPINE QUALIFICATIONS FRAMEWORK (PQF) OVERVIEW
+   - Define what PQF is
+   - Explain its purpose and objectives
+   - Discuss the eight levels of PQF
+   - Focus on Level 6 (Bachelor's Degree) for BSIT
+
+3. PQF AND INFORMATION TECHNOLOGY EDUCATION
+   - Discuss PQF standards for IT programs
+   - Explain competencies expected at Level 6
+   - Link to BSIT program requirements
+
+4. TRACER STUDIES AND QUALIFICATION FRAMEWORKS
+   - Explain how tracer studies evaluate qualification outcomes
+   - Discuss the role of tracer studies in assessing PQF alignment
+   - Cite related studies or literature
+
+5. PQF AND GRADUATE OUTCOMES
+   - Discuss how PQF measures graduate success
+   - Explain employment outcomes as indicators of PQF compliance
+   - Link to IT field work and competency assessments
+
+6. TECHNOLOGY IN TRACER STUDIES FOR PQF EVALUATION
+   - Discuss how web-based systems support PQF assessment
+   - Explain the role of automated tracer systems
+   - Connect to your BSIT Graduate Tracer System
+
+7. SYNTHESIS AND GAP IDENTIFICATION
+   - Summarize key points
+   - Identify gaps in existing literature
+   - Justify the need for your study
+
+SAMPLE PARAGRAPH STRUCTURE:
+
+"The Philippine Qualifications Framework (PQF) is a national policy that describes the levels of educational qualifications and sets standards for qualification outcomes. According to [Author/Organization], the PQF serves as a quality-assured system for developing, recognizing, and awarding qualifications based on standards of knowledge, skills, and values. For Information Technology programs, PQF Level 6 (Bachelor's Degree) requires graduates to demonstrate advanced technical knowledge and professional competencies applicable to IT-related work environments. Tracer studies serve as essential tools for evaluating whether academic programs meet PQF standards by tracking graduate employment outcomes and competency application in the workplace. The BSIT Graduate Tracer System contributes to this evaluation by collecting data on graduate employment status, IT field work classification, and competency ratings - all of which serve as indicators of PQF Level 6 qualification outcomes."
+
+WHERE TO PLACE PQF IN YOUR RRL:
+
+Option 1: Separate Section
+- Create a dedicated section titled "Philippine Qualifications Framework"
+- Place it after general tracer study literature
+- Before discussing your specific system
+
+Option 2: Integrated Approach
+- Integrate PQF discussion within existing sections
+- Mention PQF when discussing program standards
+- Reference PQF when discussing graduate outcomes
+
+Option 3: Thematic Organization
+- Organize RRL by themes (e.g., Qualification Frameworks, Tracer Studies, Technology)
+- Include PQF under "Qualification Frameworks" theme
+
+KEY POINTS TO INCLUDE:
+
+1. PQF Definition and Purpose
+2. PQF Level 6 Standards for IT
+3. How Tracer Studies Evaluate PQF Compliance
+4. Employment Outcomes as PQF Indicators
+5. Your System's Role in PQF Assessment
+
+CITATION FORMAT:
+
+- "According to the PQF National Coordinating Council..."
+- "As stated in Republic Act No. 10968 (PQF Act)..."
+- "Research by [Author] indicates that..."
+- "Studies show that programs aligned with PQF..."
+
+CONNECTING PQF TO YOUR SYSTEM:
+
+- Explain how your BSIT Graduate Tracer System collects PQF-relevant data
+- Discuss how system metrics align with PQF Level 6 outcomes
+- Show how your system supports PQF evaluation and compliance
+
+

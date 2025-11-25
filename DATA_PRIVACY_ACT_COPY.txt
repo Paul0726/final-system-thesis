@@ -1,0 +1,19 @@
+Data Privacy Act Integration in Chapter 1
+
+1.2 Background of the Study (DPA Context)
+
+In the digital age, data privacy has become a critical concern in research involving personal information. The Philippines enacted the Data Privacy Act of 2012 (Republic Act No. 10173) to protect personal information and establish guidelines for data collection, processing, and protection. This legislation is particularly relevant to the BSIT Graduate Tracer System, which collects personal information from graduates including demographic data, educational background, employment status, and feedback. The BSIT Graduate Tracer System (accessible at dwcsjgraduatetracer.it.com) is designed with DPA compliance as a foundational requirement. The system adheres to DPA principles of transparency, legitimate purpose, informed consent, data minimization, and proper security safeguards to ensure ethical research practices and protect participant privacy.
+
+1.3 Statement of the Problem (DPA Compliance Aspect)
+
+Traditional tracer study methods face challenges in ensuring compliance with the Data Privacy Act of 2012. The BSIT Graduate Tracer System addresses these compliance issues by implementing proper documentation, informed consent processes, and secure data handling procedures that are difficult to achieve through manual methods. The system ensures that data collection, storage, and processing follow DPA mandates for transparency, security, and participant rights protection.
+
+1.5 Significance of the Study (DPA Benefits)
+
+For Educational Institutions: The system facilitates DPA compliance by implementing privacy-by-design principles, ensuring that tracer study data collection meets legal requirements while maintaining ethical standards. For BSIT Graduates: The system ensures that personal information is handled securely and in compliance with privacy laws, protecting participant rights and maintaining confidentiality. For Researchers: The system provides a model for implementing DPA compliance in research systems, demonstrating best practices in data protection and privacy management.
+
+1.6 Scope and Limitations (DPA Compliance Statement)
+
+This study adheres to the Data Privacy Act of 2012 (RA 10173) and ensures strict confidentiality of participant data. Data processing follows DPA principles including: Informed Consent - Participants provide explicit consent through survey submission after reading the privacy statement displayed on the landing page and survey form. Data Minimization - The system collects only necessary information (demographics, educational background, employment information, and feedback) directly related to research objectives. Security Safeguards - Data is stored securely on Railway cloud platform with HTTPS encryption, user authentication, OTP verification for admin access, and password hashing (SHA-256). Participant Rights - Participants can access, correct, delete, or withdraw their data at any time through the system's user account features. Anonymization - Only aggregated and anonymized data may be used in research publications, with no personally identifiable information disclosed without explicit consent. No Third-Party Sharing - Personal information is not shared with third parties for commercial purposes, and access is restricted to authorized research personnel only. The system maintains compliance documentation including privacy notices, informed consent records, and security measures documentation to ensure full adherence to DPA requirements.
+
+

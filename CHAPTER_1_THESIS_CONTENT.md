@@ -1,0 +1,154 @@
+# CHAPTER 1
+## THE PROBLEM AND ITS BACKGROUND
+
+### 1.1 Introduction
+
+Educational institutions face challenges in tracking and monitoring the career progression of their graduates. Tracer studies are essential tools for evaluating program effectiveness, assessing employment outcomes, and identifying areas for curriculum improvement. The Bachelor of Science in Information Technology (BSIT) program requires systematic methods to gather comprehensive data about alumni employment status and career paths.
+
+Traditional tracer study methods involve manual data collection through paper-based surveys, phone interviews, or email correspondence. These approaches are time-consuming, costly, and result in data inconsistency and management difficulties. There is a growing need for automated, web-based solutions that can efficiently collect, manage, and analyze graduate data.
+
+This study presents the development of the **BSIT Graduate Tracer System**, a web-based application designed to automate the process of tracking BSIT graduates. The system provides a platform for collecting graduate information, monitoring employment status, analyzing career progression, and gathering feedback. By leveraging modern web technologies including React.js, Node.js, and PostgreSQL, the system offers an efficient, secure, and user-friendly solution for conducting tracer studies.
+
+### 1.2 Background of the Study
+
+Tracer studies provide valuable insights into employment outcomes, program relevance to industry needs, and institutional effectiveness. For BSIT programs, these studies help identify whether graduates work in IT-related fields and assess curriculum alignment with industry requirements.
+
+The Data Privacy Act of 2012 (Republic Act No. 10173) establishes guidelines for the collection, processing, and protection of personal information in the Philippines. This legislation requires institutions to ensure transparency, legitimate purpose, informed consent, data minimization, and proper data security measures. Compliance with the Data Privacy Act is both a legal requirement and an ethical obligation to protect participant privacy and rights.
+
+This system addresses the need for a modern, compliant, and efficient solution for conducting tracer studies while adhering to data privacy regulations through privacy-by-design principles.
+
+### 1.3 Statement of the Problem
+
+Traditional methods of conducting tracer studies for BSIT graduates present several challenges:
+
+1. **Inefficient Data Collection**: Manual methods are time-consuming and resource-intensive.
+2. **Data Management Difficulties**: Spreadsheets and paper records make it challenging to maintain data integrity and generate reports.
+3. **Limited Data Analysis**: Lack of tools for data visualization and statistical analysis hinders insight generation.
+4. **Lack of Real-time Updates**: Traditional methods do not allow for real-time data collection and updates.
+5. **Data Privacy Compliance Challenges**: Ensuring compliance with the Data Privacy Act of 2012 requires proper documentation and secure procedures difficult to implement manually.
+6. **Limited Alumni Engagement**: Without an accessible platform, graduates may be less motivated to participate, resulting in low response rates.
+7. **Insufficient Feedback Collection**: Traditional methods may not effectively capture detailed feedback about the program.
+
+### 1.4 Objectives of the Study
+
+#### 1.4.1 General Objective
+
+To develop a web-based BSIT Graduate Tracer System that automates the process of collecting, managing, and analyzing graduate data while ensuring compliance with the Data Privacy Act of 2012 and providing a user-friendly platform for both graduates and administrators.
+
+#### 1.4.2 Specific Objectives
+
+1. To design and develop a web-based system for collecting tracer study data from BSIT graduates through structured online surveys.
+2. To implement a secure database system for storing and managing graduate information, employment data, and feedback.
+3. To create an administrative dashboard for viewing, searching, filtering, and managing survey data.
+4. To develop a public dashboard displaying statistical insights and visualizations of graduate employment outcomes.
+5. To implement user authentication and authorization mechanisms to ensure data security.
+6. To incorporate data privacy compliance features in accordance with the Data Privacy Act of 2012.
+7. To provide a user-friendly interface that encourages graduate participation.
+8. To implement data export functionality for generating reports and analysis.
+9. To ensure the system is accessible across different devices with responsive design.
+10. To evaluate the system's effectiveness and compliance with data privacy regulations.
+
+### 1.5 Significance of the Study
+
+**For Educational Institutions:** Provides an efficient automated solution for conducting tracer studies, enables data-driven decision-making, facilitates DPA compliance, and enables real-time monitoring of graduate outcomes.
+
+**For BSIT Graduates:** Provides an accessible platform for participating in tracer studies, allows information updates, ensures secure data handling, and enables feedback contribution.
+
+**For Program Administrators:** Offers comprehensive data management tools, provides visualizations for program evaluation, and enables efficient tracking of employment trends.
+
+**For Researchers:** Demonstrates modern web technology applications, provides a model for DPA compliance, and contributes to tracer study methodologies.
+
+**For Future Studies:** Serves as a reference for developing similar systems and demonstrates best practices in web-based data collection.
+
+### 1.6 Scope and Delimitations
+
+#### 1.6.1 Scope of the Study
+
+This study covers: (1) System development using React.js, Node.js, Express.js, and PostgreSQL; (2) Data collection through comprehensive survey forms; (3) Data management with search, filter, and export functionalities; (4) Data visualization through dashboards with charts and graphs; (5) Security implementation with authentication and encryption; (6) Data Privacy Act compliance integration; (7) System deployment on Railway platform (dwcsjgraduatetracer.it.com).
+
+#### 1.6.2 Delimitations of the Study
+
+This study is limited to: (1) BSIT graduates from the specific institution; (2) Online accessibility primarily for institutional graduates; (3) Specific technology stack (React.js, Node.js, Express.js, PostgreSQL) on Railway; (4) Data collection during research period; (5) Core tracer study functionalities only; (6) Primarily English interface; (7) Desktop and mobile web browser optimization.
+
+### 1.7 Data Privacy Act Compliance
+
+This research study is conducted in full compliance with the **Data Privacy Act of 2012 (Republic Act No. 10173)** of the Philippines. The following sections outline how the study adheres to the principles and requirements of the Data Privacy Act:
+
+#### 1.7.1 Transparency
+
+The system ensures transparency through a comprehensive privacy notice displayed on the landing page and survey form, detailing what information is collected, why it is collected, how it will be used, who has access, and how participants can exercise their rights. The privacy notice uses clear, simple language for easy understanding.
+
+#### 1.7.2 Legitimate Purpose
+
+Data collection serves legitimate research purposes: conducting tracer studies, evaluating BSIT program effectiveness, identifying curriculum improvement areas, generating statistical reports, and contributing to academic research. All data collection is directly related to these objectives.
+
+#### 1.7.3 Informed Consent
+
+Participants provide informed consent through: (1) Prominent privacy statement display; (2) Required acknowledgment before survey access; (3) Explicit consent through survey submission for data collection, use, storage, and processing. Participants understand the research nature, data collection, usage, rights, and withdrawal procedures.
+
+#### 1.7.4 Data Minimization
+
+The system collects only necessary information: essential demographics, educational background, employment information, and feedback data. No unnecessary or excessive personal information is collected.
+
+#### 1.7.5 Data Storage and Security
+
+**Storage Security:** Data stored on Railway cloud platform with industry-standard security, PostgreSQL database on secure infrastructure, regular backups.
+
+**Transmission Security:** HTTPS encryption, SSL certificates, secured API endpoints.
+
+**Access Control:** Restricted database access to authorized administrators, user authentication, OTP verification for admin access, password hashing (SHA-256).
+
+**Data Protection:** Input validation and sanitization, regular security monitoring, access logs maintenance.
+
+**Data Retention:** Retained for research duration, may be archived/deleted per institutional policies, participants can request deletion.
+
+#### 1.7.6 Participant Rights
+
+Participants can exercise DPA rights: (1) **Access** - view submitted data through user account; (2) **Correction** - update information through survey editing; (3) **Erasure** - request data deletion; (4) **Object** - withdraw from study anytime; (5) **Data Portability** - request data copy in structured format.
+
+#### 1.7.7 Data Sharing and Disclosure
+
+Personal information is not improperly shared: no third-party commercial sharing, only aggregated/anonymized data in publications, restricted access to authorized personnel, strict confidentiality, no unauthorized disclosure without consent.
+
+#### 1.7.8 Compliance Documentation
+
+Maintained documentation includes: privacy notice, informed consent forms, data processing records, security measures documentation, and participant rights information. This framework ensures legal compliance and ethical standards in handling personal information.
+
+---
+
+## Definition of Terms
+
+**BSIT** - Bachelor of Science in Information Technology, a four-year degree program focusing on information technology and computer science.
+
+**Tracer Study** - A research method used to track and monitor graduates after they complete their academic program, focusing on employment outcomes and career progression.
+
+**Data Privacy Act of 2012 (RA 10173)** - A Philippine law governing the collection, processing, and protection of personal information.
+
+**Web-based Application** - A software application accessed through a web browser, allowing users to interact with the system via the internet.
+
+**React.js** - A JavaScript library for building interactive web application user interfaces.
+
+**Node.js** - A JavaScript runtime environment enabling server-side backend development.
+
+**PostgreSQL** - An open-source relational database management system.
+
+**Railway** - A cloud hosting platform for deploying web applications and databases.
+
+**OTP (One-Time Password)** - A security mechanism generating a temporary password sent via email for authentication.
+
+**HTTPS** - HyperText Transfer Protocol Secure, encrypting data transmission between browsers and servers.
+
+**Informed Consent** - The process where research participants are fully informed and voluntarily agree to participate.
+
+**Data Minimization** - The principle of collecting only the minimum personal information necessary for the intended purpose.
+
+**Dashboard** - A visual interface displaying key information, statistics, and data visualizations.
+
+**Authentication** - The process of verifying user or system identity.
+
+**Authorization** - The process of determining permitted actions for users or systems.
+
+---
+
+*This chapter provides the foundation for understanding the problem, objectives, and significance of developing the BSIT Graduate Tracer System, while ensuring full compliance with the Data Privacy Act of 2012.*
+

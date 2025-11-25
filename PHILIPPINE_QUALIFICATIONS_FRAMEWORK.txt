@@ -1,0 +1,27 @@
+Philippine Qualifications Framework (PQF) Integration in Chapter 1
+
+1.2 Background of the Study (PQF Context)
+
+The Philippine Qualifications Framework (PQF) is a national policy that describes the levels of educational qualifications and sets standards for qualification outcomes. It is a quality-assured system for developing, recognizing, and awarding qualifications based on standards of knowledge, skills, and values acquired through various learning pathways. The PQF aims to establish national standards and levels of learning outcomes, support pathways and equivalencies that enable access to qualifications, and align qualification standards with international frameworks.
+
+The BSIT Graduate Tracer System contributes to PQF objectives by tracking and evaluating how BSIT graduates apply their acquired knowledge, skills, and competencies in the workplace. The system assesses whether graduates are working in IT-related fields, evaluates their job placement success, and measures their competitive edge in the industry - all of which are indicators of how well the BSIT program aligns with PQF Level 6 (Bachelor's Degree) outcomes for Information Technology.
+
+1.3 Statement of the Problem (PQF Alignment Aspect)
+
+Traditional tracer study methods face challenges in systematically evaluating whether BSIT graduates meet PQF qualification outcomes and competencies. The BSIT Graduate Tracer System addresses this by collecting comprehensive data on graduate employment status, IT field work classification, job placement ratings, IT field competency ratings, and competitive edge assessments - all of which help determine if graduates demonstrate the knowledge, skills, and values expected at PQF Level 6 for Information Technology programs.
+
+1.5 Significance of the Study (PQF Benefits)
+
+For Educational Institutions: The system enables institutions to assess whether their BSIT program outcomes align with PQF Level 6 standards, identify gaps in curriculum delivery, and make data-driven improvements to ensure graduates meet national qualification standards.
+
+For BSIT Graduates: The system helps graduates understand how their qualifications translate to employment outcomes and career success, demonstrating the value of their PQF-aligned education in the job market.
+
+For Program Administrators: The system provides data to evaluate program effectiveness against PQF standards, supporting continuous quality improvement and ensuring alignment with national qualification frameworks.
+
+For Industry: The system helps employers understand the competencies and capabilities of BSIT graduates, facilitating better alignment between PQF qualification outcomes and industry needs.
+
+1.6 Scope and Limitations (PQF Compliance Statement)
+
+This study aligns with the Philippine Qualifications Framework (PQF) by evaluating BSIT graduate outcomes against PQF Level 6 (Bachelor's Degree) standards. The system collects data on graduate competencies including: IT field work classification to assess application of technical knowledge and skills; job placement ratings to evaluate employment outcomes; IT field competency ratings to measure technical proficiency; competitive edge assessments to determine workplace readiness; and employment status to track career progression. These indicators help determine whether graduates demonstrate the knowledge, skills, and values expected at PQF Level 6 for Information Technology qualifications. The system supports PQF objectives of establishing national standards, supporting pathways and equivalencies, and aligning qualification standards with industry needs and international frameworks.
+
+

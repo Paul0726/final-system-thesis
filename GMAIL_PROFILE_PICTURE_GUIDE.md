@@ -149,3 +149,4 @@ Pagkatapos ma-update ang profile picture:
 **Note:** Ang email address ay hindi maaalis dahil ito ay security feature ng Gmail. Pero ang sender name at profile picture ay na-customize na natin.
 
 
+

@@ -1,0 +1,21 @@
+Review of Related Literature - Philippine Qualifications Framework (PQF)
+
+2.1 Philippine Qualifications Framework
+
+The Philippine Qualifications Framework (PQF) is a national policy framework established to describe the levels of educational qualifications and set standards for qualification outcomes in the Philippines. According to the PQF National Coordinating Council, the framework serves as a quality-assured system for developing, recognizing, and awarding qualifications based on standards of knowledge, skills, and values acquired through various learning pathways (PQF.gov.ph, n.d.). The PQF operates on eight levels, with Level 6 corresponding to Bachelor's Degree programs, which includes the Bachelor of Science in Information Technology (BSIT) program.
+
+The PQF aims to establish national standards and levels of learning outcomes, support pathways and equivalencies that enable access to qualifications, and align qualification standards with international frameworks. For Information Technology programs at Level 6, graduates are expected to demonstrate advanced technical knowledge, complex problem-solving skills, and professional competencies applicable to IT-related work environments. These competencies include the ability to design, develop, and implement IT solutions; apply technical knowledge in professional settings; and demonstrate workplace readiness aligned with industry standards.
+
+2.2 Tracer Studies and Qualification Framework Evaluation
+
+Tracer studies serve as essential tools for evaluating whether academic programs meet qualification framework standards. According to research by educational institutions, tracer studies help assess program effectiveness against national qualification standards by tracking graduate employment outcomes, career progression, and competency application in the workplace. These studies provide empirical evidence of how graduates apply their acquired knowledge, skills, and values in real-world professional environments, which directly relates to PQF outcome-based evaluation.
+
+In the context of Information Technology education, studies indicate that IT programs aligned with qualification frameworks demonstrate better employment outcomes for graduates. Research shows that graduates from programs that adhere to national qualification standards are more likely to secure employment in their field of study and demonstrate higher levels of technical competency in the workplace. The BSIT Graduate Tracer System contributes to this evaluation by systematically collecting data on graduate employment status, IT field work classification, job placement success, and competency ratings - all of which serve as indicators of PQF Level 6 qualification outcomes.
+
+2.3 Technology-Enhanced Tracer Studies for PQF Assessment
+
+The integration of technology in tracer study systems has been identified as a significant advancement in qualification framework evaluation. Web-based tracer systems enable more efficient data collection, real-time analysis, and comprehensive evaluation of graduate outcomes against qualification standards. Studies have shown that automated tracer systems provide more accurate and timely data for assessing program alignment with qualification frameworks compared to traditional manual methods.
+
+The BSIT Graduate Tracer System represents this technological advancement, providing a platform for systematic assessment of BSIT program outcomes against PQF Level 6 standards. The system collects comprehensive data including IT field work classification, job placement ratings, IT field competency assessments, and competitive edge evaluations - all of which help determine whether graduates demonstrate the knowledge, skills, and values expected at PQF Level 6 for Information Technology qualifications. This technological approach supports continuous quality improvement by providing institutions with data-driven insights for curriculum enhancement and program alignment with PQF standards.
+
+

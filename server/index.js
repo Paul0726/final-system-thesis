@@ -84,6 +84,121 @@ function decrypt(encryptedText) {
   }
 }
 
+// Helper function to parse and validate date for PostgreSQL DATE type
+function parseDate(dateValue) {
+  if (!dateValue) return null;
+  
+  // If it's already a valid date string in YYYY-MM-DD format, return it
+  if (typeof dateValue === 'string') {
+    // Check if it's an encrypted string (contains colon)
+    if (dateValue.includes(':') && dateValue.split(':').length === 2) {
+      // Try to decrypt it first
+      try {
+        const decrypted = decrypt(dateValue);
+        // If decryption worked and it's a valid date, use it
+        if (decrypted && decrypted !== dateValue) {
+          dateValue = decrypted;
+        } else {
+          // If it's still encrypted or invalid, return null
+          return null;
+        }
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    // Validate date format (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (dateRegex.test(dateValue)) {
+      // Validate it's a real date
+      const date = new Date(dateValue);
+      if (!isNaN(date.getTime())) {
+        return dateValue; // Return in YYYY-MM-DD format
+      }
+    }
+  }
+  
+  // If it's a Date object, convert to YYYY-MM-DD
+  if (dateValue instanceof Date) {
+    if (!isNaN(dateValue.getTime())) {
+      return dateValue.toISOString().split('T')[0];
+    }
+  }
+  
+  return null;
+}
+
+// Helper function to safely parse integer
+function parseInteger(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const parsed = parseInt(value, 10);
+  return isNaN(parsed) ? null : parsed;
+}
+
+// Helper function to safely stringify JSON
+function safeStringify(value) {
+  if (!value) return null;
+  try {
+    if (typeof value === 'string') {
+      // Try to parse it first to validate it's valid JSON
+      JSON.parse(value);
+      return value;
+    }
+    return JSON.stringify(value);
+  } catch (e) {
+    console.error('Error stringifying JSON:', e);
+    return null;
+  }
+}
+
+// Helper function to safely parse JSON
+function safeParseJSON(value, defaultValue = null) {
+  if (!value) return defaultValue;
+  if (typeof value !== 'string') return value;
+  try {
+    return JSON.parse(value);
+  } catch (e) {
+    console.error('Error parsing JSON:', e);
+    return defaultValue;
+  }
+}
+
+// Helper function to format date_of_birth from database (handles both DATE type and old encrypted data)
+function formatDateOfBirth(dateValue) {
+  if (!dateValue) return null;
+  
+  // If it's a Date object, format it as YYYY-MM-DD
+  if (dateValue instanceof Date) {
+    return dateValue.toISOString().split('T')[0];
+  }
+  
+  if (typeof dateValue === 'string') {
+    // If it looks like an encrypted string (old data), try to decrypt
+    if (dateValue.includes(':') && dateValue.split(':').length === 2) {
+      const decrypted = decrypt(dateValue);
+      if (decrypted && decrypted !== dateValue) {
+        dateValue = decrypted;
+      } else {
+        // If decryption failed, it might be invalid encrypted data
+        return null;
+      }
+    }
+    
+    // Ensure it's in YYYY-MM-DD format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+      return dateValue;
+    }
+    
+    // Try to parse and format if it's a valid date string
+    const dateObj = new Date(dateValue);
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.toISOString().split('T')[0];
+    }
+  }
+  
+  return null;
+}
+
 // Admin authentication middleware
 const authenticateAdmin = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -606,7 +721,7 @@ app.get('/api/surveys', authenticateAdmin, async (req, res) => {
         permanentAddress: decrypt(row.permanent_address) || row.permanent_address,
         mobileNumber: decrypt(row.mobile_number) || row.mobile_number,
         emailAddress: decrypt(row.email_address) || row.email_address,
-        dateOfBirth: decrypt(row.date_of_birth) || row.date_of_birth,
+        dateOfBirth: formatDateOfBirth(row.date_of_birth),
         age: row.age,
         civilStatus: row.civil_status,
         sex: row.sex,
@@ -677,7 +792,7 @@ app.get('/api/surveys/:id', authenticateAdmin, async (req, res) => {
         permanent_address: decrypt(row.permanent_address) || row.permanent_address,
         mobile_number: decrypt(row.mobile_number) || row.mobile_number,
         email_address: decrypt(row.email_address) || row.email_address,
-        date_of_birth: decrypt(row.date_of_birth) || row.date_of_birth,
+        date_of_birth: formatDateOfBirth(row.date_of_birth),
         current_location: decrypt(row.current_location) || row.current_location
       };
       res.json({ success: true, data: survey });
@@ -721,6 +836,9 @@ app.post('/api/survey', async (req, res) => {
       }
 
       // Use PostgreSQL database - Encrypt sensitive data before storing
+      // Parse and validate date_of_birth (don't encrypt dates - PostgreSQL needs DATE type)
+      const parsedDateOfBirth = parseDate(surveyData.dateOfBirth);
+      
       const result = await pool.query(`
         INSERT INTO surveys (
           name, permanent_address, mobile_number, email_address, date_of_birth, age,
@@ -736,15 +854,15 @@ app.post('/api/survey', async (req, res) => {
         encrypt(surveyData.permanentAddress) || null,
         encrypt(surveyData.mobileNumber) || null,
         encrypt(surveyData.emailAddress),
-        encrypt(surveyData.dateOfBirth) || null,
-        surveyData.age ? parseInt(surveyData.age) : null,
+        parsedDateOfBirth, // Use parsed date instead of encrypted
+        parseInteger(surveyData.age),
         surveyData.civilStatus || null,
         surveyData.sex || null,
         encrypt(surveyData.currentLocation) || null,
         surveyData.courseGraduated || null,
-        surveyData.schoolYearGraduated,
+        surveyData.schoolYearGraduated || null,
         surveyData.maxAcademicAchievement || null,
-        JSON.stringify(surveyData.trainings || []),
+        safeStringify(surveyData.trainings),
         surveyData.civilService || null,
         surveyData.letLicense || null,
         surveyData.otherPRCLicense || null,
@@ -757,11 +875,11 @@ app.post('/api/survey', async (req, res) => {
         surveyData.isITField || null,
         surveyData.monthlyIncome || null,
         surveyData.additionalRevenueSources || null,
-        JSON.stringify(surveyData.ratings || {}),
+        safeStringify(surveyData.ratings),
         surveyData.isAlumni || null,
         surveyData.interestedAlumni || null,
-        surveyData.schoolRating || null,
-        surveyData.systemRating || null,
+        parseInteger(surveyData.schoolRating),
+        parseInteger(surveyData.systemRating),
         surveyData.schoolFeedback || null,
         surveyData.systemFeedback || null
       ]);
@@ -773,7 +891,7 @@ app.post('/api/survey', async (req, res) => {
         permanentAddress: decrypt(result.rows[0].permanent_address) || result.rows[0].permanent_address,
         mobileNumber: decrypt(result.rows[0].mobile_number) || result.rows[0].mobile_number,
         emailAddress: decrypt(result.rows[0].email_address) || result.rows[0].email_address,
-        dateOfBirth: decrypt(result.rows[0].date_of_birth) || result.rows[0].date_of_birth,
+        dateOfBirth: formatDateOfBirth(result.rows[0].date_of_birth),
         age: result.rows[0].age,
         civilStatus: result.rows[0].civil_status,
         sex: result.rows[0].sex,
@@ -931,7 +1049,7 @@ app.get('/api/survey/email/:email', async (req, res) => {
         permanentAddress: decrypt(result.rows[0].permanent_address) || result.rows[0].permanent_address,
         mobileNumber: decrypt(result.rows[0].mobile_number) || result.rows[0].mobile_number,
         emailAddress: decrypt(result.rows[0].email_address) || result.rows[0].email_address,
-        dateOfBirth: decrypt(result.rows[0].date_of_birth) || result.rows[0].date_of_birth,
+        dateOfBirth: formatDateOfBirth(result.rows[0].date_of_birth),
         age: result.rows[0].age,
         civilStatus: result.rows[0].civil_status,
         sex: result.rows[0].sex,
@@ -999,6 +1117,9 @@ app.put('/api/survey/:id', async (req, res) => {
         }
       }
       
+      // Parse and validate date_of_birth (don't encrypt dates - PostgreSQL needs DATE type)
+      const parsedDateOfBirth = parseDate(surveyData.dateOfBirth);
+      
       const result = await pool.query(`
         UPDATE surveys SET
           name = $1, permanent_address = $2, mobile_number = $3, email_address = $4,
@@ -1009,7 +1130,7 @@ app.put('/api/survey/:id', async (req, res) => {
           employment_classification = $20, job_title = $21, place_of_work = $22,
           is_it_field = $23, monthly_income = $24, additional_revenue_sources = $25, ratings = $26,
           is_alumni = $27, interested_alumni = $28, school_rating = $29, system_rating = $30,
-          school_feedback = $31, system_feedback = $32
+          school_feedback = $31, system_feedback = $32, updated_at = CURRENT_TIMESTAMP
         WHERE id = $33
         RETURNING *
       `, [
@@ -1017,15 +1138,15 @@ app.put('/api/survey/:id', async (req, res) => {
         encrypt(surveyData.permanentAddress) || null,
         encrypt(surveyData.mobileNumber) || null,
         encrypt(surveyData.emailAddress),
-        encrypt(surveyData.dateOfBirth) || null,
-        surveyData.age ? parseInt(surveyData.age) : null,
+        parsedDateOfBirth, // Use parsed date instead of encrypted
+        parseInteger(surveyData.age),
         surveyData.civilStatus || null,
         surveyData.sex || null,
         encrypt(surveyData.currentLocation) || null,
         surveyData.courseGraduated || null,
-        surveyData.schoolYearGraduated,
+        surveyData.schoolYearGraduated || null,
         surveyData.maxAcademicAchievement || null,
-        JSON.stringify(surveyData.trainings || []),
+        safeStringify(surveyData.trainings),
         surveyData.civilService || null,
         surveyData.letLicense || null,
         surveyData.otherPRCLicense || null,
@@ -1038,11 +1159,11 @@ app.put('/api/survey/:id', async (req, res) => {
         surveyData.isITField || null,
         surveyData.monthlyIncome || null,
         surveyData.additionalRevenueSources || null,
-        JSON.stringify(surveyData.ratings || {}),
+        safeStringify(surveyData.ratings),
         surveyData.isAlumni || null,
         surveyData.interestedAlumni || null,
-        surveyData.schoolRating || null,
-        surveyData.systemRating || null,
+        parseInteger(surveyData.schoolRating),
+        parseInteger(surveyData.systemRating),
         surveyData.schoolFeedback || null,
         surveyData.systemFeedback || null,
         id
@@ -1059,7 +1180,7 @@ app.put('/api/survey/:id', async (req, res) => {
         permanentAddress: decrypt(result.rows[0].permanent_address) || result.rows[0].permanent_address,
         mobileNumber: decrypt(result.rows[0].mobile_number) || result.rows[0].mobile_number,
         emailAddress: decrypt(result.rows[0].email_address) || result.rows[0].email_address,
-        dateOfBirth: decrypt(result.rows[0].date_of_birth) || result.rows[0].date_of_birth,
+        dateOfBirth: formatDateOfBirth(result.rows[0].date_of_birth),
         age: result.rows[0].age,
         civilStatus: result.rows[0].civil_status,
         sex: result.rows[0].sex,
@@ -1086,7 +1207,8 @@ app.put('/api/survey/:id', async (req, res) => {
         systemRating: result.rows[0].system_rating,
         schoolFeedback: result.rows[0].school_feedback,
         systemFeedback: result.rows[0].system_feedback,
-        createdAt: result.rows[0].created_at
+        createdAt: result.rows[0].created_at,
+        updatedAt: result.rows[0].updated_at
       };
       
       // Update user's survey_id if email matches
