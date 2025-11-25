@@ -163,6 +163,53 @@ function safeParseJSON(value, defaultValue = null) {
   }
 }
 
+// Helper function to safely truncate string values to prevent database errors
+function safeTruncate(value, maxLength) {
+  if (!value || typeof value !== 'string') return value;
+  if (value.length <= maxLength) return value;
+  // Truncate and log warning
+  console.warn(`⚠️ Value truncated from ${value.length} to ${maxLength} characters: ${value.substring(0, 50)}...`);
+  return value.substring(0, maxLength);
+}
+
+// Helper function to validate and sanitize survey data before insertion
+function sanitizeSurveyData(surveyData) {
+  const sanitized = { ...surveyData };
+  
+  // Define max lengths for each field (matching database schema)
+  // Using camelCase keys to match the input data format
+  const maxLengths = {
+    name: 255,
+    mobileNumber: 200,
+    emailAddress: 255,
+    civilStatus: 100,
+    sex: 10,
+    courseGraduated: 255,
+    schoolYearGraduated: 20,
+    civilService: 255,
+    letLicense: 255,
+    otherPRCLicense: 255,
+    isEmployed: 10,
+    employmentNature: 100,
+    employmentClassification: 100,
+    jobTitle: 255,
+    placeOfWork: 255, // This was likely the problem!
+    isITField: 10,
+    monthlyIncome: 100,
+    isAlumni: 10,
+    interestedAlumni: 10
+  };
+  
+  // Truncate fields that exceed max length
+  Object.keys(maxLengths).forEach(key => {
+    if (sanitized[key] && typeof sanitized[key] === 'string') {
+      sanitized[key] = safeTruncate(sanitized[key], maxLengths[key]);
+    }
+  });
+  
+  return sanitized;
+}
+
 // Helper function to format date_of_birth from database (handles both DATE type and old encrypted data)
 function formatDateOfBirth(dateValue) {
   if (!dateValue) return null;
@@ -813,7 +860,8 @@ app.get('/api/surveys/:id', authenticateAdmin, async (req, res) => {
 // Create new survey
 app.post('/api/survey', async (req, res) => {
   try {
-    const surveyData = req.body;
+    // Sanitize and validate survey data to prevent database errors
+    const surveyData = sanitizeSurveyData(req.body);
     
     // Required fields validation
     if (!surveyData.name || !surveyData.emailAddress || !surveyData.schoolYearGraduated) {
@@ -1098,7 +1146,8 @@ app.get('/api/survey/email/:email', async (req, res) => {
 app.put('/api/survey/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const surveyData = req.body;
+    // Sanitize and validate survey data to prevent database errors
+    const surveyData = sanitizeSurveyData(req.body);
     
     // Check if user is admin or owns this survey
     const isAdmin = req.headers.authorization?.includes('admin-token') || 

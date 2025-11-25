@@ -67,18 +67,18 @@ if (process.env.DATABASE_URL) {
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             permanent_address TEXT,
-            mobile_number VARCHAR(50),
+            mobile_number VARCHAR(200),
             email_address VARCHAR(255) NOT NULL,
             date_of_birth DATE,
             age INTEGER,
-            civil_status VARCHAR(50),
+            civil_status VARCHAR(100),
             sex VARCHAR(10),
             current_location TEXT,
             course_graduated VARCHAR(255),
-            school_year_graduated VARCHAR(10),
+            school_year_graduated VARCHAR(20),
             max_academic_achievement TEXT,
             trainings JSONB,
-            civil_service VARCHAR(50),
+            civil_service VARCHAR(255),
             let_license VARCHAR(255),
             other_prc_license VARCHAR(255),
             professional_organizations TEXT,
@@ -86,7 +86,7 @@ if (process.env.DATABASE_URL) {
             employment_nature VARCHAR(100),
             employment_classification VARCHAR(100),
             job_title VARCHAR(255),
-            place_of_work VARCHAR(50),
+            place_of_work VARCHAR(255),
             is_it_field VARCHAR(10),
             monthly_income VARCHAR(100),
             additional_revenue_sources TEXT,
@@ -110,9 +110,59 @@ if (process.env.DATABASE_URL) {
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_rating INTEGER`);
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS school_feedback TEXT`);
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_feedback TEXT`);
-        await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_it_field VARCHAR(10)`);
+          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_it_field VARCHAR(10)`);
         } catch (err) {
           // Columns might already exist, ignore error
+        }
+
+        // Migrate existing columns to larger sizes (for existing databases)
+        try {
+          console.log('🔄 Migrating column sizes for better compatibility...');
+          
+          // Increase mobile_number from VARCHAR(50) to VARCHAR(200)
+          await pool.query(`
+            ALTER TABLE surveys 
+            ALTER COLUMN mobile_number TYPE VARCHAR(200)
+            USING mobile_number::VARCHAR(200)
+          `);
+          
+          // Increase civil_status from VARCHAR(50) to VARCHAR(100)
+          await pool.query(`
+            ALTER TABLE surveys 
+            ALTER COLUMN civil_status TYPE VARCHAR(100)
+            USING civil_status::VARCHAR(100)
+          `);
+          
+          // Increase civil_service from VARCHAR(50) to VARCHAR(255)
+          await pool.query(`
+            ALTER TABLE surveys 
+            ALTER COLUMN civil_service TYPE VARCHAR(255)
+            USING civil_service::VARCHAR(255)
+          `);
+          
+          // Increase place_of_work from VARCHAR(50) to VARCHAR(255) - THIS IS LIKELY THE CULPRIT
+          await pool.query(`
+            ALTER TABLE surveys 
+            ALTER COLUMN place_of_work TYPE VARCHAR(255)
+            USING place_of_work::VARCHAR(255)
+          `);
+          
+          // Increase school_year_graduated from VARCHAR(10) to VARCHAR(20) for safety
+          await pool.query(`
+            ALTER TABLE surveys 
+            ALTER COLUMN school_year_graduated TYPE VARCHAR(20)
+            USING school_year_graduated::VARCHAR(20)
+          `);
+          
+          console.log('✅ Column migrations completed successfully');
+        } catch (err) {
+          // Migration errors are OK - columns might already be the right size or not exist
+          // This is expected for new databases or if columns are already migrated
+          if (err.message.includes('does not exist') || err.message.includes('already')) {
+            console.log('ℹ️ Some columns may already be migrated or don\'t exist yet');
+          } else {
+            console.log('⚠️ Migration note:', err.message);
+          }
         }
 
       // Create technical_support_reports table
