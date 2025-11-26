@@ -205,15 +205,17 @@
   text-align: center;
   color: white;
   margin-bottom: var(--spacing-xl);
-  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-3xl);
+  padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-3xl);
   position: relative;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
   border-radius: var(--radius-2xl);
   box-shadow: 
     var(--shadow-2xl),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+    0 0 0 3px rgba(255, 255, 255, 0.2),
+    inset 0 2px 8px rgba(255, 255, 255, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
 }
 
 .admin-header::after {
@@ -311,11 +313,16 @@
 .admin-header h1 {
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: var(--spacing-sm);
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
   font-weight: 800;
   letter-spacing: -0.5px;
   color: #ffffff !important;
   line-height: 1.2;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .admin-header p {
