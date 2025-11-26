@@ -58,7 +58,10 @@ const sendOTP = async (email) => {
 
     // Determine if this is admin or user OTP
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
-    const isAdmin = email === adminEmail;
+    // Case-insensitive comparison for consistency
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    const normalizedAdminEmail = (adminEmail || '').trim().toLowerCase();
+    const isAdmin = normalizedEmail === normalizedAdminEmail;
     const subject = isAdmin 
       ? 'Admin Login OTP - BSIT Graduate Tracer System'
       : 'Login OTP - BSIT Graduate Tracer System';
