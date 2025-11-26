@@ -11,6 +11,7 @@ const PersonalDashboard = lazy(() => import('./pages/PersonalDashboard'));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const TechnicalSupport = lazy(() => import('./pages/TechnicalSupport'));
+const EvaluationResultsPage = lazy(() => import('./pages/EvaluationResultsPage'));
 
 // Loading component
 const LoadingSpinner = () => (
@@ -61,6 +62,7 @@ function App() {
             <Route path="/login" element={<UserLogin />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/technical-support" element={<TechnicalSupport />} />
+            <Route path="/evaluation-results" element={<EvaluationResultsPage />} />
           </Routes>
         </Suspense>
       </div>

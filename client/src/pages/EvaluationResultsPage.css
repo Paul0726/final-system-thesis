@@ -1,0 +1,248 @@
+.evaluation-results-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%);
+  padding: 20px;
+}
+
+.evaluation-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.evaluation-header {
+  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
+  color: white;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.evaluation-header .back-link {
+  color: white;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+
+.evaluation-header .back-link:hover {
+  opacity: 1;
+}
+
+.evaluation-header .header-title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.evaluation-header .header-seal {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background: white;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.evaluation-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.evaluation-header p {
+  margin: 5px 0 0 0;
+  opacity: 0.9;
+  font-size: 16px;
+}
+
+.evaluation-content {
+  padding: 40px;
+}
+
+.evaluation-table-section {
+  margin-bottom: 50px;
+}
+
+.evaluation-table-section h2 {
+  color: #11823b;
+  font-size: 22px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #11823b;
+}
+
+.evaluation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.evaluation-table thead {
+  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
+  color: white;
+}
+
+.evaluation-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.evaluation-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 15px;
+}
+
+.evaluation-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.evaluation-table .overall-row {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+.evaluation-table .overall-row td {
+  border-top: 2px solid #11823b;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.rating-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.evaluation-description {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9fafb;
+  border-left: 4px solid #11823b;
+  border-radius: 4px;
+  line-height: 1.6;
+  color: #374151;
+  font-size: 15px;
+}
+
+.evaluation-description strong {
+  color: #11823b;
+}
+
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: white;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-back {
+  display: inline-block;
+  padding: 10px 20px;
+  background: white;
+  color: #11823b;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+  background: #f3f4f6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .evaluation-results-page {
+    padding: 10px;
+  }
+
+  .evaluation-content {
+    padding: 20px;
+  }
+
+  .evaluation-header {
+    padding: 20px;
+  }
+
+  .evaluation-header .header-title {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .evaluation-header .header-seal {
+    width: 60px;
+    height: 60px;
+  }
+
+  .evaluation-header h1 {
+    font-size: 22px;
+  }
+
+  .evaluation-table-section h2 {
+    font-size: 18px;
+  }
+
+  .evaluation-table {
+    font-size: 14px;
+  }
+
+  .evaluation-table th,
+  .evaluation-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .evaluation-table th:first-child,
+  .evaluation-table td:first-child {
+    max-width: 200px;
+    word-wrap: break-word;
+  }
+
+  .rating-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    min-width: 80px;
+  }
+
+  .evaluation-description {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+

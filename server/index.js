@@ -704,6 +704,7 @@ app.get('/api/feedbacks', async (req, res) => {
         systemRating: row.system_rating,
         schoolFeedback: row.school_feedback,
         systemFeedback: row.system_feedback,
+        systemEvaluation: safeParseJSON(row.system_evaluation) || {},
         createdAt: row.created_at
       }));
       
@@ -806,6 +807,7 @@ app.get('/api/surveys', authenticateAdmin, async (req, res) => {
         systemRating: row.system_rating,
         schoolFeedback: row.school_feedback,
         systemFeedback: row.system_feedback,
+        systemEvaluation: safeParseJSON(row.system_evaluation) || {},
         createdAt: row.created_at
       }));
       res.json({
@@ -981,8 +983,8 @@ app.post('/api/survey', async (req, res) => {
           max_academic_achievement, trainings, civil_service, let_license, other_prc_license,
           professional_organizations, is_employed, employment_nature, employment_classification,
           job_title, place_of_work, is_it_field, monthly_income, additional_revenue_sources, ratings,
-          is_alumni, interested_alumni, school_rating, system_rating, school_feedback, system_feedback
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+          is_alumni, interested_alumni, school_rating, system_rating, school_feedback, system_feedback, system_evaluation
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33)
         RETURNING *
       `, [
         cleanValue(surveyData.name),
@@ -1016,7 +1018,8 @@ app.post('/api/survey', async (req, res) => {
         parseInteger(surveyData.schoolRating),
         parseInteger(surveyData.systemRating),
         cleanValue(surveyData.schoolFeedback),
-        cleanValue(surveyData.systemFeedback)
+        cleanValue(surveyData.systemFeedback),
+        safeStringify(surveyData.systemEvaluation || {})
       ]);
 
       // Convert snake_case to camelCase for response and decrypt sensitive data
@@ -1053,6 +1056,7 @@ app.post('/api/survey', async (req, res) => {
         systemRating: result.rows[0].system_rating,
         schoolFeedback: result.rows[0].school_feedback,
         systemFeedback: result.rows[0].system_feedback,
+        systemEvaluation: safeParseJSON(result.rows[0].system_evaluation) || {},
         createdAt: result.rows[0].created_at
       };
 
@@ -1231,6 +1235,7 @@ app.get('/api/survey/email/:email', async (req, res) => {
         systemRating: result.rows[0].system_rating,
         schoolFeedback: result.rows[0].school_feedback,
         systemFeedback: result.rows[0].system_feedback,
+        systemEvaluation: safeParseJSON(result.rows[0].system_evaluation) || {},
         createdAt: result.rows[0].created_at
       };
       
@@ -1286,8 +1291,8 @@ app.put('/api/survey/:id', async (req, res) => {
           employment_classification = $20, job_title = $21, place_of_work = $22,
           is_it_field = $23, monthly_income = $24, additional_revenue_sources = $25, ratings = $26,
           is_alumni = $27, interested_alumni = $28, school_rating = $29, system_rating = $30,
-          school_feedback = $31, system_feedback = $32, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $33
+          school_feedback = $31, system_feedback = $32, system_evaluation = $33, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $34
         RETURNING *
       `, [
         surveyData.name,
@@ -1322,6 +1327,7 @@ app.put('/api/survey/:id', async (req, res) => {
         parseInteger(surveyData.systemRating),
         surveyData.schoolFeedback || null,
         surveyData.systemFeedback || null,
+        safeStringify(surveyData.systemEvaluation || {}),
         id
       ]);
       
@@ -1720,6 +1726,164 @@ app.get('/api/stats', async (req, res) => {
       }
     };
     res.json({ success: true, data: stats });
+  }
+});
+
+// Get system evaluation statistics
+app.get('/api/evaluation-stats', async (req, res) => {
+  try {
+    if (useDatabase && pool) {
+      const result = await pool.query(`
+        SELECT system_evaluation 
+        FROM surveys 
+        WHERE system_evaluation IS NOT NULL AND system_evaluation != 'null' AND system_evaluation != '{}'
+      `);
+      
+      const evaluations = result.rows
+        .map(row => safeParseJSON(row.system_evaluation))
+        .filter(eval => eval && typeof eval === 'object');
+      
+      if (evaluations.length === 0) {
+        return res.json({
+          success: true,
+          data: {
+            functionality: { mean: 0, rating: 'N/A', indicators: [] },
+            reliability: { mean: 0, rating: 'N/A', indicators: [] },
+            accuracy: { mean: 0, rating: 'N/A', indicators: [] },
+            efficiency: { mean: 0, rating: 'N/A', indicators: [] },
+            overall: { mean: 0, rating: 'N/A' }
+          }
+        });
+      }
+      
+      // Helper function to calculate mean and rating
+      const calculateMeanAndRating = (values) => {
+        const validValues = values.filter(v => v !== null && v !== undefined && v !== '');
+        if (validValues.length === 0) return { mean: 0, rating: 'N/A' };
+        
+        const sum = validValues.reduce((acc, val) => acc + parseFloat(val), 0);
+        const mean = sum / validValues.length;
+        
+        let rating = 'N/A';
+        if (mean >= 4.51 && mean <= 5.00) rating = 'Excellent';
+        else if (mean >= 3.51 && mean <= 4.50) rating = 'Very Good';
+        else if (mean >= 2.51 && mean <= 3.50) rating = 'Good';
+        else if (mean >= 1.51 && mean <= 2.50) rating = 'Fair';
+        else if (mean >= 1.00 && mean <= 1.50) rating = 'Poor';
+        
+        return { mean: parseFloat(mean.toFixed(2)), rating };
+      };
+      
+      // Functionality
+      const functionalityQ1 = evaluations.map(e => e.functionality?.q1).filter(v => v);
+      const functionalityQ2 = evaluations.map(e => e.functionality?.q2).filter(v => v);
+      const functionalityQ3 = evaluations.map(e => e.functionality?.q3).filter(v => v);
+      const functionalityMeans = [
+        functionalityQ1.length > 0 ? functionalityQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / functionalityQ1.length : 0,
+        functionalityQ2.length > 0 ? functionalityQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / functionalityQ2.length : 0,
+        functionalityQ3.length > 0 ? functionalityQ3.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / functionalityQ3.length : 0
+      ];
+      const functionalityOverall = calculateMeanAndRating([...functionalityQ1, ...functionalityQ2, ...functionalityQ3]);
+      
+      // Reliability
+      const reliabilityQ1 = evaluations.map(e => e.reliability?.q1).filter(v => v);
+      const reliabilityQ2 = evaluations.map(e => e.reliability?.q2).filter(v => v);
+      const reliabilityQ3 = evaluations.map(e => e.reliability?.q3).filter(v => v);
+      const reliabilityMeans = [
+        reliabilityQ1.length > 0 ? reliabilityQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / reliabilityQ1.length : 0,
+        reliabilityQ2.length > 0 ? reliabilityQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / reliabilityQ2.length : 0,
+        reliabilityQ3.length > 0 ? reliabilityQ3.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / reliabilityQ3.length : 0
+      ];
+      const reliabilityOverall = calculateMeanAndRating([...reliabilityQ1, ...reliabilityQ2, ...reliabilityQ3]);
+      
+      // Accuracy
+      const accuracyQ1 = evaluations.map(e => e.accuracy?.q1).filter(v => v);
+      const accuracyQ2 = evaluations.map(e => e.accuracy?.q2).filter(v => v);
+      const accuracyQ3 = evaluations.map(e => e.accuracy?.q3).filter(v => v);
+      const accuracyMeans = [
+        accuracyQ1.length > 0 ? accuracyQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / accuracyQ1.length : 0,
+        accuracyQ2.length > 0 ? accuracyQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / accuracyQ2.length : 0,
+        accuracyQ3.length > 0 ? accuracyQ3.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / accuracyQ3.length : 0
+      ];
+      const accuracyOverall = calculateMeanAndRating([...accuracyQ1, ...accuracyQ2, ...accuracyQ3]);
+      
+      // Efficiency
+      const efficiencyQ1 = evaluations.map(e => e.efficiency?.q1).filter(v => v);
+      const efficiencyQ2 = evaluations.map(e => e.efficiency?.q2).filter(v => v);
+      const efficiencyQ3 = evaluations.map(e => e.efficiency?.q3).filter(v => v);
+      const efficiencyMeans = [
+        efficiencyQ1.length > 0 ? efficiencyQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / efficiencyQ1.length : 0,
+        efficiencyQ2.length > 0 ? efficiencyQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / efficiencyQ2.length : 0,
+        efficiencyQ3.length > 0 ? efficiencyQ3.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / efficiencyQ3.length : 0
+      ];
+      const efficiencyOverall = calculateMeanAndRating([...efficiencyQ1, ...efficiencyQ2, ...efficiencyQ3]);
+      
+      // Overall mean
+      const allMeans = [functionalityOverall.mean, reliabilityOverall.mean, accuracyOverall.mean, efficiencyOverall.mean].filter(m => m > 0);
+      const overallMean = allMeans.length > 0 ? allMeans.reduce((a, b) => a + b, 0) / allMeans.length : 0;
+      const overallRating = calculateMeanAndRating(allMeans.map(String)).rating;
+      
+      res.json({
+        success: true,
+        data: {
+          functionality: {
+            mean: functionalityOverall.mean,
+            rating: functionalityOverall.rating,
+            indicators: [
+              { text: 'The system is easy to use and learned.', mean: parseFloat(functionalityMeans[0].toFixed(2)), rating: calculateMeanAndRating(functionalityQ1).rating },
+              { text: 'The system can be used with comfort and convenience.', mean: parseFloat(functionalityMeans[1].toFixed(2)), rating: calculateMeanAndRating(functionalityQ2).rating },
+              { text: 'The system is user-friendly.', mean: parseFloat(functionalityMeans[2].toFixed(2)), rating: calculateMeanAndRating(functionalityQ3).rating }
+            ]
+          },
+          reliability: {
+            mean: reliabilityOverall.mean,
+            rating: reliabilityOverall.rating,
+            indicators: [
+              { text: 'The system provides the correct desired output.', mean: parseFloat(reliabilityMeans[0].toFixed(2)), rating: calculateMeanAndRating(reliabilityQ1).rating },
+              { text: 'Absence of failures in the system.', mean: parseFloat(reliabilityMeans[1].toFixed(2)), rating: calculateMeanAndRating(reliabilityQ2).rating },
+              { text: 'The system is accurate in performance.', mean: parseFloat(reliabilityMeans[2].toFixed(2)), rating: calculateMeanAndRating(reliabilityQ3).rating }
+            ]
+          },
+          accuracy: {
+            mean: accuracyOverall.mean,
+            rating: accuracyOverall.rating,
+            indicators: [
+              { text: 'The system gives accurate information/computation.', mean: parseFloat(accuracyMeans[0].toFixed(2)), rating: calculateMeanAndRating(accuracyQ1).rating },
+              { text: 'The system provides accurate outputs.', mean: parseFloat(accuracyMeans[1].toFixed(2)), rating: calculateMeanAndRating(accuracyQ2).rating },
+              { text: 'The system provides accurate reports.', mean: parseFloat(accuracyMeans[2].toFixed(2)), rating: calculateMeanAndRating(accuracyQ3).rating }
+            ]
+          },
+          efficiency: {
+            mean: efficiencyOverall.mean,
+            rating: efficiencyOverall.rating,
+            indicators: [
+              { text: 'The system is well organized and working properly.', mean: parseFloat(efficiencyMeans[0].toFixed(2)), rating: calculateMeanAndRating(efficiencyQ1).rating },
+              { text: 'The system is well organized for purpose.', mean: parseFloat(efficiencyMeans[1].toFixed(2)), rating: calculateMeanAndRating(efficiencyQ2).rating },
+              { text: 'The system is capable to produce the desired output without delaying the run time performance.', mean: parseFloat(efficiencyMeans[2].toFixed(2)), rating: calculateMeanAndRating(efficiencyQ3).rating }
+            ]
+          },
+          overall: {
+            mean: parseFloat(overallMean.toFixed(2)),
+            rating: overallRating
+          }
+        }
+      });
+    } else {
+      // Fallback to in-memory
+      res.json({
+        success: true,
+        data: {
+          functionality: { mean: 0, rating: 'N/A', indicators: [] },
+          reliability: { mean: 0, rating: 'N/A', indicators: [] },
+          accuracy: { mean: 0, rating: 'N/A', indicators: [] },
+          efficiency: { mean: 0, rating: 'N/A', indicators: [] },
+          overall: { mean: 0, rating: 'N/A' }
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching evaluation stats:', error);
+    res.status(500).json({ success: false, message: 'Error fetching evaluation statistics' });
   }
 });
 

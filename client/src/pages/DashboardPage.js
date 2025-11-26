@@ -108,6 +108,9 @@ function DashboardPage() {
               <p>BSIT Graduate Statistics and Insights</p>
             </div>
           </div>
+          <Link to="/evaluation-results" className="evaluation-results-btn">
+            View System Evaluation Results
+          </Link>
         </header>
 
         {stats && (
