@@ -1020,14 +1020,6 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
     setExpanded(!expanded);
   };
   
-  const handleButtonClick = (e, callback) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (callback) {
-      callback();
-    }
-  };
-  
   return (
     <div className="survey-card">
       <div 
