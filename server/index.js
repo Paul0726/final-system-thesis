@@ -1730,6 +1730,159 @@ app.get('/api/stats', async (req, res) => {
 });
 
 // Get system evaluation statistics
+// Send notification to respondents
+app.post('/api/send-notification', async (req, res) => {
+  try {
+    // Verify admin authentication
+    const adminToken = req.headers['x-admin-token'] || req.headers['authorization']?.replace('Bearer ', '');
+    if (!adminToken) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    
+    const { subject, message, recipientFilter, selectedYear } = req.body;
+    
+    if (!subject || !message) {
+      return res.status(400).json({ success: false, message: 'Subject and message are required' });
+    }
+    
+    if (!pool) {
+      return res.status(500).json({ success: false, message: 'Database not available' });
+    }
+    
+    // Build query based on recipient filter
+    let query = 'SELECT DISTINCT email_address, name FROM surveys WHERE email_address IS NOT NULL AND email_address != \'\'';
+    const queryParams = [];
+    
+    if (recipientFilter === 'employed') {
+      query += ' AND is_employed = $1';
+      queryParams.push('Yes');
+    } else if (recipientFilter === 'unemployed') {
+      query += ' AND is_employed = $1';
+      queryParams.push('No');
+    } else if (recipientFilter === 'self-employed') {
+      query += ' AND employment_nature = $1';
+      queryParams.push('Self-Employed');
+    } else if (recipientFilter === 'by-year' && selectedYear) {
+      query += ' AND school_year_graduated LIKE $1';
+      queryParams.push(`${selectedYear}%`);
+    }
+    // 'all' doesn't need additional filter
+    
+    const result = await pool.query(query, queryParams);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'No recipients found matching the criteria' });
+    }
+    
+    // Get email addresses (decrypt if needed)
+    const recipients = [];
+    const emailMap = new Map(); // To avoid duplicates
+    
+    for (const row of result.rows) {
+      let email = decrypt(row.email_address) || row.email_address;
+      if (email && !emailMap.has(email.toLowerCase())) {
+        emailMap.set(email.toLowerCase(), true);
+        recipients.push({
+          email: email,
+          name: row.name || 'Respondent'
+        });
+      }
+    }
+    
+    if (recipients.length === 0) {
+      return res.status(404).json({ success: false, message: 'No valid email addresses found' });
+    }
+    
+    // Send emails to all recipients
+    const emailResults = {
+      success: 0,
+      failed: 0,
+      errors: []
+    };
+    
+    // Use nodemailer to send emails
+    const nodemailer = require('nodemailer');
+    
+    // Create transporter (reuse from auth.js if possible, or create new)
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER || process.env.EMAIL_USER || 'johnpauld750@gmail.com',
+        pass: process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS || process.env.EMAIL_APP_PASSWORD
+      }
+    });
+    
+    // Send emails in batches to avoid rate limiting
+    const batchSize = 10;
+    for (let i = 0; i < recipients.length; i += batchSize) {
+      const batch = recipients.slice(i, i + batchSize);
+      
+      await Promise.allSettled(
+        batch.map(async (recipient) => {
+          try {
+            const mailOptions = {
+              from: `"BSIT Graduate Tracer System" <${process.env.GMAIL_USER || process.env.EMAIL_USER || 'johnpauld750@gmail.com'}>`,
+              to: recipient.email,
+              subject: `[IMPORTANT] ${subject}`,
+              html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <div style="background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%); padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+                    <h1 style="color: white; margin: 0; font-size: 24px;">BSIT Graduate Tracer System</h1>
+                  </div>
+                  <div style="background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+                    <h2 style="color: #11823b; margin-top: 0;">Important Notification</h2>
+                    <p style="color: #1f2937; line-height: 1.6; font-size: 16px;">
+                      Dear ${recipient.name || 'Respondent'},
+                    </p>
+                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #11823b; margin: 20px 0;">
+                      <p style="color: #1f2937; line-height: 1.8; white-space: pre-wrap; margin: 0;">${message}</p>
+                    </div>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+                      This is an automated message from the BSIT Graduate Tracer System.<br>
+                      Please do not reply to this email.
+                    </p>
+                  </div>
+                  <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 12px;">
+                    <p>© ${new Date().getFullYear()} BSIT Graduate Tracer System | Divine Word College of San Jose</p>
+                  </div>
+                </div>
+              `,
+              text: `Dear ${recipient.name || 'Respondent'},\n\n${message}\n\nThis is an automated message from the BSIT Graduate Tracer System.`
+            };
+            
+            await transporter.sendMail(mailOptions);
+            emailResults.success++;
+          } catch (error) {
+            console.error(`Failed to send email to ${recipient.email}:`, error);
+            emailResults.failed++;
+            emailResults.errors.push({
+              email: recipient.email,
+              error: error.message
+            });
+          }
+        })
+      );
+      
+      // Small delay between batches to avoid rate limiting
+      if (i + batchSize < recipients.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+    
+    res.json({
+      success: true,
+      message: `Notification sent to ${emailResults.success} recipient(s)${emailResults.failed > 0 ? `. ${emailResults.failed} failed.` : ''}`,
+      recipientCount: emailResults.success,
+      totalRecipients: recipients.length,
+      failed: emailResults.failed,
+      errors: emailResults.errors.length > 0 ? emailResults.errors : undefined
+    });
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    res.status(500).json({ success: false, message: 'Error sending notification: ' + error.message });
+  }
+});
+
 app.get('/api/evaluation-stats', async (req, res) => {
   try {
     if (useDatabase && pool) {
