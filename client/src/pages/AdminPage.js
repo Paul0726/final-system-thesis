@@ -691,7 +691,17 @@ function AdminPage() {
               </svg>
               Back to Home
             </Link>
-            <button onClick={handleLogout} className="logout-btn">
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                handleLogout();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                handleLogout();
+              }}
+              className="logout-btn"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
@@ -818,7 +828,14 @@ function AdminPage() {
                   flexWrap: 'wrap'
                 }}>
                   <button
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(prev => Math.max(1, prev - 1));
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(prev => Math.max(1, prev - 1));
+                    }}
                     disabled={currentPage === 1}
                     style={{
                       padding: '8px 16px',
@@ -842,7 +859,14 @@ function AdminPage() {
                   </span>
                   
                   <button
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                    }}
                     disabled={currentPage === totalPages}
                     style={{
                       padding: '8px 16px',
@@ -990,9 +1014,30 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
     surveyStatus = 'Unemployed';
   }
   
+  const handleCardClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpanded(!expanded);
+  };
+  
+  const handleButtonClick = (e, callback) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (callback) {
+      callback();
+    }
+  };
+  
   return (
     <div className="survey-card">
-      <div className="survey-card-header" onClick={() => setExpanded(!expanded)}>
+      <div 
+        className="survey-card-header" 
+        onClick={handleCardClick}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          handleCardClick(e);
+        }}
+      >
         <div className="survey-card-main">
           <div>
             <h3>{survey.name || 'N/A'}</h3>
@@ -1032,6 +1077,12 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
             )}
             <button
               onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDownloadPDF(survey);
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 onDownloadPDF(survey);
               }}
@@ -1046,8 +1097,18 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
             </button>
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
-                onDelete(survey.id || index);
+                if (window.confirm(`Are you sure you want to delete the survey for ${survey.name}? This action cannot be undone.`)) {
+                  onDelete(survey.id || index);
+                }
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.confirm(`Are you sure you want to delete the survey for ${survey.name}? This action cannot be undone.`)) {
+                  onDelete(survey.id || index);
+                }
               }}
               className="btn-delete"
               title="Delete"

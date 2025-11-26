@@ -264,6 +264,150 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #1f2937 !important;
 }
 
+/* MOBILE FIXES - Button and Text Readability */
+@media (max-width: 768px) {
+  /* Fix button text color - ensure all buttons have readable text */
+  button {
+    color: #ffffff !important;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+  
+  /* Green buttons - white text */
+  button.btn-primary,
+  .btn-primary,
+  button[class*="btn-primary"],
+  button[style*="background: #11823b"],
+  button[style*="background-color: #11823b"] {
+    color: #ffffff !important;
+    background-color: #11823b !important;
+    border-color: #11823b !important;
+  }
+  
+  /* White buttons - green text */
+  button.btn-secondary,
+  .btn-secondary,
+  button[class*="btn-secondary"],
+  button[style*="background: white"],
+  button[style*="background-color: white"] {
+    color: #11823b !important;
+    background-color: #ffffff !important;
+    border-color: #11823b !important;
+  }
+  
+  /* Disabled buttons */
+  button:disabled {
+    color: #9ca3af !important;
+    background-color: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+    opacity: 0.6 !important;
+  }
+  
+  /* Links - ensure readable */
+  a {
+    color: #11823b !important;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+    touch-action: manipulation;
+  }
+  
+  a.btn-primary,
+  a[class*="btn-primary"] {
+    color: #ffffff !important;
+  }
+  
+  /* Text on colored backgrounds */
+  h1, h2, h3, h4, h5, h6 {
+    color: #1f2937 !important;
+  }
+  
+  /* White text on green backgrounds */
+  .dashboard-header h1,
+  .dashboard-header p,
+  .evaluation-header h1,
+  .evaluation-header p,
+  [style*="color: white"],
+  [class*="header"] h1,
+  [class*="header"] p {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Prevent double-tap zoom on buttons */
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+  }
+  
+  /* Fix for text in cards and containers */
+  .stat-card,
+  .survey-card,
+  .card,
+  [class*="card"],
+  [class*="container"] {
+    color: #1f2937 !important;
+  }
+  
+  /* Ensure labels are readable */
+  label {
+    color: #1f2937 !important;
+    font-weight: 500 !important;
+  }
+  
+  /* Fix for text in modals */
+  .modal,
+  .validation-modal,
+  [class*="modal"] {
+    color: #1f2937 !important;
+  }
+  
+  /* Fix for pagination text */
+  .pagination,
+  [class*="pagination"] {
+    color: #11823b !important;
+  }
+  
+  /* Fix for table text */
+  table,
+  table td,
+  table th {
+    color: #1f2937 !important;
+  }
+  
+  table thead {
+    background-color: #11823b !important;
+    color: #ffffff !important;
+  }
+  
+  /* Rating badges */
+  .rating-badge,
+  [class*="rating"] {
+    color: #ffffff !important;
+  }
+}
+
+/* Tablet fixes */
+@media (min-width: 769px) and (max-width: 1024px) {
+  button {
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+    touch-action: manipulation;
+  }
+  
+  button.btn-primary,
+  .btn-primary {
+    color: #ffffff !important;
+  }
+  
+  button.btn-secondary,
+  .btn-secondary {
+    color: #11823b !important;
+  }
+}
+
 /* Fix for select dropdown text */
 select option {
   color: #1f2937 !important;

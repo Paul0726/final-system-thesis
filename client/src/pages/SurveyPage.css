@@ -54,6 +54,42 @@
     transition: none !important;
     animation: none !important;
   }
+  
+  /* Fix button text colors on mobile */
+  button {
+    color: #ffffff !important;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+    touch-action: manipulation;
+    user-select: none;
+  }
+  
+  .btn-primary,
+  .btn-submit,
+  .btn-cancel {
+    color: #ffffff !important;
+    background-color: #11823b !important;
+  }
+  
+  .btn-secondary {
+    color: #11823b !important;
+    background-color: #ffffff !important;
+  }
+  
+  button:disabled {
+    color: #9ca3af !important;
+    background-color: #f3f4f6 !important;
+  }
+  
+  /* Fix text readability */
+  .form-container,
+  .validation-modal {
+    color: #1f2937 !important;
+  }
+  
+  label {
+    color: #1f2937 !important;
+    font-weight: 500 !important;
+  }
 }
 
 .survey-page::after {

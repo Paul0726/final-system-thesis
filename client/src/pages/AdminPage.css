@@ -55,6 +55,51 @@
     transition: none !important;
     animation: none !important;
   }
+  
+  /* Fix button text colors on mobile */
+  button {
+    color: #ffffff !important;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+    touch-action: manipulation;
+    user-select: none;
+  }
+  
+  button.btn-primary,
+  .btn-primary {
+    color: #ffffff !important;
+    background-color: #11823b !important;
+  }
+  
+  button.btn-secondary,
+  .btn-secondary {
+    color: #11823b !important;
+    background-color: #ffffff !important;
+  }
+  
+  button:disabled {
+    color: #9ca3af !important;
+    background-color: #f3f4f6 !important;
+  }
+  
+  /* Fix text readability */
+  .survey-card,
+  .admin-container {
+    color: #1f2937 !important;
+  }
+  
+  .survey-card h3,
+  .survey-card p {
+    color: #1f2937 !important;
+  }
+  
+  /* Fix pagination text */
+  .pagination button {
+    color: #11823b !important;
+  }
+  
+  .pagination button:disabled {
+    color: #9ca3af !important;
+  }
 }
 
 /* Animated background overlay for depth */
