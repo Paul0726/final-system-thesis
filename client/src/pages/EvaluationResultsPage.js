@@ -84,6 +84,77 @@ function EvaluationResultsPage() {
         </header>
 
         <div className="evaluation-content">
+          {/* Table 1: Numerical Scale */}
+          <div className="evaluation-table-section">
+            <h2>Table 1: Numerical Scale</h2>
+            <p className="scale-description">
+              The respondents were requested to evaluate the BSIT Graduate Tracer System according to criteria of the instrument using numerical scale shown in Table 1. The data were collected to compute the mean rating for each criterion and the overall mean. Results were interpreted in Table 1, for the corresponding descriptive rating.
+            </p>
+            <table className="evaluation-table">
+              <thead>
+                <tr>
+                  <th>Numerical Range</th>
+                  <th>Descriptive Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>4.51 - 5.00</td>
+                  <td>
+                    <span className="rating-badge" style={{ backgroundColor: getRatingColor('Excellent') }}>
+                      Excellent
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3.51 - 4.50</td>
+                  <td>
+                    <span className="rating-badge" style={{ backgroundColor: getRatingColor('Very Good') }}>
+                      Very Good
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2.51 - 3.50</td>
+                  <td>
+                    <span className="rating-badge" style={{ backgroundColor: getRatingColor('Good') }}>
+                      Good
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>1.51 - 2.50</td>
+                  <td>
+                    <span className="rating-badge" style={{ backgroundColor: getRatingColor('Fair') }}>
+                      Fair
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>1.00 - 1.50</td>
+                  <td>
+                    <span className="rating-badge" style={{ backgroundColor: getRatingColor('Poor') }}>
+                      Poor
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="scale-definitions">
+              <h3>Scale Definitions:</h3>
+              <ul>
+                <li><strong>1 POOR:</strong> System fails to meet basic requirements. Significant functionality problems. Poor user experience. System is difficult or impossible to use.</li>
+                <li><strong>2 FAIR:</strong> System partially meets requirements. Several functionality issues exist. Below average user experience. System requires substantial improvements.</li>
+                <li><strong>3 GOOD:</strong> System meets most requirements. Minor functionality issues. Acceptable user experience. System is functional and usable.</li>
+                <li><strong>4 VERY GOOD:</strong> System meets all requirements. Minimal or no functionality issues. Good user experience. System performs well and is user-friendly.</li>
+                <li><strong>5 EXCELLENT:</strong> System exceeds requirements. No functionality issues. Excellent user experience. System is highly functional, intuitive, and efficient.</li>
+              </ul>
+              <p className="analysis-note">
+                The collected ratings were analyzed using descriptive statistics, including mean, frequency distribution, and percentage analysis, to provide a comprehensive assessment of the system's performance.
+              </p>
+            </div>
+          </div>
+
           {/* Table 2: Functionality */}
           <div className="evaluation-table-section">
             <h2>Table 2: Functionality Performance Scales of the BSIT Graduate Tracer System</h2>
