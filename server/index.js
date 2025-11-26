@@ -144,9 +144,19 @@ function safeStringify(value) {
       JSON.parse(value);
       return value;
     }
+    // Ensure arrays/objects are properly formatted
+    if (Array.isArray(value)) {
+      return JSON.stringify(value.filter(item => item !== null && item !== undefined));
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
     return JSON.stringify(value);
   } catch (e) {
     console.error('Error stringifying JSON:', e);
+    // Return empty array/object instead of null to prevent database errors
+    if (Array.isArray(value)) return '[]';
+    if (typeof value === 'object') return '{}';
     return null;
   }
 }
@@ -185,7 +195,7 @@ function sanitizeSurveyData(surveyData) {
     civilStatus: 100,
     sex: 10,
     courseGraduated: 255,
-    schoolYearGraduated: 20,
+    schoolYearGraduated: 10, // Fixed: Changed from 20 to 10 to match database VARCHAR(10)
     civilService: 255,
     letLicense: 255,
     otherPRCLicense: 255,
@@ -193,7 +203,7 @@ function sanitizeSurveyData(surveyData) {
     employmentNature: 100,
     employmentClassification: 100,
     jobTitle: 255,
-    placeOfWork: 255, // This was likely the problem!
+    placeOfWork: 255,
     isITField: 10,
     monthlyIncome: 100,
     isAlumni: 10,
@@ -955,6 +965,14 @@ app.post('/api/survey', async (req, res) => {
       // Use PostgreSQL database - Encrypt sensitive data before storing
       // Parse and validate date_of_birth (don't encrypt dates - PostgreSQL needs DATE type)
       const parsedDateOfBirth = parseDate(surveyData.dateOfBirth);
+      
+      // Ensure all values are properly formatted before insertion
+      // Convert empty strings to null for optional fields
+      const cleanValue = (val) => {
+        if (val === '' || val === undefined) return null;
+        if (typeof val === 'string') return val.trim() || null;
+        return val;
+      };
       
       const result = await pool.query(`
         INSERT INTO surveys (

@@ -143,6 +143,12 @@ function SurveyPage() {
     
     if (!formData.schoolYearGraduated) {
       errors.push('School year graduated is required');
+    } else {
+      // Accept single year format (YYYY) - this is the original design
+      const yearValue = formData.schoolYearGraduated.trim();
+      if (!/^\d{4}$/.test(yearValue)) {
+        errors.push('School year must be a valid year (e.g., 2024)');
+      }
     }
     
     if (!formData.courseGraduated) {
