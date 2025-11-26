@@ -1733,6 +1733,10 @@ app.get('/api/stats', async (req, res) => {
 app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
   try {
     console.log('📧 Notification endpoint called');
+    console.log('📧 Request headers:', { 
+      'x-admin-token': req.headers['x-admin-token'] ? 'present' : 'missing',
+      'authorization': req.headers['authorization'] ? 'present' : 'missing'
+    });
     const { subject, message, recipientFilter, selectedYear } = req.body;
     console.log('📧 Notification data:', { subject, recipientFilter, selectedYear, messageLength: message?.length });
     
