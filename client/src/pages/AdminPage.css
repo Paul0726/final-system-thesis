@@ -225,22 +225,33 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: white;
+  color: #ffffff !important;
   text-decoration: none;
   margin-bottom: 20px;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(10px);
   border-radius: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
   transition: all 0.3s ease;
-  font-weight: 500;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .back-link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
   transform: translateX(-5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile fixes for back link */
+@media (max-width: 768px) {
+  .back-link {
+    color: #ffffff !important;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
 }
 
 .header-title {
@@ -280,12 +291,31 @@
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: #ffffff !important;
 }
 
 .admin-header p {
   font-size: clamp(1rem, 2vw, 1.2rem);
-  opacity: 0.95;
-  font-weight: 300;
+  opacity: 1 !important;
+  font-weight: 400;
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile fixes for admin header */
+@media (max-width: 768px) {
+  .admin-header h1 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 800;
+  }
+  
+  .admin-header p {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 500;
+  }
 }
 
 .admin-controls {
@@ -834,22 +864,35 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
   padding: 10px 20px;
   border-radius: 25px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   font-size: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
 }
 
 .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile fixes for logout button */
+@media (max-width: 768px) {
+  .logout-btn {
+    color: #ffffff !important;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
 }
 
 .logout-btn svg {

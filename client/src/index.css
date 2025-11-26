@@ -384,13 +384,40 @@ input[type="number"]::-webkit-outer-spin-button {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
   }
   
-  /* Prevent double-tap zoom on buttons */
+  /* Prevent double-tap zoom on buttons - CRITICAL for mobile */
   button,
   a,
   input[type="button"],
-  input[type="submit"] {
+  input[type="submit"],
+  .btn-primary,
+  .btn-secondary,
+  .btn-refresh,
+  .btn-download,
+  .btn-delete,
+  .btn-about,
+  .btn-support,
+  .back-link,
+  .link-button,
+  .logout-btn,
+  .evaluation-results-btn {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3) !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -webkit-touch-callout: none !important;
+  }
+  
+  /* Prevent 300ms click delay on mobile */
+  * {
     touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+  }
+  
+  /* Ensure all interactive elements respond immediately */
+  button:active,
+  a:active,
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
   }
   
   /* Fix for text in cards and containers */

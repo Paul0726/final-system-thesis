@@ -887,7 +887,19 @@ function AdminPage() {
         </div>
 
         <div className="admin-actions">
-          <button onClick={toggleReports} className="btn-reports">
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleReports();
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleReports();
+            }}
+            className="btn-reports"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
               <line x1="9" y1="10" x2="15" y2="10"></line>
@@ -899,9 +911,36 @@ function AdminPage() {
             )}
           </button>
           <Link to="/dashboard" className="btn-secondary">View Dashboard</Link>
-          <button onClick={fetchSurveys} className="btn-refresh">🔄 Refresh</button>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              fetchSurveys();
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              fetchSurveys();
+            }}
+            className="btn-refresh"
+          >
+            🔄 Refresh
+          </button>
           {filteredSurveys.length > 0 && (
-            <button onClick={generateAllPDFs} className="btn-download-all" title="Download all filtered surveys as PDF">
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                generateAllPDFs();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                generateAllPDFs();
+              }}
+              className="btn-download-all" 
+              title="Download all filtered surveys as PDF"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>

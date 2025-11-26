@@ -249,7 +249,7 @@
 .link-button {
   background: none;
   border: none;
-  color: #11823b;
+  color: #11823b !important;
   cursor: pointer;
   text-decoration: underline;
   font-weight: 600;
@@ -258,31 +258,50 @@
 }
 
 .link-button:hover {
-  color: #0d6b2f;
+  color: #0d6b2f !important;
+}
+
+/* Mobile fixes for link buttons */
+@media (max-width: 768px) {
+  .link-button {
+    color: #11823b !important;
+    font-weight: 700;
+    text-decoration: underline;
+  }
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #11823b;
+  color: #11823b !important;
   text-decoration: none;
   margin-top: 25px;
   padding: 10px 20px;
-  background: white;
+  background: white !important;
   backdrop-filter: blur(10px);
   border-radius: 25px;
-  border: 2px solid #11823b;
+  border: 2px solid #11823b !important;
   transition: all 0.3s ease;
-  font-weight: 500;
+  font-weight: 600;
   width: 100%;
   justify-content: center;
 }
 
 .back-link:hover {
-  background: #dce3c7;
-  border-color: #0d6b2f;
+  background: #dce3c7 !important;
+  border-color: #0d6b2f !important;
   transform: translateX(-5px);
+}
+
+/* Mobile fixes for back link */
+@media (max-width: 768px) {
+  .back-link {
+    color: #11823b !important;
+    background: white !important;
+    border: 2px solid #11823b !important;
+    font-weight: 700;
+  }
 }
 
 @media (max-width: 480px) {
