@@ -1729,15 +1729,9 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-// Get system evaluation statistics
 // Send notification to respondents
-app.post('/api/send-notification', async (req, res) => {
+app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
   try {
-    // Verify admin authentication
-    const adminToken = req.headers['x-admin-token'] || req.headers['authorization']?.replace('Bearer ', '');
-    if (!adminToken) {
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
     
     const { subject, message, recipientFilter, selectedYear } = req.body;
     
@@ -1883,6 +1877,7 @@ app.post('/api/send-notification', async (req, res) => {
   }
 });
 
+// Get system evaluation statistics
 app.get('/api/evaluation-stats', async (req, res) => {
   try {
     if (useDatabase && pool) {
