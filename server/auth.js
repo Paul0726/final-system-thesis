@@ -14,6 +14,18 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Verify transporter configuration on startup
+transporter.verify(function (error, success) {
+  if (error) {
+    console.error('[EMAIL] Transporter verification failed:', error);
+    console.error('[EMAIL] Make sure GMAIL_USER and GMAIL_APP_PASSWORD are set correctly in Railway!');
+  } else {
+    console.log('[EMAIL] Transporter is ready to send emails');
+    console.log('[EMAIL] Gmail User:', process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com');
+    console.log('[EMAIL] App Password configured:', (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD) ? 'Yes' : 'No');
+  }
+});
+
 // Generate OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -22,6 +34,22 @@ const generateOTP = () => {
 // Send OTP to email
 const sendOTP = async (email) => {
   try {
+    // Check if Gmail credentials are configured
+    const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
+    const gmailPassword = process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD;
+    
+    if (!gmailPassword) {
+      console.error('ERROR: GMAIL_APP_PASSWORD or GMAIL_PASSWORD is not set in environment variables!');
+      return { 
+        success: false, 
+        message: 'Email service is not configured. Please contact the administrator.' 
+      };
+    }
+
+    console.log(`[OTP] Attempting to send OTP to: ${email}`);
+    console.log(`[OTP] Using Gmail user: ${gmailUser}`);
+    console.log(`[OTP] App Password configured: ${gmailPassword ? 'Yes (hidden)' : 'No'}`);
+
     const otp = generateOTP();
     otpStore[email] = {
       otp: otp,
@@ -36,9 +64,8 @@ const sendOTP = async (email) => {
       : 'Login OTP - BSIT Graduate Tracer System';
     const title = isAdmin ? 'Admin Login OTP' : 'Login OTP';
     
-    const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
-    
-    await transporter.sendMail({
+    console.log(`[OTP] Sending email via transporter...`);
+    const info = await transporter.sendMail({
       from: `"BSIT Graduate Tracer System" <${gmailUser}>`,
       to: email,
       subject: subject,
@@ -72,10 +99,28 @@ const sendOTP = async (email) => {
       `
     });
 
+    console.log(`[OTP] Email sent successfully! Message ID: ${info.messageId}`);
     return { success: true, message: 'OTP sent successfully' };
   } catch (error) {
-    console.error('Error sending OTP:', error);
-    return { success: false, message: 'Failed to send OTP' };
+    console.error('[OTP] ERROR sending OTP:', error);
+    console.error('[OTP] Error details:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to send OTP';
+    if (error.code === 'EAUTH') {
+      errorMessage = 'Email authentication failed. Please check Gmail App Password configuration.';
+    } else if (error.code === 'ECONNECTION') {
+      errorMessage = 'Cannot connect to email server. Please check your internet connection.';
+    } else if (error.response) {
+      errorMessage = `Email server error: ${error.response}`;
+    }
+    
+    return { success: false, message: errorMessage };
   }
 };
 

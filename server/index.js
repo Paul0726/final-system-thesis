@@ -324,24 +324,31 @@ app.get('/api/health', (req, res) => {
 app.post('/api/admin/send-otp', async (req, res) => {
   try {
     const { email } = req.body;
+    console.log(`[ADMIN OTP] Request received for email: ${email}`);
     
     // Only allow specific admin email (from environment variable or default)
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
+    console.log(`[ADMIN OTP] Admin email configured: ${adminEmail}`);
+    
     if (email !== adminEmail) {
+      console.log(`[ADMIN OTP] Unauthorized email attempt: ${email}`);
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 
       });
     }
 
+    console.log(`[ADMIN OTP] Sending OTP to admin email...`);
     const result = await sendOTP(email);
     if (result.success) {
+      console.log(`[ADMIN OTP] OTP sent successfully`);
       res.json({ success: true, message: 'OTP sent to your email' });
     } else {
+      console.error(`[ADMIN OTP] Failed to send OTP: ${result.message}`);
       res.status(500).json({ success: false, message: result.message });
     }
   } catch (error) {
-    console.error('Error sending OTP:', error);
+    console.error('[ADMIN OTP] Error in send-otp endpoint:', error);
     res.status(500).json({ success: false, message: 'Failed to send OTP' });
   }
 });
@@ -437,10 +444,13 @@ app.post('/api/user/login', async (req, res) => {
       }
 
       // Send OTP
+      console.log(`[USER OTP] Sending OTP to user: ${email}`);
       const result = await sendOTP(email);
       if (result.success) {
+        console.log(`[USER OTP] OTP sent successfully to ${email}`);
         res.json({ success: true, message: 'OTP sent to your email' });
       } else {
+        console.error(`[USER OTP] Failed to send OTP: ${result.message}`);
         res.status(500).json({ success: false, message: result.message });
       }
     } else {
