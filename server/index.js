@@ -325,8 +325,9 @@ app.post('/api/admin/send-otp', async (req, res) => {
   try {
     const { email } = req.body;
     
-    // Only allow specific admin email
-    if (email !== 'johnpauld750@gmail.com') {
+    // Only allow specific admin email (from environment variable or default)
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    if (email !== adminEmail) {
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 
@@ -349,7 +350,9 @@ app.post('/api/admin/verify-otp', async (req, res) => {
   try {
     const { email, otp } = req.body;
     
-    if (email !== 'johnpauld750@gmail.com') {
+    // Only allow specific admin email (from environment variable or default)
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    if (email !== adminEmail) {
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 

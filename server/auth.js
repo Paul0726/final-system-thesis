@@ -29,7 +29,8 @@ const sendOTP = async (email) => {
     };
 
     // Determine if this is admin or user OTP
-    const isAdmin = email === 'johnpauld750@gmail.com';
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const isAdmin = email === adminEmail;
     const subject = isAdmin 
       ? 'Admin Login OTP - BSIT Graduate Tracer System'
       : 'Login OTP - BSIT Graduate Tracer System';
@@ -103,7 +104,7 @@ const verifyOTP = (email, otp) => {
 // Send Technical Support Report to Admin
 const sendTechnicalSupportReport = async (reportData) => {
   try {
-    const adminEmail = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'johnpauld750@gmail.com';
     const priorityColors = {
       'Low': '#6b7280',
       'Medium': '#f59e0b',
