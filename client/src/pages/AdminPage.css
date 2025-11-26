@@ -205,11 +205,15 @@
   text-align: center;
   color: white;
   margin-bottom: var(--spacing-xl);
-  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-2xl);
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-3xl);
   position: relative;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
   border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 
+    var(--shadow-2xl),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .admin-header::after {
@@ -340,17 +344,17 @@
 }
 
 .admin-controls {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  padding: var(--spacing-xl);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  padding: var(--spacing-2xl);
   border-radius: var(--radius-2xl);
   margin-bottom: var(--spacing-xl);
   box-shadow: 
     var(--shadow-2xl),
-    0 0 0 1px rgba(255, 255, 255, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.95);
+    0 0 0 2px rgba(17, 130, 59, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.98);
   color: var(--text-dark);
 }
 
