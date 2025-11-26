@@ -9,7 +9,7 @@ const passwordResetOTPStore = {};
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER || 'johnpauld750@gmail.com',
+    user: process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com',
     pass: process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD
   }
 });
@@ -36,7 +36,7 @@ const sendOTP = async (email) => {
       : 'Login OTP - BSIT Graduate Tracer System';
     const title = isAdmin ? 'Admin Login OTP' : 'Login OTP';
     
-    const gmailUser = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     
     await transporter.sendMail({
       from: `"BSIT Graduate Tracer System" <${gmailUser}>`,
@@ -113,7 +113,7 @@ const sendTechnicalSupportReport = async (reportData) => {
     };
     const priorityColor = priorityColors[reportData.priority] || '#6b7280';
 
-    const gmailUser = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     
     await transporter.sendMail({
       from: `"BSIT Graduate Tracer System" <${gmailUser}>`,
@@ -207,7 +207,7 @@ const sendPasswordResetOTP = async (email) => {
       expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
     };
 
-    const gmailUser = process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     
     await transporter.sendMail({
       from: `"BSIT Graduate Tracer System" <${gmailUser}>`,

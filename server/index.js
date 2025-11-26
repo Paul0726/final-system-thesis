@@ -326,7 +326,7 @@ app.post('/api/admin/send-otp', async (req, res) => {
     const { email } = req.body;
     
     // Only allow specific admin email (from environment variable or default)
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     if (email !== adminEmail) {
       return res.status(403).json({ 
         success: false, 
@@ -351,7 +351,7 @@ app.post('/api/admin/verify-otp', async (req, res) => {
     const { email, otp } = req.body;
     
     // Only allow specific admin email (from environment variable or default)
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'johnpauld750@gmail.com';
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     if (email !== adminEmail) {
       return res.status(403).json({ 
         success: false, 
@@ -1809,7 +1809,7 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER || process.env.EMAIL_USER || 'johnpauld750@gmail.com',
+        user: process.env.GMAIL_USER || process.env.EMAIL_USER || 'dwcsjtracersystem@gmail.com',
         pass: process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS || process.env.EMAIL_APP_PASSWORD
       }
     });
@@ -1832,7 +1832,7 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
             const dashboardLink = `${baseUrl}/personal-dashboard?email=${encodeURIComponent(recipient.email)}`;
             
             const mailOptions = {
-              from: `"BSIT Graduate Tracer System" <${process.env.GMAIL_USER || process.env.EMAIL_USER || 'johnpauld750@gmail.com'}>`,
+              from: `"BSIT Graduate Tracer System" <${process.env.GMAIL_USER || process.env.EMAIL_USER || 'dwcsjtracersystem@gmail.com'}>`,
               to: recipient.email,
               subject: `[IMPORTANT] ${subject}`,
               html: `
