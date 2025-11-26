@@ -891,6 +891,26 @@ function AdminPage() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              toggleNotifications();
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleNotifications();
+            }}
+            className="btn-notifications"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              <path d="M21 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path>
+            </svg>
+            Send Notification
+          </button>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               toggleReports();
             }}
             onTouchEnd={(e) => {
@@ -950,6 +970,146 @@ function AdminPage() {
             </button>
           )}
         </div>
+
+        {/* Notification System Section */}
+        {showNotifications && (
+          <div className="notifications-section">
+            <div className="notifications-header">
+              <h2>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" style={{ marginRight: '10px', verticalAlign: 'middle' }}>
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  <path d="M21 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path>
+                </svg>
+                Send Notification to Respondents
+              </h2>
+              <button 
+                onClick={toggleNotifications}
+                className="btn-close"
+                title="Close"
+              >
+                ×
+              </button>
+            </div>
+            
+            {notificationSuccess && (
+              <div className="notification-success-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Notification sent successfully!
+              </div>
+            )}
+            
+            <div className="notification-form">
+              <div className="form-group">
+                <label htmlFor="notification-subject">
+                  Subject <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="notification-subject"
+                  value={notificationSubject}
+                  onChange={(e) => setNotificationSubject(e.target.value)}
+                  placeholder="e.g., Important: Please Complete Additional Survey"
+                  className="form-input"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="notification-message">
+                  Message <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <textarea
+                  id="notification-message"
+                  value={notificationMessage}
+                  onChange={(e) => setNotificationMessage(e.target.value)}
+                  placeholder="Enter your message here. This will be sent to selected respondents via email."
+                  className="form-textarea"
+                  rows="8"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="recipient-filter">
+                  Send To <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <select
+                  id="recipient-filter"
+                  value={recipientFilter}
+                  onChange={(e) => {
+                    setRecipientFilter(e.target.value);
+                    if (e.target.value !== 'by-year') {
+                      setSelectedYear('');
+                    }
+                  }}
+                  className="form-select"
+                >
+                  <option value="all">All Respondents</option>
+                  <option value="employed">Employed Only</option>
+                  <option value="unemployed">Unemployed Only</option>
+                  <option value="self-employed">Self-Employed Only</option>
+                  <option value="by-year">By Graduation Year</option>
+                </select>
+              </div>
+              
+              {recipientFilter === 'by-year' && (
+                <div className="form-group">
+                  <label htmlFor="selected-year">
+                    Graduation Year <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <select
+                    id="selected-year"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="form-select"
+                    required
+                  >
+                    <option value="">Select Year</option>
+                    {availableYears.map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              
+              <div className="notification-actions">
+                <button
+                  onClick={handleSendNotification}
+                  disabled={sendingNotification || !notificationSubject.trim() || !notificationMessage.trim() || (recipientFilter === 'by-year' && !selectedYear)}
+                  className="btn-send-notification"
+                >
+                  {sendingNotification ? (
+                    <>
+                      <svg className="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                        <circle cx="12" cy="12" r="10" strokeOpacity="0.25"></circle>
+                        <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round"></path>
+                      </svg>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                      </svg>
+                      Send Notification
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={toggleNotifications}
+                  className="btn-cancel"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Technical Support Reports Section */}
         {showReports && (
