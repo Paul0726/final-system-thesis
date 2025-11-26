@@ -330,8 +330,12 @@ app.post('/api/admin/send-otp', async (req, res) => {
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     console.log(`[ADMIN OTP] Admin email configured: ${adminEmail}`);
     
-    if (email !== adminEmail) {
-      console.log(`[ADMIN OTP] Unauthorized email attempt: ${email}`);
+    // Case-insensitive comparison with trimmed whitespace
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    const normalizedAdminEmail = (adminEmail || '').trim().toLowerCase();
+    
+    if (normalizedEmail !== normalizedAdminEmail) {
+      console.log(`[ADMIN OTP] Unauthorized email attempt: ${email} (expected: ${adminEmail})`);
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 
@@ -359,7 +363,13 @@ app.post('/api/admin/verify-otp', async (req, res) => {
     
     // Only allow specific admin email (from environment variable or default)
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
-    if (email !== adminEmail) {
+    
+    // Case-insensitive comparison with trimmed whitespace
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    const normalizedAdminEmail = (adminEmail || '').trim().toLowerCase();
+    
+    if (normalizedEmail !== normalizedAdminEmail) {
+      console.log(`[ADMIN OTP VERIFY] Unauthorized email attempt: ${email} (expected: ${adminEmail})`);
       return res.status(403).json({ 
         success: false, 
         message: 'Unauthorized email address' 

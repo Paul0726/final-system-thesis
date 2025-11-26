@@ -35,7 +35,7 @@ adminAxios.interceptors.request.use(
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const email = 'johnpauld750@gmail.com'; // Admin email (hardcoded for security)
+  const email = 'dwcsjtracersystem@gmail.com'; // Admin email (hardcoded for security)
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
