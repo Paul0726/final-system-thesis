@@ -170,7 +170,7 @@ function EvaluationResultsPage() {
                 {evaluationData.functionality.indicators.map((indicator, idx) => (
                   <tr key={idx}>
                     <td>{indicator.text}</td>
-                    <td>{indicator.mean > 0 ? indicator.mean.toFixed(2) : '-'}</td>
+                    <td>{indicator.mean > 0 ? indicator.mean.toFixed(2) : (indicator.rating === 'N/A' ? '-' : indicator.mean.toFixed(2))}</td>
                     <td>
                       <span className="rating-badge" style={{ backgroundColor: getRatingColor(indicator.rating) }}>
                         {indicator.rating}

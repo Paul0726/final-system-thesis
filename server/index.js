@@ -1758,7 +1758,13 @@ app.get('/api/evaluation-stats', async (req, res) => {
       
       // Helper function to calculate mean and rating
       const calculateMeanAndRating = (values) => {
-        const validValues = values.filter(v => v !== null && v !== undefined && v !== '');
+        // Filter out null, undefined, empty strings, and invalid values
+        const validValues = values.filter(v => {
+          if (v === null || v === undefined || v === '') return false;
+          const num = parseFloat(v);
+          return !isNaN(num) && num >= 1 && num <= 5; // Only accept valid ratings 1-5
+        });
+        
         if (validValues.length === 0) return { mean: 0, rating: 'N/A' };
         
         const sum = validValues.reduce((acc, val) => acc + parseFloat(val), 0);
@@ -1775,9 +1781,9 @@ app.get('/api/evaluation-stats', async (req, res) => {
       };
       
       // Functionality
-      const functionalityQ1 = evaluations.map(e => e.functionality?.q1).filter(v => v);
-      const functionalityQ2 = evaluations.map(e => e.functionality?.q2).filter(v => v);
-      const functionalityQ3 = evaluations.map(e => e.functionality?.q3).filter(v => v);
+      const functionalityQ1 = evaluations.map(e => e.functionality?.q1).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const functionalityQ2 = evaluations.map(e => e.functionality?.q2).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const functionalityQ3 = evaluations.map(e => e.functionality?.q3).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
       const functionalityMeans = [
         functionalityQ1.length > 0 ? functionalityQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / functionalityQ1.length : 0,
         functionalityQ2.length > 0 ? functionalityQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / functionalityQ2.length : 0,
@@ -1786,9 +1792,9 @@ app.get('/api/evaluation-stats', async (req, res) => {
       const functionalityOverall = calculateMeanAndRating([...functionalityQ1, ...functionalityQ2, ...functionalityQ3]);
       
       // Reliability
-      const reliabilityQ1 = evaluations.map(e => e.reliability?.q1).filter(v => v);
-      const reliabilityQ2 = evaluations.map(e => e.reliability?.q2).filter(v => v);
-      const reliabilityQ3 = evaluations.map(e => e.reliability?.q3).filter(v => v);
+      const reliabilityQ1 = evaluations.map(e => e.reliability?.q1).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const reliabilityQ2 = evaluations.map(e => e.reliability?.q2).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const reliabilityQ3 = evaluations.map(e => e.reliability?.q3).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
       const reliabilityMeans = [
         reliabilityQ1.length > 0 ? reliabilityQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / reliabilityQ1.length : 0,
         reliabilityQ2.length > 0 ? reliabilityQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / reliabilityQ2.length : 0,
@@ -1797,9 +1803,9 @@ app.get('/api/evaluation-stats', async (req, res) => {
       const reliabilityOverall = calculateMeanAndRating([...reliabilityQ1, ...reliabilityQ2, ...reliabilityQ3]);
       
       // Accuracy
-      const accuracyQ1 = evaluations.map(e => e.accuracy?.q1).filter(v => v);
-      const accuracyQ2 = evaluations.map(e => e.accuracy?.q2).filter(v => v);
-      const accuracyQ3 = evaluations.map(e => e.accuracy?.q3).filter(v => v);
+      const accuracyQ1 = evaluations.map(e => e.accuracy?.q1).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const accuracyQ2 = evaluations.map(e => e.accuracy?.q2).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const accuracyQ3 = evaluations.map(e => e.accuracy?.q3).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
       const accuracyMeans = [
         accuracyQ1.length > 0 ? accuracyQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / accuracyQ1.length : 0,
         accuracyQ2.length > 0 ? accuracyQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / accuracyQ2.length : 0,
@@ -1808,9 +1814,9 @@ app.get('/api/evaluation-stats', async (req, res) => {
       const accuracyOverall = calculateMeanAndRating([...accuracyQ1, ...accuracyQ2, ...accuracyQ3]);
       
       // Efficiency
-      const efficiencyQ1 = evaluations.map(e => e.efficiency?.q1).filter(v => v);
-      const efficiencyQ2 = evaluations.map(e => e.efficiency?.q2).filter(v => v);
-      const efficiencyQ3 = evaluations.map(e => e.efficiency?.q3).filter(v => v);
+      const efficiencyQ1 = evaluations.map(e => e.efficiency?.q1).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const efficiencyQ2 = evaluations.map(e => e.efficiency?.q2).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
+      const efficiencyQ3 = evaluations.map(e => e.efficiency?.q3).filter(v => v !== null && v !== undefined && v !== '' && !isNaN(parseFloat(v)));
       const efficiencyMeans = [
         efficiencyQ1.length > 0 ? efficiencyQ1.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / efficiencyQ1.length : 0,
         efficiencyQ2.length > 0 ? efficiencyQ2.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / efficiencyQ2.length : 0,
