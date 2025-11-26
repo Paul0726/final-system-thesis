@@ -206,6 +206,62 @@ function SurveyPage() {
       }
     }
     
+    // School and System Ratings - Star ratings are required (feedback is optional)
+    if (!formData.schoolRating || formData.schoolRating === 0) {
+      missing.push({ field: 'School Rating (1-5 stars)', section: 'E. School and System Ratings' });
+    }
+    
+    if (!formData.systemRating || formData.systemRating === 0) {
+      missing.push({ field: 'System Rating (1-5 stars)', section: 'E. School and System Ratings' });
+    }
+    
+    // System Evaluation - ALL questions are required
+    const systemEval = formData.systemEvaluation || {};
+    
+    // Functionality - all 3 questions required
+    if (!systemEval.functionality?.q1 || systemEval.functionality.q1 === '') {
+      missing.push({ field: 'Functionality: The system is easy to use and learned', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.functionality?.q2 || systemEval.functionality.q2 === '') {
+      missing.push({ field: 'Functionality: The system can be used with comfort and convenience', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.functionality?.q3 || systemEval.functionality.q3 === '') {
+      missing.push({ field: 'Functionality: The system is user-friendly', section: 'F. System Evaluation' });
+    }
+    
+    // Reliability - all 3 questions required
+    if (!systemEval.reliability?.q1 || systemEval.reliability.q1 === '') {
+      missing.push({ field: 'Reliability: The system provides the correct desired output', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.reliability?.q2 || systemEval.reliability.q2 === '') {
+      missing.push({ field: 'Reliability: Absence of failures in the system', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.reliability?.q3 || systemEval.reliability.q3 === '') {
+      missing.push({ field: 'Reliability: The system is accurate in performance', section: 'F. System Evaluation' });
+    }
+    
+    // Accuracy - all 3 questions required
+    if (!systemEval.accuracy?.q1 || systemEval.accuracy.q1 === '') {
+      missing.push({ field: 'Accuracy: The system gives accurate information/computation', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.accuracy?.q2 || systemEval.accuracy.q2 === '') {
+      missing.push({ field: 'Accuracy: The system provides accurate outputs', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.accuracy?.q3 || systemEval.accuracy.q3 === '') {
+      missing.push({ field: 'Accuracy: The system provides accurate reports', section: 'F. System Evaluation' });
+    }
+    
+    // Efficiency - all 3 questions required
+    if (!systemEval.efficiency?.q1 || systemEval.efficiency.q1 === '') {
+      missing.push({ field: 'Efficiency: The system is well organized and working properly', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.efficiency?.q2 || systemEval.efficiency.q2 === '') {
+      missing.push({ field: 'Efficiency: The system is well organized for purpose', section: 'F. System Evaluation' });
+    }
+    if (!systemEval.efficiency?.q3 || systemEval.efficiency.q3 === '') {
+      missing.push({ field: 'Efficiency: The system is capable to produce the desired output without delaying the run time performance', section: 'F. System Evaluation' });
+    }
+    
     // Account creation validation - only if account creation is enabled
     if (createAccount) {
       if (!accountPassword || accountPassword.length < 6) {
