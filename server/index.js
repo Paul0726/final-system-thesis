@@ -879,8 +879,18 @@ app.post('/api/survey', async (req, res) => {
     
     if (!surveyData.schoolYearGraduated) {
       validationErrors.push('School year graduated is required');
-    } else if (!/^\d{4}-\d{4}$/.test(surveyData.schoolYearGraduated)) {
-      validationErrors.push('School year must be in format YYYY-YYYY (e.g., 2020-2021)');
+    } else {
+      // Accept both single year (YYYY) and range (YYYY-YYYY) formats
+      const yearValue = String(surveyData.schoolYearGraduated).trim();
+      if (!/^\d{4}(-\d{4})?$/.test(yearValue)) {
+        validationErrors.push('School year must be in format YYYY or YYYY-YYYY (e.g., 2020 or 2020-2021)');
+      } else {
+        // Normalize to YYYY-YYYY format if single year
+        if (/^\d{4}$/.test(yearValue)) {
+          const year = parseInt(yearValue);
+          surveyData.schoolYearGraduated = `${year}-${year + 1}`;
+        }
+      }
     }
     
     if (!surveyData.dateOfBirth) {

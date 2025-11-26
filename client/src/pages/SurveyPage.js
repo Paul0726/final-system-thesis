@@ -148,8 +148,12 @@ function SurveyPage() {
     
     if (!formData.schoolYearGraduated) {
       errors.push('School year graduated is required');
-    } else if (!/^\d{4}-\d{4}$/.test(formData.schoolYearGraduated)) {
-      errors.push('School year must be in format YYYY-YYYY (e.g., 2020-2021)');
+    } else {
+      // Accept both single year (YYYY) and range (YYYY-YYYY) formats
+      const yearValue = formData.schoolYearGraduated.trim();
+      if (!/^\d{4}(-\d{4})?$/.test(yearValue)) {
+        errors.push('School year must be in format YYYY or YYYY-YYYY (e.g., 2020 or 2020-2021)');
+      }
     }
     
     if (!formData.courseGraduated) {
@@ -208,8 +212,17 @@ function SurveyPage() {
     setLoading(true);
     
     try {
+      // Normalize school year format (convert single year to YYYY-YYYY if needed)
+      let normalizedSchoolYear = formData.schoolYearGraduated.trim();
+      if (/^\d{4}$/.test(normalizedSchoolYear)) {
+        // Convert single year to range (e.g., 2020 -> 2020-2021)
+        const year = parseInt(normalizedSchoolYear);
+        normalizedSchoolYear = `${year}-${year + 1}`;
+      }
+      
       const submitData = {
         ...formData,
+        schoolYearGraduated: normalizedSchoolYear,
         // Properly record alumni status
         isAlumni: isAlumni === 'Yes' ? 'Yes' : 'No',
         interestedAlumni: isAlumni === 'Yes' ? null : (interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null)),
@@ -527,13 +540,13 @@ function SurveyPage() {
               <label>School Year Graduated *</label>
               <select name="schoolYearGraduated" value={formData.schoolYearGraduated} onChange={handleChange} required>
                 <option value="">Select...</option>
-                <option value="2018">2018</option>
-                <option value="2019">2019</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
+                <option value="2018-2019">2018-2019</option>
+                <option value="2019-2020">2019-2020</option>
+                <option value="2020-2021">2020-2021</option>
+                <option value="2021-2022">2021-2022</option>
+                <option value="2022-2023">2022-2023</option>
+                <option value="2023-2024">2023-2024</option>
+                <option value="2024-2025">2024-2025</option>
               </select>
             </div>
           </div>
