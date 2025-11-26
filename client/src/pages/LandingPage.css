@@ -288,7 +288,7 @@
 
 .btn-about {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
+  color: #ffffff !important;
   padding: 16px 48px;
   border-radius: 14px;
   font-size: 1.1rem;
@@ -310,6 +310,12 @@
   max-width: 300px;
 }
 
+.btn-about svg,
+.btn-about .btn-icon {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
 .btn-icon {
   width: 20px;
   height: 20px;
@@ -326,7 +332,7 @@
 
 .btn-support {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
+  color: #ffffff !important;
   padding: 16px 48px;
   border-radius: 14px;
   font-size: 1.1rem;
@@ -346,6 +352,12 @@
   min-width: 220px;
   flex: 1;
   max-width: 300px;
+}
+
+.btn-support svg,
+.btn-support .btn-icon {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
 }
 
 .btn-support:hover {

@@ -37,17 +37,23 @@
 
 .back-link {
   display: inline-block;
-  color: white;
+  color: #ffffff !important;
   text-decoration: none;
   margin-bottom: 20px;
   font-size: 1rem;
-  opacity: 0.9;
-  transition: opacity 0.3s;
+  font-weight: 600;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
 }
 
 .back-link:hover {
-  opacity: 1;
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
 }
 
 .about-header h1 {
