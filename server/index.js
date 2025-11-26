@@ -1732,8 +1732,9 @@ app.get('/api/stats', async (req, res) => {
 // Send notification to respondents
 app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
   try {
-    
+    console.log('📧 Notification endpoint called');
     const { subject, message, recipientFilter, selectedYear } = req.body;
+    console.log('📧 Notification data:', { subject, recipientFilter, selectedYear, messageLength: message?.length });
     
     if (!subject || !message) {
       return res.status(400).json({ success: false, message: 'Subject and message are required' });

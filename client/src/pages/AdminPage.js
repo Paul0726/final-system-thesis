@@ -212,7 +212,15 @@ function AdminPage() {
       }
     } catch (error) {
       console.error('Error sending notification:', error);
-      alert('Error sending notification: ' + (error.response?.data?.message || error.message));
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
+        url: error.config?.url
+      });
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+      alert(`Error sending notification: ${errorMessage}\n\nStatus: ${error.response?.status || 'N/A'}\nURL: ${error.config?.url || '/api/send-notification'}`);
     } finally {
       setSendingNotification(false);
     }
