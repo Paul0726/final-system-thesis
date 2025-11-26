@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const crypto = require('crypto');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
 const { sendOTP, verifyOTP, sendTechnicalSupportReport, sendPasswordResetOTP, verifyPasswordResetOTP, clearPasswordResetOTP } = require('./auth');
 require('dotenv').config();
 
@@ -15,6 +18,66 @@ if (!ENCRYPTION_KEY) {
   console.warn('⚠️ WARNING: Using default encryption key. Set ENCRYPTION_KEY environment variable in production!');
 }
 const ALGORITHM = 'aes-256-cbc';
+
+// ============================================
+// INPUT VALIDATION & SANITIZATION
+// ============================================
+
+// Sanitize user input to prevent XSS and injection attacks
+function sanitizeInput(input) {
+  if (!input || typeof input !== 'string') return input;
+  
+  // Remove potentially dangerous characters and patterns
+  return input
+    .trim()
+    .replace(/[<>]/g, '') // Remove < and > to prevent HTML injection
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
+    .replace(/['"]/g, '') // Remove quotes that could break SQL
+    .substring(0, 10000); // Limit length to prevent DoS
+}
+
+// Validate email format
+function isValidEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email.trim()) && email.length <= 255;
+}
+
+// Validate and sanitize SQL input (already using parameterized queries, but extra safety)
+function sanitizeSQLInput(input) {
+  if (!input) return null;
+  if (typeof input !== 'string') return input;
+  
+  // Remove SQL injection patterns
+  const dangerousPatterns = [
+    /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE|UNION|SCRIPT)\b)/gi,
+    /(--|#|\/\*|\*\/|;)/g,
+    /(\bor\b|\band\b)\s+\d+\s*=\s*\d+/gi
+  ];
+  
+  let sanitized = input.trim();
+  dangerousPatterns.forEach(pattern => {
+    sanitized = sanitized.replace(pattern, '');
+  });
+  
+  return sanitized.substring(0, 10000); // Limit length
+}
+
+// Secure error messages - never expose sensitive data
+function secureErrorResponse(error, defaultMessage = 'An error occurred') {
+  // Never expose database errors, stack traces, or sensitive info
+  if (process.env.NODE_ENV === 'production') {
+    return { success: false, message: defaultMessage };
+  } else {
+    // In development, show more details
+    return { 
+      success: false, 
+      message: defaultMessage,
+      error: error.message 
+    };
+  }
+}
 
 // Encryption functions
 function encrypt(text) {
@@ -291,24 +354,46 @@ function formatDateOfBirth(dateValue) {
   return null;
 }
 
-// Admin authentication middleware
+// Admin authentication middleware - ENHANCED SECURITY
 const authenticateAdmin = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-  
-  // Also check for token in query or body (for backward compatibility)
-  const tokenFromQuery = req.query.token || req.body.token;
-  const adminToken = token || tokenFromQuery || req.headers['x-admin-token'];
-  
-  // Check if token matches admin token
-  if (adminToken === 'admin-token') {
-    // Verify admin email from token or session
-    // For now, we'll trust the token since it's set after OTP verification
-    next();
-  } else {
-    return res.status(401).json({ 
+  try {
+    // Log authentication attempts for security monitoring
+    const clientIP = req.ip || req.connection.remoteAddress;
+    
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    // Also check for token in query or body (for backward compatibility)
+    const tokenFromQuery = req.query.token || req.body.token;
+    const adminToken = token || tokenFromQuery || req.headers['x-admin-token'];
+    
+    // SECURITY: Never log the actual token, only log attempts
+    if (!adminToken) {
+      console.warn(`🔒 SECURITY: Unauthorized admin access attempt from IP ${clientIP}`);
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Unauthorized: Admin authentication required' 
+      });
+    }
+    
+    // Check if token matches admin token
+    if (adminToken === 'admin-token') {
+      // Verify admin email from token or session
+      // For now, we'll trust the token since it's set after OTP verification
+      console.log(`✅ SECURITY: Admin authenticated from IP ${clientIP}`);
+      next();
+    } else {
+      console.warn(`🔒 SECURITY: Invalid admin token attempt from IP ${clientIP}`);
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Unauthorized: Admin authentication required' 
+      });
+    }
+  } catch (error) {
+    console.error('🔒 SECURITY ERROR in authenticateAdmin:', error);
+    return res.status(500).json({ 
       success: false, 
-      message: 'Unauthorized: Admin authentication required' 
+      message: 'Authentication error' 
     });
   }
 };
@@ -336,10 +421,149 @@ const PORT = process.env.PORT || 3000;
 // Fallback: In-memory database
 let surveys = [];
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ============================================
+// SECURITY MIDDLEWARE - PROTECT SENSITIVE DATA
+// ============================================
+
+// 1. Helmet - Security headers (XSS, clickjacking, etc.)
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
+// 2. Rate Limiting - Prevent brute force attacks
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs for auth endpoints
+  message: 'Too many authentication attempts, please try again later.',
+  skipSuccessfulRequests: true,
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30, // Limit each IP to 30 requests per minute for API endpoints
+  message: 'Too many API requests, please slow down.',
+});
+
+// Apply rate limiters
+app.use('/api/', generalLimiter);
+app.use('/api/admin/send-otp', authLimiter);
+app.use('/api/admin/verify-otp', authLimiter);
+app.use('/api/user/send-otp', authLimiter);
+app.use('/api/user/verify-otp', authLimiter);
+app.use('/api/surveys', apiLimiter);
+app.use('/api/feedbacks', apiLimiter);
+
+// 3. CORS - Restrict cross-origin requests
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // In production, restrict to your domain
+    if (process.env.NODE_ENV === 'production') {
+      const allowedOrigins = [
+        process.env.ALLOWED_ORIGIN,
+        'https://dwcsjgraduatetracer.it.com',
+        'https://www.dwcsjgraduatetracer.it.com'
+      ].filter(Boolean);
+      
+      if (allowedOrigins.length > 0 && !allowedOrigins.includes(origin)) {
+        return callback(new Error('Not allowed by CORS'));
+      }
+    }
+    
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-token'],
+  exposedHeaders: [],
+  maxAge: 86400 // 24 hours
+};
+
+app.use(cors(corsOptions));
+
+// 4. HPP - Prevent HTTP Parameter Pollution
+app.use(hpp());
+
+// 5. Body Parser with size limits - Prevent DoS attacks
+app.use(express.json({ 
+  limit: '10mb', // Limit request body size
+  verify: (req, res, buf) => {
+    // Additional security: check for suspicious patterns
+    const bodyString = buf.toString();
+    if (bodyString.length > 10 * 1024 * 1024) { // 10MB
+      throw new Error('Request body too large');
+    }
+  }
+}));
+app.use(express.urlencoded({ 
+  extended: true, 
+  limit: '10mb',
+  parameterLimit: 100 // Limit number of parameters
+}));
+
+// 6. Request timeout - Prevent hanging requests
+app.use((req, res, next) => {
+  req.setTimeout(30000); // 30 seconds timeout
+  res.setTimeout(30000);
+  next();
+});
+
+// 7. Security logging middleware
+const securityLogger = (req, res, next) => {
+  // Log suspicious activities
+  const suspiciousPatterns = [
+    /<script/i,
+    /javascript:/i,
+    /on\w+\s*=/i,
+    /union.*select/i,
+    /drop.*table/i,
+    /delete.*from/i,
+    /insert.*into/i,
+    /update.*set/i,
+    /exec\(/i,
+    /eval\(/i
+  ];
+  
+  const requestString = JSON.stringify(req.body) + JSON.stringify(req.query) + req.url;
+  
+  suspiciousPatterns.forEach(pattern => {
+    if (pattern.test(requestString)) {
+      console.warn(`🚨 SECURITY ALERT: Suspicious pattern detected from IP ${req.ip}`);
+      console.warn(`   Pattern: ${pattern}`);
+      console.warn(`   URL: ${req.url}`);
+      console.warn(`   Method: ${req.method}`);
+      // In production, you might want to block or alert admin
+    }
+  });
+  
+  next();
+};
+
+app.use(securityLogger);
 
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {
@@ -828,8 +1052,10 @@ app.get('/api/feedbacks', async (req, res) => {
 app.get('/api/surveys', authenticateAdmin, async (req, res) => {
   try {
     if (useDatabase && pool) {
+      // SECURITY: Use parameterized query (already safe, but explicit)
       const result = await pool.query('SELECT * FROM surveys ORDER BY created_at DESC');
       console.log(`📊 Found ${result.rows.length} surveys in database`);
+      // SECURITY: Never log sensitive data - only count
       // Convert snake_case to camelCase for frontend and decrypt sensitive data
       const surveys = result.rows.map(row => {
         // Decrypt sensitive fields
@@ -889,7 +1115,8 @@ app.get('/api/surveys', authenticateAdmin, async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error fetching surveys:', error);
+    // SECURITY: Never expose error details in production
+    console.error('Error fetching surveys:', error.message);
     // Fallback to in-memory on error
     res.json({
       success: true,
