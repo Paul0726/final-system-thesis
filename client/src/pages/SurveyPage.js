@@ -377,7 +377,7 @@ function SurveyPage() {
       <div className="validation-modal-overlay" onClick={() => setShowValidationModal(false)}>
         <div className="validation-modal" onClick={(e) => e.stopPropagation()}>
           <div className="validation-modal-header">
-            <h2>⚠️ Kailangan Sagutan ang mga Field na Ito</h2>
+            <h2>⚠️ Required Fields Must Be Completed</h2>
             <button 
               type="button"
               className="validation-modal-close" 
@@ -392,7 +392,7 @@ function SurveyPage() {
             </button>
           </div>
           <div className="validation-modal-content">
-            <p>Mangyaring kumpletuhin ang mga sumusunod na required fields bago mag-submit:</p>
+            <p>Please complete the following required fields before submitting:</p>
             <div className="missing-fields-list">
               {Object.entries(fieldsBySection).map(([section, fields]) => (
                 <div key={section} className="missing-fields-section">
@@ -423,7 +423,7 @@ function SurveyPage() {
                   }, 100);
                 }}
               >
-                Naintindihan, Kukumpletuhin Ko
+                Understood, I Will Complete It
               </button>
             </div>
           </div>

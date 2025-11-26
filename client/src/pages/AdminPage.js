@@ -499,6 +499,66 @@ function AdminPage() {
       doc.setFont('helvetica', 'normal');
       yPosition = addText(survey.systemFeedback, margin, yPosition, maxWidth, 10);
     }
+    
+    // System Evaluation Section
+    if (survey.systemEvaluation) {
+      checkNewPage(40);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('F. System Evaluation', margin, yPosition);
+      yPosition += 8;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      
+      if (survey.systemEvaluation.functionality) {
+        checkNewPage(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Functionality:', margin, yPosition);
+        yPosition += 6;
+        doc.setFont('helvetica', 'normal');
+        yPosition = addText(`  The system is easy to use and learned: ${survey.systemEvaluation.functionality.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system can be used with comfort and convenience: ${survey.systemEvaluation.functionality.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system is user-friendly: ${survey.systemEvaluation.functionality.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition += 3;
+      }
+      
+      if (survey.systemEvaluation.reliability) {
+        checkNewPage(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Reliability:', margin, yPosition);
+        yPosition += 6;
+        doc.setFont('helvetica', 'normal');
+        yPosition = addText(`  The system provides the correct desired output: ${survey.systemEvaluation.reliability.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  Absence of failures in the system: ${survey.systemEvaluation.reliability.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system is accurate in performance: ${survey.systemEvaluation.reliability.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition += 3;
+      }
+      
+      if (survey.systemEvaluation.accuracy) {
+        checkNewPage(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Accuracy:', margin, yPosition);
+        yPosition += 6;
+        doc.setFont('helvetica', 'normal');
+        yPosition = addText(`  The system gives accurate information/computation: ${survey.systemEvaluation.accuracy.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system provides accurate outputs: ${survey.systemEvaluation.accuracy.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system provides accurate reports: ${survey.systemEvaluation.accuracy.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition += 3;
+      }
+      
+      if (survey.systemEvaluation.efficiency) {
+        checkNewPage(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Efficiency:', margin, yPosition);
+        yPosition += 6;
+        doc.setFont('helvetica', 'normal');
+        yPosition = addText(`  The system is well organized and working properly: ${survey.systemEvaluation.efficiency.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system is well organized for purpose: ${survey.systemEvaluation.efficiency.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition = addText(`  The system is capable to produce the desired output without delaying the run time performance: ${survey.systemEvaluation.efficiency.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+        yPosition += 3;
+      }
+    }
 
     // Footer
     const totalPages = doc.internal.pages.length - 1;
@@ -1062,6 +1122,48 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
               <p><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</p>
               <p><strong>System Feedback:</strong> {survey.systemFeedback || 'N/A'}</p>
             </div>
+            
+            {survey.systemEvaluation && (
+              <div className="detail-section">
+                <h4>System Evaluation</h4>
+                
+                {survey.systemEvaluation.functionality && (
+                  <div style={{ marginBottom: '15px' }}>
+                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</h5>
+                    <p><strong>The system is easy to use and learned:</strong> {survey.systemEvaluation.functionality.q1 || 'N/A'}/5</p>
+                    <p><strong>The system can be used with comfort and convenience:</strong> {survey.systemEvaluation.functionality.q2 || 'N/A'}/5</p>
+                    <p><strong>The system is user-friendly:</strong> {survey.systemEvaluation.functionality.q3 || 'N/A'}/5</p>
+                  </div>
+                )}
+                
+                {survey.systemEvaluation.reliability && (
+                  <div style={{ marginBottom: '15px' }}>
+                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Reliability</h5>
+                    <p><strong>The system provides the correct desired output:</strong> {survey.systemEvaluation.reliability.q1 || 'N/A'}/5</p>
+                    <p><strong>Absence of failures in the system:</strong> {survey.systemEvaluation.reliability.q2 || 'N/A'}/5</p>
+                    <p><strong>The system is accurate in performance:</strong> {survey.systemEvaluation.reliability.q3 || 'N/A'}/5</p>
+                  </div>
+                )}
+                
+                {survey.systemEvaluation.accuracy && (
+                  <div style={{ marginBottom: '15px' }}>
+                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Accuracy</h5>
+                    <p><strong>The system gives accurate information/computation:</strong> {survey.systemEvaluation.accuracy.q1 || 'N/A'}/5</p>
+                    <p><strong>The system provides accurate outputs:</strong> {survey.systemEvaluation.accuracy.q2 || 'N/A'}/5</p>
+                    <p><strong>The system provides accurate reports:</strong> {survey.systemEvaluation.accuracy.q3 || 'N/A'}/5</p>
+                  </div>
+                )}
+                
+                {survey.systemEvaluation.efficiency && (
+                  <div style={{ marginBottom: '15px' }}>
+                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Efficiency</h5>
+                    <p><strong>The system is well organized and working properly:</strong> {survey.systemEvaluation.efficiency.q1 || 'N/A'}/5</p>
+                    <p><strong>The system is well organized for purpose:</strong> {survey.systemEvaluation.efficiency.q2 || 'N/A'}/5</p>
+                    <p><strong>The system is capable to produce the desired output without delaying the run time performance:</strong> {survey.systemEvaluation.efficiency.q3 || 'N/A'}/5</p>
+                  </div>
+                )}
+              </div>
+            )}
             
             {survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0 && (
               <div className="detail-section full-width">
