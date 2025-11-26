@@ -863,12 +863,12 @@ app.post('/api/survey', async (req, res) => {
     // Sanitize and validate survey data to prevent database errors
     const surveyData = sanitizeSurveyData(req.body);
     
-    // Comprehensive validation
+    // Basic validation - only check critical required fields
     const validationErrors = [];
     
     // Required fields validation
-    if (!surveyData.name || surveyData.name.trim().length < 2) {
-      validationErrors.push('Name is required and must be at least 2 characters');
+    if (!surveyData.name || !surveyData.name.trim()) {
+      validationErrors.push('Name is required');
     }
     
     if (!surveyData.emailAddress) {
@@ -883,7 +883,13 @@ app.post('/api/survey', async (req, res) => {
       // Accept both single year (YYYY) and range (YYYY-YYYY) formats
       const yearValue = String(surveyData.schoolYearGraduated).trim();
       if (!/^\d{4}(-\d{4})?$/.test(yearValue)) {
-        validationErrors.push('School year must be in format YYYY or YYYY-YYYY (e.g., 2020 or 2020-2021)');
+        // Try to normalize - if it's just numbers, convert to range
+        if (/^\d+$/.test(yearValue) && yearValue.length === 4) {
+          const year = parseInt(yearValue);
+          surveyData.schoolYearGraduated = `${year}-${year + 1}`;
+        } else {
+          validationErrors.push('School year must be in format YYYY or YYYY-YYYY');
+        }
       } else {
         // Normalize to YYYY-YYYY format if single year
         if (/^\d{4}$/.test(yearValue)) {
@@ -899,18 +905,7 @@ app.post('/api/survey', async (req, res) => {
       const parsedDate = parseDate(surveyData.dateOfBirth);
       if (!parsedDate) {
         validationErrors.push('Invalid date of birth format');
-      } else {
-        const birthDate = new Date(parsedDate);
-        const today = new Date();
-        const age = today.getFullYear() - birthDate.getFullYear();
-        if (age < 18 || age > 100) {
-          validationErrors.push('Age must be between 18-100 years');
-        }
       }
-    }
-    
-    if (!surveyData.age || parseInt(surveyData.age) < 18 || parseInt(surveyData.age) > 100) {
-      validationErrors.push('Age is required and must be between 18-100');
     }
     
     if (!surveyData.courseGraduated) {
@@ -925,7 +920,7 @@ app.post('/api/survey', async (req, res) => {
       validationErrors.push('Sex is required');
     }
     
-    // Account creation validation
+    // Account creation validation - only if account creation is enabled
     if (surveyData.createAccount && surveyData.accountPassword) {
       if (surveyData.accountPassword.length < 6) {
         validationErrors.push('Password must be at least 6 characters long');
@@ -935,7 +930,7 @@ app.post('/api/survey', async (req, res) => {
     if (validationErrors.length > 0) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Validation failed',
+        message: validationErrors.length === 1 ? validationErrors[0] : 'Please fix the following errors: ' + validationErrors.join(', '),
         errors: validationErrors
       });
     }

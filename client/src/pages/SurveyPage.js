@@ -122,38 +122,27 @@ function SurveyPage() {
   const validateForm = () => {
     const errors = [];
     
-    // Required fields validation
+    // Required fields validation - Only check truly critical fields
     if (!formData.name || formData.name.trim().length < 2) {
       errors.push('Name is required and must be at least 2 characters');
     }
     
-    if (!formData.emailAddress || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.emailAddress)) {
-      errors.push('Valid email address is required');
+    if (!formData.emailAddress) {
+      errors.push('Email address is required');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.emailAddress)) {
+      errors.push('Please enter a valid email address');
     }
     
     if (!formData.dateOfBirth) {
       errors.push('Date of birth is required');
-    } else {
-      const birthDate = new Date(formData.dateOfBirth);
-      const today = new Date();
-      const age = today.getFullYear() - birthDate.getFullYear();
-      if (age < 18 || age > 100) {
-        errors.push('Please enter a valid date of birth (age must be between 18-100)');
-      }
     }
     
-    if (!formData.age || parseInt(formData.age) < 18 || parseInt(formData.age) > 100) {
-      errors.push('Age is required and must be between 18-100');
+    if (!formData.age || isNaN(parseInt(formData.age))) {
+      errors.push('Age is required');
     }
     
     if (!formData.schoolYearGraduated) {
       errors.push('School year graduated is required');
-    } else {
-      // Accept both single year (YYYY) and range (YYYY-YYYY) formats
-      const yearValue = formData.schoolYearGraduated.trim();
-      if (!/^\d{4}(-\d{4})?$/.test(yearValue)) {
-        errors.push('School year must be in format YYYY or YYYY-YYYY (e.g., 2020 or 2020-2021)');
-      }
     }
     
     if (!formData.courseGraduated) {
@@ -168,26 +157,13 @@ function SurveyPage() {
       errors.push('Sex is required');
     }
     
-    // Account creation validation
+    // Account creation validation - only if account creation is enabled
     if (createAccount) {
       if (!accountPassword || accountPassword.length < 6) {
         errors.push('Password must be at least 6 characters long');
       }
       if (accountPassword !== confirmPassword) {
         errors.push('Passwords do not match');
-      }
-    }
-    
-    // Employment validation
-    if (formData.isEmployed === 'Yes') {
-      if (!formData.employmentNature) {
-        errors.push('Employment nature is required if you are employed');
-      }
-      if (!formData.jobTitle) {
-        errors.push('Job title is required if you are employed');
-      }
-      if (!formData.placeOfWork) {
-        errors.push('Place of work is required if you are employed');
       }
     }
     
