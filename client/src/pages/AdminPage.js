@@ -220,7 +220,8 @@ function AdminPage() {
         url: error.config?.url
       });
       const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
-      alert(`Error sending notification: ${errorMessage}\n\nStatus: ${error.response?.status || 'N/A'}\nURL: ${error.config?.url || '/api/send-notification'}`);
+      const requestUrl = error.config?.url || error.config?.baseURL + '/send-notification' || '/api/send-notification';
+      alert(`Error sending notification: ${errorMessage}\n\nStatus: ${error.response?.status || 'N/A'}\nURL: ${requestUrl}`);
     } finally {
       setSendingNotification(false);
     }
