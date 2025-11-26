@@ -56,10 +56,26 @@ function encrypt(text) {
 
 function decrypt(encryptedText) {
   if (!encryptedText) return null;
+  
+  // If it's not a string, return as is
+  if (typeof encryptedText !== 'string') {
+    return encryptedText;
+  }
+  
   try {
     const parts = encryptedText.split(':');
     if (parts.length !== 2) {
       // Not encrypted (no colon separator), return as is
+      return encryptedText;
+    }
+    
+    // Check if it looks like encrypted data (hex strings)
+    const ivHex = parts[0];
+    const encryptedHex = parts[1];
+    
+    // Validate hex format
+    if (!/^[0-9a-fA-F]+$/.test(ivHex) || !/^[0-9a-fA-F]+$/.test(encryptedHex)) {
+      // Doesn't look like encrypted data, return as is
       return encryptedText;
     }
     
@@ -72,14 +88,33 @@ function decrypt(encryptedText) {
     }
     
     const key = Buffer.from(keyHex, 'hex');
-    const iv = Buffer.from(parts[0], 'hex');
-    const encrypted = parts[1];
+    const iv = Buffer.from(ivHex, 'hex');
+    
+    // Validate IV length (should be 16 bytes = 32 hex characters)
+    if (iv.length !== 16) {
+      console.warn(`[DECRYPT] Invalid IV length: ${iv.length} bytes (expected 16)`);
+      return encryptedText;
+    }
+    
     const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    let decrypted = decipher.update(encryptedHex, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
+    
+    // Validate decrypted result (should not be empty and should be reasonable text)
+    if (!decrypted || decrypted.trim().length === 0) {
+      console.warn(`[DECRYPT] Decryption resulted in empty string for: ${encryptedText.substring(0, 50)}...`);
+      return encryptedText;
+    }
+    
     return decrypted;
   } catch (error) {
-    // If decryption fails, assume it's not encrypted
+    // Log the error for debugging
+    console.error(`[DECRYPT] Failed to decrypt: ${error.message}`);
+    console.error(`[DECRYPT] Encrypted text (first 100 chars): ${encryptedText.substring(0, 100)}...`);
+    console.error(`[DECRYPT] Encryption key length: ${ENCRYPTION_KEY ? ENCRYPTION_KEY.length : 0}`);
+    
+    // If decryption fails, return the encrypted text (so admin can see something)
+    // But also log it so we know there's an issue
     return encryptedText;
   }
 }
@@ -796,17 +831,24 @@ app.get('/api/surveys', authenticateAdmin, async (req, res) => {
       const result = await pool.query('SELECT * FROM surveys ORDER BY created_at DESC');
       console.log(`📊 Found ${result.rows.length} surveys in database`);
       // Convert snake_case to camelCase for frontend and decrypt sensitive data
-      const surveys = result.rows.map(row => ({
-        id: row.id,
-        name: row.name,
-        permanentAddress: decrypt(row.permanent_address) || row.permanent_address,
-        mobileNumber: decrypt(row.mobile_number) || row.mobile_number,
-        emailAddress: decrypt(row.email_address) || row.email_address,
+      const surveys = result.rows.map(row => {
+        // Decrypt sensitive fields
+        const permanentAddress = row.permanent_address ? decrypt(row.permanent_address) : null;
+        const mobileNumber = row.mobile_number ? decrypt(row.mobile_number) : null;
+        const emailAddress = row.email_address ? decrypt(row.email_address) : null;
+        const currentLocation = row.current_location ? decrypt(row.current_location) : null;
+        
+        return {
+          id: row.id,
+          name: row.name,
+          permanentAddress: permanentAddress || row.permanent_address || '',
+          mobileNumber: mobileNumber || row.mobile_number || '',
+          emailAddress: emailAddress || row.email_address || '',
         dateOfBirth: formatDateOfBirth(row.date_of_birth),
         age: row.age,
         civilStatus: row.civil_status,
         sex: row.sex,
-        currentLocation: decrypt(row.current_location) || row.current_location,
+        currentLocation: currentLocation || row.current_location || '',
         courseGraduated: row.course_graduated,
         schoolYearGraduated: row.school_year_graduated,
         maxAcademicAchievement: row.max_academic_achievement,
