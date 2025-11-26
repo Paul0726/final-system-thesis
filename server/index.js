@@ -1889,6 +1889,25 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
       }
     }
     
+    // Save to notification history
+    try {
+      await pool.query(
+        `INSERT INTO notifications_history (subject, message, recipient_filter, selected_year, recipient_count)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          subject,
+          message,
+          recipientFilter,
+          selectedYear || null,
+          emailResults.success
+        ]
+      );
+      console.log('✅ Notification saved to history');
+    } catch (historyError) {
+      console.error('⚠️ Failed to save notification to history:', historyError.message);
+      // Don't fail the request if history save fails
+    }
+    
     res.json({
       success: true,
       message: `Notification sent to ${emailResults.success} recipient(s)${emailResults.failed > 0 ? `. ${emailResults.failed} failed.` : ''}`,
@@ -1900,6 +1919,37 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
   } catch (error) {
     console.error('Error sending notification:', error);
     res.status(500).json({ success: false, message: 'Error sending notification: ' + error.message });
+  }
+});
+
+// Get notification history
+app.get('/api/notifications-history', authenticateAdmin, async (req, res) => {
+  try {
+    if (!pool) {
+      return res.status(500).json({ success: false, message: 'Database not available' });
+    }
+    
+    const result = await pool.query(`
+      SELECT 
+        id,
+        subject,
+        message,
+        recipient_filter,
+        selected_year,
+        recipient_count,
+        sent_at
+      FROM notifications_history
+      ORDER BY sent_at DESC
+      LIMIT 100
+    `);
+    
+    res.json({
+      success: true,
+      history: result.rows
+    });
+  } catch (error) {
+    console.error('Error fetching notification history:', error);
+    res.status(500).json({ success: false, message: 'Error fetching notification history: ' + error.message });
   }
 });
 

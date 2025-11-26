@@ -183,6 +183,20 @@ if (process.env.DATABASE_URL) {
       `);
       console.log('✅ Technical support reports table created/verified');
 
+      // Create notifications_history table
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS notifications_history (
+          id SERIAL PRIMARY KEY,
+          subject VARCHAR(500) NOT NULL,
+          message TEXT NOT NULL,
+          recipient_filter VARCHAR(50) NOT NULL,
+          selected_year VARCHAR(20),
+          recipient_count INTEGER NOT NULL,
+          sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      console.log('✅ Notifications history table created/verified');
+
         // Create users table for respondent accounts (AFTER surveys table)
         console.log('🔄 Creating users table...');
         try {

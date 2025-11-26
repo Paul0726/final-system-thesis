@@ -62,6 +62,8 @@ function AdminPage() {
   const [selectedYear, setSelectedYear] = useState('');
   const [sendingNotification, setSendingNotification] = useState(false);
   const [notificationSuccess, setNotificationSuccess] = useState(false);
+  const [notificationHistory, setNotificationHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   
   // Debounce search term for better performance (300ms delay)
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -171,9 +173,26 @@ function AdminPage() {
     setShowReports(!showReports);
   };
   
+  const fetchNotificationHistory = async () => {
+    try {
+      setLoadingHistory(true);
+      const response = await adminAxios.get('/notifications-history');
+      if (response.data.success) {
+        setNotificationHistory(response.data.history || []);
+      }
+    } catch (error) {
+      console.error('Error fetching notification history:', error);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+  
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
-    if (showNotifications) {
+    if (!showNotifications) {
+      // Fetch history when opening
+      fetchNotificationHistory();
+    } else {
       // Reset form when closing
       setNotificationSubject('');
       setNotificationMessage('');
@@ -206,6 +225,8 @@ function AdminPage() {
         setNotificationMessage('');
         setRecipientFilter('all');
         setSelectedYear('');
+        // Refresh history after sending
+        fetchNotificationHistory();
         alert(`Notification sent successfully to ${response.data.recipientCount} recipient(s)!`);
       } else {
         alert('Failed to send notification: ' + (response.data.message || 'Unknown error'));
@@ -1186,6 +1207,77 @@ function AdminPage() {
                   Cancel
                 </button>
               </div>
+            </div>
+            
+            {/* Notification History Section */}
+            <div className="notification-history-section">
+              <div className="notification-history-header">
+                <h3>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  Notification History
+                </h3>
+                <button 
+                  onClick={fetchNotificationHistory} 
+                  className="btn-refresh-small" 
+                  title="Refresh history"
+                  disabled={loadingHistory}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                  </svg>
+                </button>
+              </div>
+              
+              {loadingHistory ? (
+                <div className="loading-message">Loading history...</div>
+              ) : notificationHistory.length === 0 ? (
+                <div className="empty-message">No notification history yet.</div>
+              ) : (
+                <div className="notification-history-list">
+                  {notificationHistory.map((item) => (
+                    <div key={item.id} className="notification-history-item">
+                      <div className="history-item-header">
+                        <div className="history-item-meta">
+                          <h4>{item.subject}</h4>
+                          <div className="history-item-details">
+                            <span className="history-badge">
+                              {item.recipient_filter === 'all' ? 'All Respondents' :
+                               item.recipient_filter === 'employed' ? 'Employed Only' :
+                               item.recipient_filter === 'unemployed' ? 'Unemployed Only' :
+                               item.recipient_filter === 'self-employed' ? 'Self-Employed Only' :
+                               item.recipient_filter === 'by-year' ? `Year: ${item.selected_year || 'N/A'}` :
+                               item.recipient_filter}
+                            </span>
+                            <span className="history-recipient-count">
+                              {item.recipient_count} recipient{item.recipient_count !== 1 ? 's' : ''}
+                            </span>
+                            <span className="history-date">
+                              {new Date(item.sent_at).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="history-item-message">
+                        <p>{item.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
