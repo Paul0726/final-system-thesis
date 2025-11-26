@@ -1811,6 +1811,12 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
       }
     });
     
+    // Get base URL for links
+    const baseUrl = process.env.BASE_URL || 
+                    process.env.FRONTEND_URL || 
+                    (req.protocol + '://' + req.get('host')) ||
+                    'https://dwcsjgraduatetracer.it.com';
+    
     // Send emails in batches to avoid rate limiting
     const batchSize = 10;
     for (let i = 0; i < recipients.length; i += batchSize) {
@@ -1819,6 +1825,9 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
       await Promise.allSettled(
         batch.map(async (recipient) => {
           try {
+            // Construct personal dashboard link with email
+            const dashboardLink = `${baseUrl}/personal-dashboard?email=${encodeURIComponent(recipient.email)}`;
+            
             const mailOptions = {
               from: `"BSIT Graduate Tracer System" <${process.env.GMAIL_USER || process.env.EMAIL_USER || 'johnpauld750@gmail.com'}>`,
               to: recipient.email,
@@ -1836,6 +1845,18 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
                     <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #11823b; margin: 20px 0;">
                       <p style="color: #1f2937; line-height: 1.8; white-space: pre-wrap; margin: 0;">${message}</p>
                     </div>
+                    <div style="background: #eff6ff; padding: 20px; border-radius: 8px; border: 2px solid #11823b; margin: 25px 0;">
+                      <h3 style="color: #11823b; margin-top: 0; font-size: 18px;">📋 How to Access Your Personal Dashboard:</h3>
+                      <ol style="color: #1f2937; line-height: 1.8; padding-left: 20px; margin: 15px 0;">
+                        <li style="margin-bottom: 10px;">Click the button below to access your personal dashboard directly</li>
+                        <li style="margin-bottom: 10px;">Or copy and paste this link into your browser: <a href="${dashboardLink}" style="color: #11823b; word-break: break-all;">${dashboardLink}</a></li>
+                        <li style="margin-bottom: 10px;">You can view and edit your survey responses, including the System Evaluation section</li>
+                        <li>If you need to login, use your registered email address and password</li>
+                      </ol>
+                      <div style="text-align: center; margin-top: 25px;">
+                        <a href="${dashboardLink}" style="display: inline-block; background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Access Your Personal Dashboard</a>
+                      </div>
+                    </div>
                     <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
                       This is an automated message from the BSIT Graduate Tracer System.<br>
                       Please do not reply to this email.
@@ -1846,7 +1867,7 @@ app.post('/api/send-notification', authenticateAdmin, async (req, res) => {
                   </div>
                 </div>
               `,
-              text: `Dear ${recipient.name || 'Respondent'},\n\n${message}\n\nThis is an automated message from the BSIT Graduate Tracer System.`
+              text: `Dear ${recipient.name || 'Respondent'},\n\n${message}\n\nHow to Access Your Personal Dashboard:\n1. Click this link: ${dashboardLink}\n2. Or copy and paste the link into your browser\n3. You can view and edit your survey responses, including the System Evaluation section\n4. If you need to login, use your registered email address and password\n\nThis is an automated message from the BSIT Graduate Tracer System.`
             };
             
             await transporter.sendMail(mailOptions);
