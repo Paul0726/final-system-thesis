@@ -430,6 +430,172 @@
 }
 
 /* Alumni Modal */
+/* Validation Modal Styles */
+.validation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.validation-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.validation-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e5e7eb;
+  background: #fef3c7;
+  border-radius: 12px 12px 0 0;
+}
+
+.validation-modal-header h2 {
+  margin: 0;
+  color: #92400e;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.validation-modal-close {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #92400e;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.validation-modal-close:hover {
+  background: rgba(146, 64, 14, 0.1);
+}
+
+.validation-modal-content {
+  padding: 24px;
+}
+
+.validation-modal-content > p {
+  margin: 0 0 20px 0;
+  color: #374151;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.missing-fields-list {
+  margin: 20px 0;
+}
+
+.missing-fields-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #f59e0b;
+}
+
+.missing-fields-section h3 {
+  margin: 0 0 12px 0;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.missing-fields-section ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.missing-fields-section li {
+  margin: 8px 0;
+  color: #4b5563;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.validation-modal-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.validation-modal-actions .btn-primary {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .validation-modal {
+    max-width: 95%;
+    margin: 10px;
+  }
+  
+  .validation-modal-header {
+    padding: 16px;
+  }
+  
+  .validation-modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .validation-modal-content {
+    padding: 20px;
+  }
+  
+  .validation-modal-actions {
+    flex-direction: column;
+  }
+  
+  .validation-modal-actions .btn-primary {
+    width: 100%;
+  }
+}
+
 .alumni-modal-overlay {
   position: fixed;
   top: 0;

@@ -110,7 +110,7 @@ if (process.env.DATABASE_URL) {
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_rating INTEGER`);
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS school_feedback TEXT`);
           await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS system_feedback TEXT`);
-          await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_it_field VARCHAR(10)`);
+        await pool.query(`ALTER TABLE surveys ADD COLUMN IF NOT EXISTS is_it_field VARCHAR(10)`);
         } catch (err) {
           // Columns might already exist, ignore error
         }

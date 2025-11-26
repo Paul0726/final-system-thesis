@@ -71,6 +71,8 @@ function SurveyPage() {
   const [createAccount, setCreateAccount] = useState(true); // Default to true
   const [accountPassword, setAccountPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [missingFields, setMissingFields] = useState([]);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -118,62 +120,83 @@ function SurveyPage() {
     }));
   }, []);
 
-  // Comprehensive validation function
+  // Comprehensive validation function - returns missing fields with friendly names
   const validateForm = () => {
-    const errors = [];
+    const missing = [];
     
-    // Required fields validation - Only check truly critical fields
+    // Required fields validation with friendly field names
     if (!formData.name || formData.name.trim().length < 2) {
-      errors.push('Name is required and must be at least 2 characters');
+      missing.push({ field: 'Name', section: 'A. Individual Information' });
+    }
+    
+    if (!formData.permanentAddress || formData.permanentAddress.trim().length === 0) {
+      missing.push({ field: 'Permanent Address', section: 'A. Individual Information' });
+    }
+    
+    if (!formData.mobileNumber || formData.mobileNumber.trim().length === 0) {
+      missing.push({ field: 'Mobile Number', section: 'A. Individual Information' });
     }
     
     if (!formData.emailAddress) {
-      errors.push('Email address is required');
+      missing.push({ field: 'Email Address', section: 'A. Individual Information' });
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.emailAddress)) {
-      errors.push('Please enter a valid email address');
+      missing.push({ field: 'Email Address (invalid format)', section: 'A. Individual Information' });
     }
     
     if (!formData.dateOfBirth) {
-      errors.push('Date of birth is required');
+      missing.push({ field: 'Date of Birth', section: 'A. Individual Information' });
     }
     
     if (!formData.age || isNaN(parseInt(formData.age))) {
-      errors.push('Age is required');
-    }
-    
-    if (!formData.schoolYearGraduated) {
-      errors.push('School year graduated is required');
-    } else {
-      // Accept single year format (YYYY) - this is the original design
-      const yearValue = formData.schoolYearGraduated.trim();
-      if (!/^\d{4}$/.test(yearValue)) {
-        errors.push('School year must be a valid year (e.g., 2024)');
-      }
-    }
-    
-    if (!formData.courseGraduated) {
-      errors.push('Course graduated is required');
+      missing.push({ field: 'Age', section: 'A. Individual Information' });
     }
     
     if (!formData.civilStatus) {
-      errors.push('Civil status is required');
+      missing.push({ field: 'Civil Status', section: 'A. Individual Information' });
     }
     
     if (!formData.sex) {
-      errors.push('Sex is required');
+      missing.push({ field: 'Sex', section: 'A. Individual Information' });
+    }
+    
+    if (!formData.courseGraduated) {
+      missing.push({ field: 'Course Graduated', section: 'A. Individual Information' });
+    }
+    
+    if (!formData.schoolYearGraduated) {
+      missing.push({ field: 'School Year Graduated', section: 'A. Individual Information' });
+    }
+    
+    // Employment section - conditional required fields
+    if (!formData.isEmployed) {
+      missing.push({ field: 'Are you currently employed?', section: 'C. Employment Experiences' });
+    } else if (formData.isEmployed === 'Yes') {
+      // If employed, these fields are required
+      if (!formData.employmentNature) {
+        missing.push({ field: 'Employment Nature', section: 'C. Employment Experiences' });
+      }
+      if (!formData.employmentClassification) {
+        missing.push({ field: 'Employment Classification', section: 'C. Employment Experiences' });
+      }
+      if (!formData.jobTitle || formData.jobTitle.trim().length === 0) {
+        missing.push({ field: 'Job Title', section: 'C. Employment Experiences' });
+      }
+      if (!formData.placeOfWork) {
+        missing.push({ field: 'Place of Work', section: 'C. Employment Experiences' });
+      }
     }
     
     // Account creation validation - only if account creation is enabled
     if (createAccount) {
       if (!accountPassword || accountPassword.length < 6) {
-        errors.push('Password must be at least 6 characters long');
+        missing.push({ field: 'Password (must be at least 6 characters)', section: 'Account Creation' });
       }
       if (accountPassword !== confirmPassword) {
-        errors.push('Passwords do not match');
+        missing.push({ field: 'Password Confirmation (passwords do not match)', section: 'Account Creation' });
       }
     }
     
-    return errors;
+    return missing;
   };
   
   const handleSubmit = async (e) => {
@@ -181,13 +204,16 @@ function SurveyPage() {
     
     // Prevent double submission
     if (loading) {
-      return;
-    }
+        return;
+      }
     
     // Validate form
-    const validationErrors = validateForm();
-    if (validationErrors.length > 0) {
-      alert('Please fix the following errors:\n\n' + validationErrors.join('\n'));
+    const missingFieldsList = validateForm();
+    if (missingFieldsList.length > 0) {
+      setMissingFields(missingFieldsList);
+      setShowValidationModal(true);
+      // Scroll to top to show modal
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     
@@ -252,7 +278,7 @@ function SurveyPage() {
         errorMessage = error.message;
       }
       
-      alert('Error: ' + errorMessage);
+        alert('Error: ' + errorMessage);
     } finally {
       setLoading(false);
     }
@@ -394,6 +420,7 @@ function SurveyPage() {
 
   return (
     <div className="survey-page">
+      <ValidationModal />
       <div className="survey-container">
         <header className="survey-header">
           <Link to="/" className="back-link">← Back to Home</Link>
