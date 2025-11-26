@@ -193,7 +193,7 @@ function AdminPage() {
     setNotificationSuccess(false);
     
     try {
-      const response = await adminAxios.post('/api/send-notification', {
+      const response = await adminAxios.post('/send-notification', {
         subject: notificationSubject,
         message: notificationMessage,
         recipientFilter: recipientFilter,
