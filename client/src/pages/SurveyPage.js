@@ -303,8 +303,13 @@ function SurveyPage() {
           <div className="validation-modal-header">
             <h2>⚠️ Kailangan Sagutan ang mga Field na Ito</h2>
             <button 
+              type="button"
               className="validation-modal-close" 
-              onClick={() => setShowValidationModal(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowValidationModal(false);
+              }}
               aria-label="Close"
             >
               ×
@@ -326,15 +331,20 @@ function SurveyPage() {
             </div>
             <div className="validation-modal-actions">
               <button 
+                type="button"
                 className="btn-primary" 
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setShowValidationModal(false);
                   // Scroll to first missing field if possible
-                  const firstField = document.querySelector('input[required], select[required]');
-                  if (firstField) {
-                    firstField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => firstField.focus(), 500);
-                  }
+                  setTimeout(() => {
+                    const firstField = document.querySelector('input[required], select[required]');
+                    if (firstField) {
+                      firstField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      setTimeout(() => firstField.focus(), 500);
+                    }
+                  }, 100);
                 }}
               >
                 Naintindihan, Kukumpletuhin Ko
@@ -665,12 +675,32 @@ function SurveyPage() {
                       />
                     </div>
                     {formData.trainings.length > 1 && (
-                      <button type="button" onClick={() => removeTraining(index)} className="btn-remove">Remove</button>
+                      <button 
+                        type="button" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          removeTraining(index);
+                        }} 
+                        className="btn-remove"
+                      >
+                        Remove
+                      </button>
                     )}
                   </div>
                 </div>
               ))}
-              <button type="button" onClick={addTraining} className="btn-add-training">+ Add Training</button>
+              <button 
+                type="button" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  addTraining();
+                }} 
+                className="btn-add-training"
+              >
+                + Add Training
+              </button>
             </div>
 
             <div className="form-group">

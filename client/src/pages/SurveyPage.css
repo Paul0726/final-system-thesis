@@ -97,6 +97,7 @@
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  pointer-events: auto;
 }
 
 .survey-header {
@@ -488,6 +489,11 @@
   justify-content: center;
   border-radius: 4px;
   transition: background 0.2s;
+  z-index: 11;
+  pointer-events: auto;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .validation-modal-close:hover {
@@ -547,6 +553,11 @@
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 600;
+  z-index: 10;
+  pointer-events: auto;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 @keyframes fadeIn {
@@ -682,6 +693,11 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s;
+  z-index: 10;
+  pointer-events: auto;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .modal-buttons .btn-primary {
@@ -861,6 +877,9 @@
   padding-top: 30px;
   border-top: 2px solid #dce3c7;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .btn-submit,
@@ -888,6 +907,10 @@
     0 0 0 0 rgba(17, 130, 59, 0);
   position: relative;
   overflow: hidden;
+  z-index: 10;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .btn-submit::before {
@@ -933,11 +956,16 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  pointer-events: none;
 }
 
 .btn-cancel {
   background: #e5e7eb;
   color: #374151;
+  z-index: 10;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .btn-cancel:hover {
