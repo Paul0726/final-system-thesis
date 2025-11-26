@@ -75,7 +75,7 @@ if (process.env.DATABASE_URL) {
             sex VARCHAR(10),
             current_location TEXT,
             course_graduated VARCHAR(255),
-            school_year_graduated VARCHAR(20),
+            school_year_graduated VARCHAR(10),
             max_academic_achievement TEXT,
             trainings JSONB,
             civil_service VARCHAR(255),

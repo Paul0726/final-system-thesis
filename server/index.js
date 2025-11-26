@@ -880,22 +880,10 @@ app.post('/api/survey', async (req, res) => {
     if (!surveyData.schoolYearGraduated) {
       validationErrors.push('School year graduated is required');
     } else {
-      // Accept both single year (YYYY) and range (YYYY-YYYY) formats
+      // Accept single year format (YYYY) - this is the original design
       const yearValue = String(surveyData.schoolYearGraduated).trim();
-      if (!/^\d{4}(-\d{4})?$/.test(yearValue)) {
-        // Try to normalize - if it's just numbers, convert to range
-        if (/^\d+$/.test(yearValue) && yearValue.length === 4) {
-          const year = parseInt(yearValue);
-          surveyData.schoolYearGraduated = `${year}-${year + 1}`;
-        } else {
-          validationErrors.push('School year must be in format YYYY or YYYY-YYYY');
-        }
-      } else {
-        // Normalize to YYYY-YYYY format if single year
-        if (/^\d{4}$/.test(yearValue)) {
-          const year = parseInt(yearValue);
-          surveyData.schoolYearGraduated = `${year}-${year + 1}`;
-        }
+      if (!/^\d{4}$/.test(yearValue)) {
+        validationErrors.push('School year must be a valid year (e.g., 2024)');
       }
     }
     
