@@ -284,6 +284,68 @@ function SurveyPage() {
     }
   };
 
+  // Validation Modal Component
+  const ValidationModal = () => {
+    if (!showValidationModal) return null;
+    
+    // Group missing fields by section
+    const fieldsBySection = missingFields.reduce((acc, item) => {
+      if (!acc[item.section]) {
+        acc[item.section] = [];
+      }
+      acc[item.section].push(item.field);
+      return acc;
+    }, {});
+    
+    return (
+      <div className="validation-modal-overlay" onClick={() => setShowValidationModal(false)}>
+        <div className="validation-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="validation-modal-header">
+            <h2>⚠️ Kailangan Sagutan ang mga Field na Ito</h2>
+            <button 
+              className="validation-modal-close" 
+              onClick={() => setShowValidationModal(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+          </div>
+          <div className="validation-modal-content">
+            <p>Mangyaring kumpletuhin ang mga sumusunod na required fields bago mag-submit:</p>
+            <div className="missing-fields-list">
+              {Object.entries(fieldsBySection).map(([section, fields]) => (
+                <div key={section} className="missing-fields-section">
+                  <h3>{section}</h3>
+                  <ul>
+                    {fields.map((field, index) => (
+                      <li key={index}>• {field}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="validation-modal-actions">
+              <button 
+                className="btn-primary" 
+                onClick={() => {
+                  setShowValidationModal(false);
+                  // Scroll to first missing field if possible
+                  const firstField = document.querySelector('input[required], select[required]');
+                  if (firstField) {
+                    firstField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => firstField.focus(), 500);
+                  }
+                }}
+              >
+                Naintindihan, Kukumpletuhin Ko
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (submitted) {
     return (
       <div className="survey-page">
