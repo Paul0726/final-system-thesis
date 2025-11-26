@@ -54,6 +54,15 @@ function AdminPage() {
   const [reportsLoading, setReportsLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   
+  // Notification system state
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationSubject, setNotificationSubject] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [recipientFilter, setRecipientFilter] = useState('all'); // 'all', 'employed', 'unemployed', 'self-employed', 'by-year'
+  const [selectedYear, setSelectedYear] = useState('');
+  const [sendingNotification, setSendingNotification] = useState(false);
+  const [notificationSuccess, setNotificationSuccess] = useState(false);
+  
   // Debounce search term for better performance (300ms delay)
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -161,6 +170,67 @@ function AdminPage() {
     }
     setShowReports(!showReports);
   };
+  
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+    if (showNotifications) {
+      // Reset form when closing
+      setNotificationSubject('');
+      setNotificationMessage('');
+      setRecipientFilter('all');
+      setSelectedYear('');
+      setNotificationSuccess(false);
+    }
+  };
+  
+  const handleSendNotification = async () => {
+    if (!notificationSubject.trim() || !notificationMessage.trim()) {
+      alert('Please fill in both subject and message fields.');
+      return;
+    }
+    
+    setSendingNotification(true);
+    setNotificationSuccess(false);
+    
+    try {
+      const response = await adminAxios.post('/api/send-notification', {
+        subject: notificationSubject,
+        message: notificationMessage,
+        recipientFilter: recipientFilter,
+        selectedYear: selectedYear || null
+      });
+      
+      if (response.data.success) {
+        setNotificationSuccess(true);
+        setNotificationSubject('');
+        setNotificationMessage('');
+        setRecipientFilter('all');
+        setSelectedYear('');
+        alert(`Notification sent successfully to ${response.data.recipientCount} recipient(s)!`);
+      } else {
+        alert('Failed to send notification: ' + (response.data.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      alert('Error sending notification: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setSendingNotification(false);
+    }
+  };
+  
+  // Get unique years from surveys for filtering
+  const availableYears = useMemo(() => {
+    const years = new Set();
+    surveys.forEach(survey => {
+      if (survey.schoolYearGraduated) {
+        const year = survey.schoolYearGraduated.split('-')[0] || survey.schoolYearGraduated;
+        if (year && year.length === 4) {
+          years.add(year);
+        }
+      }
+    });
+    return Array.from(years).sort().reverse();
+  }, [surveys]);
 
   const handleSendOTP = async () => {
     try {
