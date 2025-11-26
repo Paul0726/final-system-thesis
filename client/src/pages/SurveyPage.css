@@ -402,7 +402,7 @@
 
 .form-help {
   display: block;
-  color: #6b7280;
+  color: #1f2937;
   font-size: 0.85rem;
   margin-top: 5px;
   font-style: italic;
@@ -707,7 +707,7 @@
 }
 
 .modal-note {
-  color: #6b7280;
+  color: #1f2937;
   font-size: 0.95rem;
   font-style: italic;
   margin-top: 10px;
@@ -897,7 +897,7 @@
 
 .rating-label span {
   font-size: 1.1rem;
-  color: #6b7280;
+  color: #1f2937;
 }
 
 .rating-label:has(input[type="radio"]:checked) {
@@ -1033,7 +1033,7 @@
 }
 
 .success-message p {
-  color: #6b7280;
+  color: #1f2937;
   font-size: 1.1rem;
   margin-bottom: 30px;
 }
@@ -1073,7 +1073,7 @@
 }
 
 .section-description {
-  color: #6b7280;
+  color: #1f2937;
   margin-bottom: 20px;
   font-size: 0.95rem;
   line-height: 1.6;
@@ -1126,7 +1126,7 @@
 .form-group small {
   display: block;
   margin-top: 5px;
-  color: #6b7280;
+  color: #1f2937;
   font-size: 0.85rem;
 }
 

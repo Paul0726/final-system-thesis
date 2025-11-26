@@ -266,6 +266,37 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* MOBILE FIXES - Button and Text Readability */
 @media (max-width: 768px) {
+  /* CRITICAL: Fix ALL light gray text to dark for readability */
+  * {
+    /* Override all light gray text colors */
+  }
+  
+  /* Fix all text that uses light gray colors */
+  p,
+  span,
+  div,
+  label,
+  small,
+  .survey-meta,
+  .detail-section p,
+  .detail-section span,
+  .form-help,
+  .modal-note,
+  .section-description,
+  .rating-count,
+  .feedback-rating,
+  .developers-subtitle,
+  .developer-role,
+  .cta-subtext,
+  .feature-card p,
+  .privacy-text li,
+  [style*="color: #6b7280"],
+  [style*="color: #9ca3af"],
+  [class*="meta"],
+  [class*="text-gray"] {
+    color: #1f2937 !important;
+  }
+  
   /* Fix button text color - ensure all buttons have readable text */
   button {
     color: #ffffff !important;
@@ -280,7 +311,9 @@ input[type="number"]::-webkit-outer-spin-button {
   .btn-primary,
   button[class*="btn-primary"],
   button[style*="background: #11823b"],
-  button[style*="background-color: #11823b"] {
+  button[style*="background-color: #11823b"],
+  a.btn-primary,
+  a[class*="btn-primary"] {
     color: #ffffff !important;
     background-color: #11823b !important;
     border-color: #11823b !important;
@@ -291,10 +324,28 @@ input[type="number"]::-webkit-outer-spin-button {
   .btn-secondary,
   button[class*="btn-secondary"],
   button[style*="background: white"],
-  button[style*="background-color: white"] {
+  button[style*="background-color: white"],
+  a.btn-secondary,
+  a[class*="btn-secondary"] {
     color: #11823b !important;
     background-color: #ffffff !important;
     border-color: #11823b !important;
+  }
+  
+  /* Action buttons - ensure visible */
+  .btn-download,
+  .btn-delete,
+  .btn-refresh,
+  .btn-mark-read,
+  .btn-delete-report {
+    color: #11823b !important;
+    background-color: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  .btn-delete,
+  .btn-delete-report {
+    color: #ef4444 !important;
   }
   
   /* Disabled buttons */
@@ -312,21 +363,20 @@ input[type="number"]::-webkit-outer-spin-button {
     touch-action: manipulation;
   }
   
-  a.btn-primary,
-  a[class*="btn-primary"] {
-    color: #ffffff !important;
-  }
-  
   /* Text on colored backgrounds */
   h1, h2, h3, h4, h5, h6 {
     color: #1f2937 !important;
   }
   
-  /* White text on green backgrounds */
+  /* White text on green backgrounds - keep white */
   .dashboard-header h1,
   .dashboard-header p,
   .evaluation-header h1,
   .evaluation-header p,
+  .admin-header h1,
+  .admin-header p,
+  .landing-header h1,
+  .landing-subtitle,
   [style*="color: white"],
   [class*="header"] h1,
   [class*="header"] p {
@@ -347,8 +397,15 @@ input[type="number"]::-webkit-outer-spin-button {
   .stat-card,
   .survey-card,
   .card,
+  .feature-card,
+  .rating-card,
+  .feedback-card,
+  .developer-card,
   [class*="card"],
-  [class*="container"] {
+  [class*="container"],
+  .admin-controls,
+  .admin-content,
+  .form-container {
     color: #1f2937 !important;
   }
   
@@ -373,20 +430,34 @@ input[type="number"]::-webkit-outer-spin-button {
   
   /* Fix for table text */
   table,
-  table td,
-  table th {
+  table td {
     color: #1f2937 !important;
   }
   
-  table thead {
+  table th {
     background-color: #11823b !important;
     color: #ffffff !important;
   }
   
   /* Rating badges */
   .rating-badge,
-  [class*="rating"] {
+  [class*="rating-badge"] {
     color: #ffffff !important;
+  }
+  
+  /* Fix empty state text */
+  .empty-state,
+  .loading,
+  .empty-message {
+    color: #1f2937 !important;
+  }
+  
+  /* Fix all headings in cards */
+  .survey-card h3,
+  .survey-card h4,
+  .detail-section h4,
+  .detail-section h5 {
+    color: #11823b !important;
   }
 }
 

@@ -81,14 +81,32 @@
     background-color: #f3f4f6 !important;
   }
   
-  /* Fix text readability */
+  /* Fix text readability - ALL text must be dark and readable */
   .survey-card,
-  .admin-container {
+  .admin-container,
+  .admin-controls,
+  .admin-content {
     color: #1f2937 !important;
   }
   
   .survey-card h3,
-  .survey-card p {
+  .survey-card h4,
+  .survey-card p,
+  .survey-card label,
+  .survey-card span,
+  .survey-meta,
+  .detail-section,
+  .detail-section p,
+  .detail-section strong {
+    color: #1f2937 !important;
+  }
+  
+  /* Fix all light gray text to dark */
+  .survey-meta,
+  [class*="meta"],
+  [class*="text-gray"],
+  [style*="color: #6b7280"],
+  [style*="color: #9ca3af"] {
     color: #1f2937 !important;
   }
   
@@ -99,6 +117,43 @@
   
   .pagination button:disabled {
     color: #9ca3af !important;
+  }
+  
+  /* Fix button visibility */
+  .btn-download,
+  .btn-delete {
+    color: #11823b !important;
+    background-color: #f3f4f6 !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  /* Fix all headings */
+  h1, h2, h3, h4, h5, h6 {
+    color: #1f2937 !important;
+  }
+  
+  /* Fix admin header text */
+  .admin-header h1,
+  .admin-header p {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Fix filter and select text */
+  .filter-select,
+  .search-input {
+    color: #1f2937 !important;
+  }
+  
+  /* Fix table text */
+  .surveys-table td,
+  .surveys-table th {
+    color: #1f2937 !important;
+  }
+  
+  .surveys-table th {
+    background-color: #11823b !important;
+    color: #ffffff !important;
   }
 }
 
@@ -406,12 +461,12 @@
 
 .btn-download {
   padding: 8px;
-  border: none;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
-  background: transparent;
+  background: #f9fafb;
   transition: all 0.3s;
-  color: #6b7280;
+  color: #11823b;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -430,12 +485,12 @@
 
 .btn-delete {
   padding: 8px;
-  border: none;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
-  background: transparent;
+  background: #f9fafb;
   transition: all 0.3s;
-  color: #6b7280;
+  color: #ef4444;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -456,7 +511,7 @@
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #6b7280;
+  color: #1f2937;
   font-size: 1.1rem;
 }
 
@@ -464,7 +519,7 @@
   width: 80px;
   height: 80px;
   margin: 0 auto 20px;
-  color: #9ca3af;
+  color: #1f2937;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -482,7 +537,7 @@
 }
 
 .empty-state p {
-  color: #6b7280;
+  color: #1f2937;
   margin-bottom: 10px;
   line-height: 1.6;
 }
@@ -647,7 +702,7 @@
 
 .login-box > p {
   text-align: center;
-  color: #6b7280;
+  color: #1f2937;
   margin-bottom: 30px;
   font-size: 1rem;
 }
@@ -724,7 +779,7 @@
 }
 
 .login-form small {
-  color: #6b7280;
+  color: #1f2937;
   font-size: 0.9rem;
 }
 
@@ -870,9 +925,10 @@
 }
 
 .survey-meta {
-  color: #6b7280;
+  color: #1f2937;
   margin: 0;
   font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .survey-card-actions {
@@ -925,7 +981,7 @@
 
 .alumni-no-badge {
   background: #e5e7eb;
-  color: #6b7280;
+  color: #1f2937;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -1120,13 +1176,13 @@
 }
 
 .report-type {
-  color: #6b7280;
+  color: #1f2937;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .report-date {
-  color: #9ca3af;
+  color: #1f2937;
   font-size: 0.85rem;
 }
 
@@ -1223,7 +1279,7 @@
 .empty-message {
   text-align: center;
   padding: 40px 20px;
-  color: #6b7280;
+  color: #1f2937;
   font-size: 1.1rem;
 }
 
