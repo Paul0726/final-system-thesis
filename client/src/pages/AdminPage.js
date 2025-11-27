@@ -4,6 +4,42 @@ import axios from 'axios';
 import { StarRating } from '../utils/helpers';
 import jsPDF from 'jspdf';
 import { useDebounce } from '../utils/debounce';
+import { 
+  Card, 
+  Button, 
+  Input, 
+  Select, 
+  Table, 
+  Space, 
+  Typography, 
+  Row, 
+  Col, 
+  Layout, 
+  Statistic,
+  Badge,
+  Modal,
+  Form,
+  message,
+  Empty,
+  Spin,
+  Tag,
+  Divider,
+  Pagination,
+  Collapse
+} from 'antd';
+import { 
+  SearchOutlined, 
+  LogoutOutlined, 
+  HomeOutlined,
+  MailOutlined,
+  CheckCircleOutlined,
+  DeleteOutlined,
+  DownloadOutlined,
+  BellOutlined,
+  FileTextOutlined,
+  UserOutlined,
+  FilterOutlined
+} from '@ant-design/icons';
 import './AdminPage.css';
 
 const API_URL = process.env.NODE_ENV === 'production' 
@@ -693,387 +729,364 @@ function AdminPage() {
   // Login Form
   if (!isAuthenticated) {
     return (
-      <div className="admin-page">
-        <div className="admin-container">
-          <div className="login-container">
-            <div className="login-box">
-              <h2>Admin Login</h2>
-              <p>Request OTP to access admin panel</p>
+      <Layout style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '20px' }}>
+          <Card 
+            style={{ 
+              width: '100%', 
+              maxWidth: '450px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+            }}
+          >
+            <Space direction="vertical" size="large" style={{ width: '100%' }}>
+              <div style={{ textAlign: 'center' }}>
+                <Typography.Title level={2}>Admin Login</Typography.Title>
+                <Typography.Text type="secondary">Request OTP to access admin panel</Typography.Text>
+              </div>
               
               {!otpSent ? (
-                <div className="login-form">
-                  <div className="otp-request-info">
-                    <p>Click the button below to receive a one-time password (OTP) via email.</p>
-                  </div>
-                  <button 
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                  <Typography.Text>Click the button below to receive a one-time password (OTP) via email.</Typography.Text>
+                  <Button 
+                    type="primary"
+                    size="large"
+                    block
+                    icon={<MailOutlined />}
                     onClick={handleSendOTP} 
-                    className="btn-primary"
-                    disabled={loginLoading}
+                    loading={loginLoading}
                   >
-                    {loginLoading ? 'Sending OTP...' : (
-                      <>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                          <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                        Request OTP
-                      </>
-                    )}
-                  </button>
-                </div>
+                    Request OTP
+                  </Button>
+                </Space>
               ) : (
-                <form onSubmit={handleVerifyOTP} className="login-form">
-                  <div className="otp-sent-message">
-                    <p>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                      OTP has been sent to your registered email address.
-                    </p>
-                    <p>Please check your inbox and enter the 6-digit code below.</p>
-                  </div>
-                  <div className="form-group">
-                    <label>Enter OTP Code</label>
-                    <input 
-                      type="text" 
+                <Form onFinish={handleVerifyOTP} layout="vertical">
+                  <Space direction="vertical" size="middle" style={{ width: '100%', marginBottom: '16px' }}>
+                    <div style={{ 
+                      padding: '12px', 
+                      background: '#f6ffed', 
+                      border: '1px solid #b7eb8f', 
+                      borderRadius: '6px',
+                      textAlign: 'center'
+                    }}>
+                      <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '20px', marginRight: '8px' }} />
+                      <Typography.Text strong>OTP has been sent to your registered email address.</Typography.Text>
+                      <br />
+                      <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+                        Please check your inbox and enter the 6-digit code below.
+                      </Typography.Text>
+                    </div>
+                  </Space>
+                  
+                  <Form.Item 
+                    label="Enter OTP Code"
+                    required
+                  >
+                    <Input 
+                      size="large"
                       value={otp} 
                       onChange={(e) => setOtp(e.target.value)}
                       placeholder="Enter 6-digit OTP"
-                      maxLength="6"
-                      required
-                      className="otp-input"
+                      maxLength={6}
+                      style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '18px' }}
                     />
-                  </div>
-                  <button 
-                    type="submit" 
-                    className="btn-primary"
-                    disabled={loginLoading}
-                  >
-                    {loginLoading ? 'Verifying...' : (
-                      <>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Verify OTP
-                      </>
-                    )}
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      setOtpSent(false);
-                      setOtp('');
-                    }}
-                    className="btn-secondary"
-                  >
-                    ← Request New OTP
-                  </button>
-                </form>
+                  </Form.Item>
+                  
+                  <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                    <Button 
+                      type="primary"
+                      size="large"
+                      block
+                      htmlType="submit"
+                      icon={<CheckCircleOutlined />}
+                      loading={loginLoading}
+                    >
+                      Verify OTP
+                    </Button>
+                    <Button 
+                      block
+                      onClick={() => {
+                        setOtpSent(false);
+                        setOtp('');
+                      }}
+                    >
+                      ← Request New OTP
+                    </Button>
+                  </Space>
+                </Form>
               )}
               
-              <Link to="/" className="back-link">← Back to Home</Link>
-            </div>
-          </div>
+              <Divider />
+              <Link to="/">
+                <Button type="link" icon={<HomeOutlined />} block>
+                  Back to Home
+                </Button>
+              </Link>
+            </Space>
+          </Card>
         </div>
-      </div>
+      </Layout>
     );
   }
 
+  const { Header, Content } = Layout;
+  const { Title, Text } = Typography;
+
   return (
-    <div className="admin-page">
-      <div className="admin-container">
-        <header className="admin-header">
-          <div className="header-top">
-            <Link to="/" className="back-link">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header style={{ 
+        background: 'linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%)',
+        padding: '16px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '16px'
+      }}>
+        <Space>
+          <Link to="/">
+            <Button type="text" icon={<HomeOutlined />} style={{ color: 'white' }}>
               Back to Home
-            </Link>
-            <button 
-              onClick={(e) => {
-                e.preventDefault();
-                handleLogout();
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                handleLogout();
-              }}
-              className="logout-btn"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-              Logout
-            </button>
-          </div>
-          <div className="header-title">
-            <img src="/seal.png" alt="School Seal" className="header-seal" />
+            </Button>
+          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img src="/seal.png" alt="School Seal" style={{ width: '40px', height: '40px' }} />
             <div>
-              <h1>Admin Panel</h1>
-              <p>Manage BSIT Graduate Survey Data</p>
+              <Title level={4} style={{ color: 'white', margin: 0 }}>Admin Panel</Title>
+              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>Manage BSIT Graduate Survey Data</Text>
             </div>
           </div>
-        </header>
+        </Space>
+        <Button 
+          type="text"
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          style={{ color: 'white' }}
+        >
+          Logout
+        </Button>
+      </Header>
 
-        <div className="admin-controls">
-          <div className="search-bar">
-            <img src="/seal.png" alt="School Seal" className="search-seal" />
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" className="search-icon">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="M21 21l-4.35-4.35"></path>
-            </svg>
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          <div className="filter-bar">
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="filter-select"
-            >
-              <option value="">All Status</option>
-              <option value="Employed">Employed</option>
-              <option value="Self-Employed">Self-Employed</option>
-              <option value="Unemployed">Unemployed</option>
-            </select>
-            <select
-              value={filterGender}
-              onChange={(e) => setFilterGender(e.target.value)}
-              className="filter-select"
-            >
-              <option value="">All Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="filter-select"
-            >
-              <option value="year">Sort by Year (Newest First)</option>
-              <option value="name">Sort by Name (Alphabetical)</option>
-              <option value="gender">Sort by Gender</option>
-            </select>
-            <div className="admin-stats">
-              <span>Total: {filteredSurveys.length} / {surveys.length}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="admin-content">
-          {loading ? (
-            <div className="loading">Loading surveys...</div>
-          ) : surveys.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-              </div>
-              <h3>No Surveys Yet</h3>
-              <p>There are no survey responses in the database.</p>
-              <p>Submit a survey first to see data here.</p>
-              <Link to="/survey" className="btn-primary" style={{ marginTop: '20px', display: 'inline-block' }}>
-                Go to Survey Page
-              </Link>
-            </div>
-          ) : filteredSurveys.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="M21 21l-4.35-4.35"></path>
-                </svg>
-              </div>
-              <h3>No Results Found</h3>
-              <p>No surveys match your search or filter criteria.</p>
-              <button onClick={() => { setSearchTerm(''); setFilterStatus(''); }} className="btn-primary" style={{ marginTop: '20px' }}>
-                Clear Filters
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="surveys-list">
-                {paginatedSurveys.map((survey, index) => (
-                  <SurveyCard 
-                    key={survey.id || index} 
-                    survey={survey} 
-                    index={index} 
-                    onDelete={handleDelete} 
-                    getStatusColor={getStatusColor}
-                    onDownloadPDF={generatePDF}
-                  />
-                ))}
-              </div>
+      <Content style={{ padding: '24px', background: '#f0f2f5' }}>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          {/* Search and Filters */}
+          <Card>
+            <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+              <Input
+                size="large"
+                placeholder="Search by name or email..."
+                prefix={<SearchOutlined />}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                allowClear
+              />
               
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="pagination" style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginTop: '30px',
-                  flexWrap: 'wrap'
-                }}>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(prev => Math.max(1, prev - 1));
-                    }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(prev => Math.max(1, prev - 1));
-                    }}
-                    disabled={currentPage === 1}
-                    style={{
-                      padding: '8px 16px',
-                      border: '1px solid #11823b',
-                      background: currentPage === 1 ? '#f0f0f0' : 'white',
-                      color: currentPage === 1 ? '#999' : '#11823b',
-                      borderRadius: '8px',
-                      cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                      fontSize: '14px'
-                    }}
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={8} md={6}>
+                  <Select
+                    style={{ width: '100%' }}
+                    size="large"
+                    placeholder="All Status"
+                    value={filterStatus || undefined}
+                    onChange={setFilterStatus}
+                    suffixIcon={<FilterOutlined />}
                   >
-                    Previous
-                  </button>
-                  
-                  <span style={{ 
-                    padding: '8px 16px',
-                    color: '#11823b',
-                    fontWeight: '500'
-                  }}>
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(prev => Math.min(totalPages, prev + 1));
-                    }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(prev => Math.min(totalPages, prev + 1));
-                    }}
-                    disabled={currentPage === totalPages}
-                    style={{
-                      padding: '8px 16px',
-                      border: '1px solid #11823b',
-                      background: currentPage === totalPages ? '#f0f0f0' : 'white',
-                      color: currentPage === totalPages ? '#999' : '#11823b',
-                      borderRadius: '8px',
-                      cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                      fontSize: '14px'
-                    }}
+                    <Select.Option value="">All Status</Select.Option>
+                    <Select.Option value="Employed">Employed</Select.Option>
+                    <Select.Option value="Self-Employed">Self-Employed</Select.Option>
+                    <Select.Option value="Unemployed">Unemployed</Select.Option>
+                  </Select>
+                </Col>
+                <Col xs={24} sm={8} md={6}>
+                  <Select
+                    style={{ width: '100%' }}
+                    size="large"
+                    placeholder="All Gender"
+                    value={filterGender || undefined}
+                    onChange={setFilterGender}
+                    suffixIcon={<FilterOutlined />}
                   >
-                    Next
-                  </button>
+                    <Select.Option value="">All Gender</Select.Option>
+                    <Select.Option value="Male">Male</Select.Option>
+                    <Select.Option value="Female">Female</Select.Option>
+                  </Select>
+                </Col>
+                <Col xs={24} sm={8} md={6}>
+                  <Select
+                    style={{ width: '100%' }}
+                    size="large"
+                    value={sortBy}
+                    onChange={setSortBy}
+                  >
+                    <Select.Option value="year">Sort by Year (Newest First)</Select.Option>
+                    <Select.Option value="name">Sort by Name (Alphabetical)</Select.Option>
+                    <Select.Option value="gender">Sort by Gender</Select.Option>
+                  </Select>
+                </Col>
+                <Col xs={24} sm={24} md={6}>
+                  <Statistic
+                    title="Total Surveys"
+                    value={filteredSurveys.length}
+                    suffix={`/ ${surveys.length}`}
+                    valueStyle={{ color: '#11823b' }}
+                  />
+                </Col>
+              </Row>
+            </Space>
+          </Card>
+
+          {/* Surveys Content */}
+          <Card>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                <Spin size="large" />
+                <div style={{ marginTop: '16px' }}>
+                  <Text>Loading surveys...</Text>
                 </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <div className="admin-actions">
-          <button 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleNotifications();
-            }}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleNotifications();
-            }}
-            className="btn-notifications"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              <path d="M21 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path>
-            </svg>
-            Send Notification
-          </button>
-          <button 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleReports();
-            }}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleReports();
-            }}
-            className="btn-reports"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              <line x1="9" y1="10" x2="15" y2="10"></line>
-              <line x1="9" y1="14" x2="13" y2="14"></line>
-            </svg>
-            Technical Support Reports
-            {unreadCount > 0 && (
-              <span className="notification-badge">{unreadCount}</span>
+              </div>
+            ) : surveys.length === 0 ? (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <Space direction="vertical" size="small">
+                    <Text strong>No Surveys Yet</Text>
+                    <Text type="secondary">There are no survey responses in the database.</Text>
+                    <Text type="secondary">Submit a survey first to see data here.</Text>
+                  </Space>
+                }
+              >
+                <Link to="/survey">
+                  <Button type="primary">Go to Survey Page</Button>
+                </Link>
+              </Empty>
+            ) : filteredSurveys.length === 0 ? (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <Space direction="vertical" size="small">
+                    <Text strong>No Results Found</Text>
+                    <Text type="secondary">No surveys match your search or filter criteria.</Text>
+                  </Space>
+                }
+              >
+                <Button 
+                  type="primary"
+                  onClick={() => { 
+                    setSearchTerm(''); 
+                    setFilterStatus(''); 
+                    setFilterGender('');
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </Empty>
+            ) : (
+              <>
+                <Row gutter={[16, 16]}>
+                  {paginatedSurveys.map((survey, index) => (
+                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
+                      <SurveyCard 
+                        survey={survey} 
+                        index={index} 
+                        onDelete={handleDelete} 
+                        getStatusColor={getStatusColor}
+                        onDownloadPDF={generatePDF}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+                
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center',
+                    marginTop: '24px',
+                    gap: '16px',
+                    flexWrap: 'wrap'
+                  }}>
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </Button>
+                    
+                    <Text>
+                      Page <Text strong>{currentPage}</Text> of <Text strong>{totalPages}</Text>
+                    </Text>
+                    
+                    <Button
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
-          </button>
-          <Link to="/dashboard" className="btn-secondary">View Dashboard</Link>
-          <button 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              fetchSurveys();
-            }}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              fetchSurveys();
-            }}
-            className="btn-refresh"
-          >
-            🔄 Refresh
-          </button>
-          {filteredSurveys.length > 0 && (
-            <button 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                generateAllPDFs();
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                generateAllPDFs();
-              }}
-              className="btn-download-all" 
-              title="Download all filtered surveys as PDF"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Download All as PDF ({filteredSurveys.length})
-            </button>
-          )}
-        </div>
+          </Card>
 
-        {/* Notification System Section */}
-        {showNotifications && (
-          <div className="notifications-section">
+          {/* Admin Actions */}
+          <Card>
+            <Space wrap style={{ width: '100%', justifyContent: 'center' }}>
+              <Button 
+                type="primary"
+                icon={<BellOutlined />}
+                onClick={toggleNotifications}
+                size="large"
+              >
+                Send Notification
+              </Button>
+              <Badge count={unreadCount} size="small">
+                <Button 
+                  icon={<FileTextOutlined />}
+                  onClick={toggleReports}
+                  size="large"
+                >
+                  Technical Support Reports
+                </Button>
+              </Badge>
+              <Link to="/dashboard">
+                <Button size="large">View Dashboard</Button>
+              </Link>
+              <Button 
+                icon={<UserOutlined />}
+                onClick={fetchSurveys}
+                size="large"
+              >
+                Refresh
+              </Button>
+              {filteredSurveys.length > 0 && (
+                <Button 
+                  type="primary"
+                  icon={<DownloadOutlined />}
+                  onClick={generateAllPDFs}
+                  size="large"
+                >
+                  Download All as PDF ({filteredSurveys.length})
+                </Button>
+              )}
+            </Space>
+          </Card>
+
+          {/* Notification System Section */}
+          {showNotifications && (
+            <Card 
+              title={
+                <Space>
+                  <BellOutlined />
+                  <span>Send Notification to Respondents</span>
+                </Space>
+              }
+              extra={
+                <Button type="text" onClick={toggleNotifications}>
+                  ×
+                </Button>
+              }
+            >
             <div className="notifications-header">
               <h2>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" style={{ marginRight: '10px', verticalAlign: 'middle' }}>
@@ -1278,13 +1291,27 @@ function AdminPage() {
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-        )}
+            </Card>
+          )}
 
-        {/* Technical Support Reports Section */}
-        {showReports && (
-          <div className="reports-section">
+          {/* Technical Support Reports Section */}
+          {showReports && (
+            <Card
+              title={
+                <Space>
+                  <FileTextOutlined />
+                  <span>Technical Support Reports</span>
+                  {unreadCount > 0 && (
+                    <Badge count={unreadCount} />
+                  )}
+                </Space>
+              }
+              extra={
+                <Button type="text" icon={<UserOutlined />} onClick={fetchReports}>
+                  Refresh
+                </Button>
+              }
+            >
             <div className="reports-header">
               <h2>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" style={{ marginRight: '10px', verticalAlign: 'middle' }}>
@@ -1361,17 +1388,16 @@ function AdminPage() {
                 ))}
               </div>
             )}
-          </div>
-        )}
-      </div>
-    </div>
+            </Card>
+          )}
+        </Space>
+      </Content>
+    </Layout>
   );
 }
 
 // Survey Card Component (Memoized for performance)
 const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
-  const [expanded, setExpanded] = useState(false);
-  
   // Determine status
   let surveyStatus = '';
   if (survey.isEmployed === 'Yes') {
@@ -1384,226 +1410,214 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
     surveyStatus = 'Unemployed';
   }
   
-  const handleCardClick = (e) => {
+  const getStatusTagColor = (status) => {
+    if (status === 'Employed') return 'green';
+    if (status === 'Self-Employed') return 'blue';
+    if (status === 'Unemployed') return 'orange';
+    return 'default';
+  };
+  
+  const handleDelete = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setExpanded(!expanded);
+    Modal.confirm({
+      title: 'Delete Survey',
+      content: `Are you sure you want to delete the survey for ${survey.name}? This action cannot be undone.`,
+      okText: 'Yes, Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: () => onDelete(survey.id || index),
+    });
   };
   
   return (
-    <div className="survey-card">
-      <div 
-        className="survey-card-header" 
-        onClick={handleCardClick}
-        onTouchEnd={(e) => {
-          e.preventDefault();
-          handleCardClick(e);
-        }}
-      >
-        <div className="survey-card-main">
-          <div>
-            <h3>{survey.name || 'N/A'}</h3>
-            <p className="survey-meta">
-              {survey.schoolYearGraduated || 'N/A'} • {survey.sex || 'N/A'} • {survey.emailAddress || 'N/A'}
-            </p>
-          </div>
-          <div className="survey-card-actions">
-            <span 
-              className="status-badge"
-              style={{ backgroundColor: getStatusColor(surveyStatus) }}
-            >
-              {surveyStatus || 'N/A'}
-            </span>
+    <Card
+      hoverable
+      style={{ marginBottom: '16px' }}
+      actions={[
+        <Button
+          key="download"
+          type="text"
+          icon={<DownloadOutlined />}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDownloadPDF(survey);
+          }}
+          title="Download as PDF"
+        />,
+        <Button
+          key="delete"
+          type="text"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={handleDelete}
+          title="Delete"
+        />
+      ]}
+    >
+      <Card.Meta
+        title={
+          <Space>
+            <Typography.Text strong>{survey.name || 'N/A'}</Typography.Text>
+            <Tag color={getStatusTagColor(surveyStatus)}>{surveyStatus || 'N/A'}</Tag>
             {survey.isAlumni === 'Yes' && (
-              <span className="alumni-badge" title="Alumni">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                </svg>
-                Alumni
-              </span>
+              <Tag color="gold">Alumni</Tag>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
-              <span className="alumni-interest-badge" title="Wants to Register as Alumni">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                </svg>
-                Wants to Register
-              </span>
+              <Tag color="cyan">Wants to Register</Tag>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
-              <span className="alumni-no-badge" title="Not Alumni">
-                Not Alumni
-              </span>
+              <Tag>Not Alumni</Tag>
             )}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onDownloadPDF(survey);
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onDownloadPDF(survey);
-              }}
-              className="btn-download"
-              title="Download as PDF"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </button>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (window.confirm(`Are you sure you want to delete the survey for ${survey.name}? This action cannot be undone.`)) {
-                  onDelete(survey.id || index);
-                }
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (window.confirm(`Are you sure you want to delete the survey for ${survey.name}? This action cannot be undone.`)) {
-                  onDelete(survey.id || index);
-                }
-              }}
-              className="btn-delete"
-              title="Delete"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-              </svg>
-            </button>
-            <span className="expand-icon">
-              {expanded ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              )}
-            </span>
-          </div>
-        </div>
-      </div>
+          </Space>
+        }
+        description={
+          <Typography.Text type="secondary">
+            {survey.schoolYearGraduated || 'N/A'} • {survey.sex || 'N/A'} • {survey.emailAddress || 'N/A'}
+          </Typography.Text>
+        }
+      />
       
-      {expanded && (
-        <div className="survey-card-details">
-          <div className="details-grid">
-            <div className="detail-section">
-              <h4>Personal Information</h4>
-              <p><strong>Name:</strong> {survey.name || 'N/A'}</p>
-              <p><strong>Email:</strong> {survey.emailAddress || 'N/A'}</p>
-              <p><strong>Mobile:</strong> {survey.mobileNumber || 'N/A'}</p>
-              <p><strong>Date of Birth:</strong> {survey.dateOfBirth ? new Date(survey.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</p>
-              <p><strong>Age:</strong> {survey.age || 'N/A'}</p>
-              <p><strong>Sex:</strong> {survey.sex || 'N/A'}</p>
-              <p><strong>Civil Status:</strong> {survey.civilStatus || 'N/A'}</p>
-              <p><strong>Permanent Address:</strong> {survey.permanentAddress || 'N/A'}</p>
-              <p><strong>Current Location:</strong> {survey.currentLocation || 'N/A'}</p>
-            </div>
-            
-            <div className="detail-section">
-              <h4>Education</h4>
-              <p><strong>Course Graduated:</strong> {survey.courseGraduated || 'N/A'}</p>
-              <p><strong>School Year Graduated:</strong> {survey.schoolYearGraduated || 'N/A'}</p>
-              <p><strong>Max Academic Achievement:</strong> {survey.maxAcademicAchievement || 'N/A'}</p>
-              <p><strong>Civil Service:</strong> {survey.civilService || 'N/A'}</p>
-              <p><strong>LET License:</strong> {survey.letLicense || 'N/A'}</p>
-              <p><strong>Other PRC License:</strong> {survey.otherPRCLicense || 'N/A'}</p>
-              <p><strong>Professional Organizations:</strong> {survey.professionalOrganizations || 'N/A'}</p>
-            </div>
-            
-            <div className="detail-section">
-              <h4>Employment</h4>
-              <p><strong>Is Employed:</strong> {survey.isEmployed || 'N/A'}</p>
-              <p><strong>Employment Nature:</strong> {survey.employmentNature || 'N/A'}</p>
-              <p><strong>Employment Classification:</strong> {survey.employmentClassification || 'N/A'}</p>
-              <p><strong>Job Title:</strong> {survey.jobTitle || 'N/A'}</p>
-              <p><strong>Place of Work:</strong> {survey.placeOfWork || 'N/A'}</p>
-              <p><strong>IT Field:</strong> {survey.isITField || 'N/A'}</p>
-              <p><strong>Monthly Income:</strong> {survey.monthlyIncome || 'N/A'}</p>
-              <p><strong>Additional Revenue Sources:</strong> {survey.additionalRevenueSources || 'N/A'}</p>
-            </div>
-            
-            <div className="detail-section">
-              <h4>Alumni & Ratings</h4>
-              <p><strong>Is Alumni:</strong> {survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}</p>
-              {survey.isAlumni !== 'Yes' && (
-                <p><strong>Interested in Alumni Registration:</strong> {survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}</p>
-              )}
-              <p><strong>School Rating:</strong> {survey.schoolRating ? <><StarRating rating={survey.schoolRating} size="small" /> <span>({survey.schoolRating}/5)</span></> : 'N/A'}</p>
-              <p><strong>System Rating:</strong> {survey.systemRating ? <><StarRating rating={survey.systemRating} size="small" /> <span>({survey.systemRating}/5)</span></> : 'N/A'}</p>
-              <p><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</p>
-              <p><strong>System Feedback:</strong> {survey.systemFeedback || 'N/A'}</p>
-            </div>
-            
-            {survey.systemEvaluation && (
-              <div className="detail-section">
-                <h4>System Evaluation</h4>
+      <Divider style={{ margin: '12px 0' }} />
+      <Collapse 
+        ghost
+        items={[
+          {
+            key: '1',
+            label: 'View Details',
+            children: (
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12} md={12}>
+                  <Card size="small" title="Personal Information" style={{ marginBottom: '16px' }}>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <Text><strong>Name:</strong> {survey.name || 'N/A'}</Text>
+                      <Text><strong>Email:</strong> {survey.emailAddress || 'N/A'}</Text>
+                      <Text><strong>Mobile:</strong> {survey.mobileNumber || 'N/A'}</Text>
+                      <Text><strong>Date of Birth:</strong> {survey.dateOfBirth ? new Date(survey.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</Text>
+                      <Text><strong>Age:</strong> {survey.age || 'N/A'}</Text>
+                      <Text><strong>Sex:</strong> {survey.sex || 'N/A'}</Text>
+                      <Text><strong>Civil Status:</strong> {survey.civilStatus || 'N/A'}</Text>
+                      <Text><strong>Permanent Address:</strong> {survey.permanentAddress || 'N/A'}</Text>
+                      <Text><strong>Current Location:</strong> {survey.currentLocation || 'N/A'}</Text>
+                    </Space>
+                  </Card>
+                </Col>
                 
-                {survey.systemEvaluation.functionality && (
-                  <div style={{ marginBottom: '15px' }}>
-                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</h5>
-                    <p><strong>The system is easy to use and learned:</strong> {survey.systemEvaluation.functionality.q1 || 'N/A'}/5</p>
-                    <p><strong>The system can be used with comfort and convenience:</strong> {survey.systemEvaluation.functionality.q2 || 'N/A'}/5</p>
-                    <p><strong>The system is user-friendly:</strong> {survey.systemEvaluation.functionality.q3 || 'N/A'}/5</p>
-                  </div>
+                <Col xs={24} sm={12} md={12}>
+                  <Card size="small" title="Education" style={{ marginBottom: '16px' }}>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <Text><strong>Course Graduated:</strong> {survey.courseGraduated || 'N/A'}</Text>
+                      <Text><strong>School Year Graduated:</strong> {survey.schoolYearGraduated || 'N/A'}</Text>
+                      <Text><strong>Max Academic Achievement:</strong> {survey.maxAcademicAchievement || 'N/A'}</Text>
+                      <Text><strong>Civil Service:</strong> {survey.civilService || 'N/A'}</Text>
+                      <Text><strong>LET License:</strong> {survey.letLicense || 'N/A'}</Text>
+                      <Text><strong>Other PRC License:</strong> {survey.otherPRCLicense || 'N/A'}</Text>
+                      <Text><strong>Professional Organizations:</strong> {survey.professionalOrganizations || 'N/A'}</Text>
+                    </Space>
+                  </Card>
+                </Col>
+                
+                <Col xs={24} sm={12} md={12}>
+                  <Card size="small" title="Employment" style={{ marginBottom: '16px' }}>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <Text><strong>Is Employed:</strong> {survey.isEmployed || 'N/A'}</Text>
+                      <Text><strong>Employment Nature:</strong> {survey.employmentNature || 'N/A'}</Text>
+                      <Text><strong>Employment Classification:</strong> {survey.employmentClassification || 'N/A'}</Text>
+                      <Text><strong>Job Title:</strong> {survey.jobTitle || 'N/A'}</Text>
+                      <Text><strong>Place of Work:</strong> {survey.placeOfWork || 'N/A'}</Text>
+                      <Text><strong>IT Field:</strong> {survey.isITField || 'N/A'}</Text>
+                      <Text><strong>Monthly Income:</strong> {survey.monthlyIncome || 'N/A'}</Text>
+                      <Text><strong>Additional Revenue Sources:</strong> {survey.additionalRevenueSources || 'N/A'}</Text>
+                    </Space>
+                  </Card>
+                </Col>
+                
+                <Col xs={24} sm={12} md={12}>
+                  <Card size="small" title="Alumni & Ratings" style={{ marginBottom: '16px' }}>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      <Text><strong>Is Alumni:</strong> {survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}</Text>
+                      {survey.isAlumni !== 'Yes' && (
+                        <Text><strong>Interested in Alumni Registration:</strong> {survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}</Text>
+                      )}
+                      <Text><strong>School Rating:</strong> {survey.schoolRating ? <><StarRating rating={survey.schoolRating} size="small" /> <span>({survey.schoolRating}/5)</span></> : 'N/A'}</Text>
+                      <Text><strong>System Rating:</strong> {survey.systemRating ? <><StarRating rating={survey.systemRating} size="small" /> <span>({survey.systemRating}/5)</span></> : 'N/A'}</Text>
+                      <Text><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</Text>
+                      <Text><strong>System Feedback:</strong> {survey.systemFeedback || 'N/A'}</Text>
+                    </Space>
+                  </Card>
+                </Col>
+                
+                {survey.systemEvaluation && (
+                  <Col xs={24} sm={24} md={24}>
+                    <Card size="small" title="System Evaluation" style={{ marginBottom: '16px' }}>
+                      {survey.systemEvaluation.functionality && (
+                        <div style={{ marginBottom: '15px' }}>
+                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</Title>
+                          <Space direction="vertical" size="small">
+                            <Text><strong>The system is easy to use and learned:</strong> {survey.systemEvaluation.functionality.q1 || 'N/A'}/5</Text>
+                            <Text><strong>The system can be used with comfort and convenience:</strong> {survey.systemEvaluation.functionality.q2 || 'N/A'}/5</Text>
+                            <Text><strong>The system is user-friendly:</strong> {survey.systemEvaluation.functionality.q3 || 'N/A'}/5</Text>
+                          </Space>
+                        </div>
+                      )}
+                      
+                      {survey.systemEvaluation.reliability && (
+                        <div style={{ marginBottom: '15px' }}>
+                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Reliability</Title>
+                          <Space direction="vertical" size="small">
+                            <Text><strong>The system provides the correct desired output:</strong> {survey.systemEvaluation.reliability.q1 || 'N/A'}/5</Text>
+                            <Text><strong>Absence of failures in the system:</strong> {survey.systemEvaluation.reliability.q2 || 'N/A'}/5</Text>
+                            <Text><strong>The system is accurate in performance:</strong> {survey.systemEvaluation.reliability.q3 || 'N/A'}/5</Text>
+                          </Space>
+                        </div>
+                      )}
+                      
+                      {survey.systemEvaluation.accuracy && (
+                        <div style={{ marginBottom: '15px' }}>
+                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Accuracy</Title>
+                          <Space direction="vertical" size="small">
+                            <Text><strong>The system gives accurate information/computation:</strong> {survey.systemEvaluation.accuracy.q1 || 'N/A'}/5</Text>
+                            <Text><strong>The system provides accurate outputs:</strong> {survey.systemEvaluation.accuracy.q2 || 'N/A'}/5</Text>
+                            <Text><strong>The system provides accurate reports:</strong> {survey.systemEvaluation.accuracy.q3 || 'N/A'}/5</Text>
+                          </Space>
+                        </div>
+                      )}
+                      
+                      {survey.systemEvaluation.efficiency && (
+                        <div style={{ marginBottom: '15px' }}>
+                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Efficiency</Title>
+                          <Space direction="vertical" size="small">
+                            <Text><strong>The system is well organized and working properly:</strong> {survey.systemEvaluation.efficiency.q1 || 'N/A'}/5</Text>
+                            <Text><strong>The system is well organized for purpose:</strong> {survey.systemEvaluation.efficiency.q2 || 'N/A'}/5</Text>
+                            <Text><strong>The system is capable to produce the desired output without delaying the run time performance:</strong> {survey.systemEvaluation.efficiency.q3 || 'N/A'}/5</Text>
+                          </Space>
+                        </div>
+                      )}
+                    </Card>
+                  </Col>
                 )}
                 
-                {survey.systemEvaluation.reliability && (
-                  <div style={{ marginBottom: '15px' }}>
-                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Reliability</h5>
-                    <p><strong>The system provides the correct desired output:</strong> {survey.systemEvaluation.reliability.q1 || 'N/A'}/5</p>
-                    <p><strong>Absence of failures in the system:</strong> {survey.systemEvaluation.reliability.q2 || 'N/A'}/5</p>
-                    <p><strong>The system is accurate in performance:</strong> {survey.systemEvaluation.reliability.q3 || 'N/A'}/5</p>
-                  </div>
+                {survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0 && (
+                  <Col xs={24} sm={24} md={24}>
+                    <Card size="small" title="Trainings" style={{ marginBottom: '16px' }}>
+                      {survey.trainings.map((training, idx) => (
+                        <Card key={idx} size="small" style={{ marginBottom: '8px' }}>
+                          <Space direction="vertical" size="small">
+                            <Text><strong>Title:</strong> {training.title || 'N/A'}</Text>
+                            <Text><strong>Duration:</strong> {training.duration || 'N/A'}</Text>
+                            <Text><strong>Trainer:</strong> {training.trainer || 'N/A'}</Text>
+                          </Space>
+                        </Card>
+                      ))}
+                    </Card>
+                  </Col>
                 )}
-                
-                {survey.systemEvaluation.accuracy && (
-                  <div style={{ marginBottom: '15px' }}>
-                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Accuracy</h5>
-                    <p><strong>The system gives accurate information/computation:</strong> {survey.systemEvaluation.accuracy.q1 || 'N/A'}/5</p>
-                    <p><strong>The system provides accurate outputs:</strong> {survey.systemEvaluation.accuracy.q2 || 'N/A'}/5</p>
-                    <p><strong>The system provides accurate reports:</strong> {survey.systemEvaluation.accuracy.q3 || 'N/A'}/5</p>
-                  </div>
-                )}
-                
-                {survey.systemEvaluation.efficiency && (
-                  <div style={{ marginBottom: '15px' }}>
-                    <h5 style={{ marginBottom: '8px', color: '#11823b' }}>Efficiency</h5>
-                    <p><strong>The system is well organized and working properly:</strong> {survey.systemEvaluation.efficiency.q1 || 'N/A'}/5</p>
-                    <p><strong>The system is well organized for purpose:</strong> {survey.systemEvaluation.efficiency.q2 || 'N/A'}/5</p>
-                    <p><strong>The system is capable to produce the desired output without delaying the run time performance:</strong> {survey.systemEvaluation.efficiency.q3 || 'N/A'}/5</p>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0 && (
-              <div className="detail-section full-width">
-                <h4>Trainings</h4>
-                {survey.trainings.map((training, idx) => (
-                  <div key={idx} className="training-item">
-                    <p><strong>Title:</strong> {training.title || 'N/A'}</p>
-                    <p><strong>Duration:</strong> {training.duration || 'N/A'}</p>
-                    <p><strong>Trainer:</strong> {training.trainer || 'N/A'}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+              </Row>
+            ),
+          },
+        ]}
+      />
+    </Card>
   );
 });
 
