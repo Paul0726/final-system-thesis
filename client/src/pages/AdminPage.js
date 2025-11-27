@@ -935,7 +935,7 @@ function AdminPage() {
           </Card>
 
           {/* Surveys Content */}
-          <Card>
+          <Card bodyStyle={{ padding: '16px' }}>
             {loading ? (
               <div style={{ textAlign: 'center', padding: '60px 0' }}>
                 <Spin size="large" />
@@ -981,7 +981,7 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[16, 16]}>
+                <Row gutter={[12, 12]}>
                   {paginatedSurveys.map((survey, index) => (
                     <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
                       <SurveyCard 
@@ -1416,7 +1416,12 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
   return (
     <Card
       hoverable
-      style={{ marginBottom: '16px' }}
+      style={{ 
+        marginBottom: '0',
+        width: '100%',
+        borderRadius: '8px'
+      }}
+      bodyStyle={{ padding: '16px' }}
       actions={[
         <Button
           key="download"
@@ -1438,10 +1443,13 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         />
       ]}
     >
-      <Card.Meta
-        title={
-          <Space>
-            <Typography.Text strong>{survey.name || 'N/A'}</Typography.Text>
+      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+        {/* Name and Status */}
+        <div>
+          <Title level={5} style={{ margin: 0, marginBottom: '8px' }}>
+            {survey.name || 'N/A'}
+          </Title>
+          <Space wrap size={[8, 8]}>
             <Tag color={getStatusTagColor(surveyStatus)}>{surveyStatus || 'N/A'}</Tag>
             {survey.isAlumni === 'Yes' && (
               <Tag color="gold">Alumni</Tag>
@@ -1453,21 +1461,34 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
               <Tag>Not Alumni</Tag>
             )}
           </Space>
-        }
-        description={
-          <Typography.Text type="secondary">
-            {survey.schoolYearGraduated || 'N/A'} • {survey.sex || 'N/A'} • {survey.emailAddress || 'N/A'}
-          </Typography.Text>
-        }
-      />
+        </div>
+
+        {/* Key Information */}
+        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+          <Text type="secondary" style={{ display: 'block' }}>
+            <strong>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
+          </Text>
+          <Text type="secondary" style={{ display: 'block' }}>
+            <strong>Gender:</strong> {survey.sex || 'N/A'}
+          </Text>
+          <Text type="secondary" style={{ display: 'block', wordBreak: 'break-word' }}>
+            <strong>Email:</strong> {survey.emailAddress || 'N/A'}
+          </Text>
+          {survey.jobTitle && (
+            <Text type="secondary" style={{ display: 'block' }}>
+              <strong>Job:</strong> {survey.jobTitle}
+            </Text>
+          )}
+        </Space>
+      </Space>
       
-      <Divider style={{ margin: '12px 0' }} />
+      <Divider style={{ margin: '16px 0' }} />
       <Collapse 
         ghost
         items={[
           {
             key: '1',
-            label: 'View Details',
+            label: <Text strong>View Full Details</Text>,
             children: (
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12}>
