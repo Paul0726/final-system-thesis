@@ -1504,15 +1504,25 @@
 /* Fix text breaking in Ant Design Cards - MAXIMUM PRIORITY FIXES */
 .admin-page .ant-card,
 .admin-page .ant-card-body,
-.admin-page .ant-card-body * {
+.admin-page .ant-card-body *,
+.admin-page .ant-card-body h1,
+.admin-page .ant-card-body h2,
+.admin-page .ant-card-body h3,
+.admin-page .ant-card-body h4,
+.admin-page .ant-card-body h5,
+.admin-page .ant-card-body h6,
+.admin-page .ant-card-body div,
+.admin-page .ant-card-body span,
+.admin-page .ant-card-body p {
   word-break: normal !important;
-  overflow-wrap: break-word !important;
+  overflow-wrap: normal !important;
   white-space: normal !important;
   hyphens: none !important;
   -webkit-hyphens: none !important;
   -ms-hyphens: none !important;
   text-overflow: clip !important;
   overflow: visible !important;
+  max-width: 100% !important;
 }
 
 .admin-page .ant-card {
@@ -1523,13 +1533,15 @@
 
 .admin-page .ant-card-body {
   word-break: normal !important;
-  overflow-wrap: break-word !important;
+  overflow-wrap: normal !important;
   white-space: normal !important;
   overflow: visible !important;
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
   text-overflow: clip !important;
   padding: 20px !important;
+  box-sizing: border-box !important;
 }
 
 .admin-page .ant-card-body h1,
@@ -1621,32 +1633,37 @@
   margin-right: 0 !important;
 }
 
-.ant-col {
+.admin-page .ant-col {
   padding-left: 10px !important;
   padding-right: 10px !important;
   width: 100% !important;
   max-width: 100% !important;
   flex: 0 0 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 @media (min-width: 768px) {
-  .ant-col {
+  .admin-page .ant-col {
     flex: 0 0 50% !important;
     max-width: 50% !important;
+    min-width: 0 !important;
   }
 }
 
 @media (min-width: 992px) {
-  .ant-col {
+  .admin-page .ant-col {
     flex: 0 0 33.333333% !important;
     max-width: 33.333333% !important;
+    min-width: 0 !important;
   }
 }
 
 @media (min-width: 1200px) {
-  .ant-col {
+  .admin-page .ant-col {
     flex: 0 0 25% !important;
     max-width: 25% !important;
+    min-width: 0 !important;
   }
 }
 

@@ -1414,24 +1414,45 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
   };
   
   return (
-    <Card
-      hoverable
-      style={{ 
-        marginBottom: '0',
-        width: '100%',
-        maxWidth: '100%',
-        borderRadius: '12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        overflow: 'visible'
-      }}
-      bodyStyle={{ 
-        padding: '20px',
-        wordBreak: 'break-word',
-        overflowWrap: 'break-word',
-        overflow: 'visible',
-        maxWidth: '100%',
-        width: '100%'
-      }}
+    <>
+      <style>{`
+        .survey-card-${index} * {
+          word-break: normal !important;
+          overflow-wrap: normal !important;
+          white-space: normal !important;
+          hyphens: none !important;
+          -webkit-hyphens: none !important;
+          -ms-hyphens: none !important;
+        }
+        .survey-card-${index} h4,
+        .survey-card-${index} div,
+        .survey-card-${index} span {
+          word-break: normal !important;
+          overflow-wrap: normal !important;
+          white-space: normal !important;
+        }
+      `}</style>
+      <Card
+        className={`survey-card-${index}`}
+        hoverable
+        style={{ 
+          marginBottom: '0',
+          width: '100%',
+          maxWidth: '100%',
+          borderRadius: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          overflow: 'visible'
+        }}
+        bodyStyle={{ 
+          padding: '20px',
+          wordBreak: 'normal',
+          overflowWrap: 'normal',
+          whiteSpace: 'normal',
+          overflow: 'visible',
+          maxWidth: '100%',
+          width: '100%',
+          minWidth: 0
+        }}
       actions={[
         <Button
           key="download"
@@ -1453,91 +1474,174 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         />
       ]}
     >
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', boxSizing: 'border-box' }}>
         {/* Name and Status */}
-        <div style={{ width: '100%', marginBottom: '16px' }}>
-          <h4 style={{ 
+        <div style={{ width: '100%', marginBottom: '16px', boxSizing: 'border-box' }}>
+          <div style={{ 
             margin: 0, 
             marginBottom: '12px',
             wordBreak: 'normal',
-            overflowWrap: 'break-word',
+            overflowWrap: 'normal',
             whiteSpace: 'normal',
             lineHeight: '1.5',
             color: '#11823b',
             width: '100%',
             maxWidth: '100%',
             fontSize: '18px',
-            fontWeight: '600'
+            fontWeight: '600',
+            display: 'block',
+            boxSizing: 'border-box',
+            hyphens: 'none',
+            WebkitHyphens: 'none',
+            MsHyphens: 'none'
           }}>
             {survey.name || 'N/A'}
-          </h4>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
-            <Tag color={getStatusTagColor(surveyStatus)} style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal', flexShrink: 0 }}>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '4px', width: '100%' }}>
+            <span style={{ 
+              fontSize: '13px', 
+              padding: '4px 12px', 
+              whiteSpace: 'nowrap', 
+              wordBreak: 'normal',
+              overflowWrap: 'normal',
+              flexShrink: 0,
+              display: 'inline-block',
+              backgroundColor: getStatusTagColor(surveyStatus) === 'green' ? '#f6ffed' : getStatusTagColor(surveyStatus) === 'blue' ? '#e6f7ff' : '#fff7e6',
+              color: getStatusTagColor(surveyStatus) === 'green' ? '#52c41a' : getStatusTagColor(surveyStatus) === 'blue' ? '#1890ff' : '#faad14',
+              border: `1px solid ${getStatusTagColor(surveyStatus) === 'green' ? '#b7eb8f' : getStatusTagColor(surveyStatus) === 'blue' ? '#91d5ff' : '#ffe58f'}`,
+              borderRadius: '4px'
+            }}>
               {surveyStatus || 'N/A'}
-            </Tag>
+            </span>
             {survey.isAlumni === 'Yes' && (
-              <Tag color="gold" style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal', flexShrink: 0 }}>Alumni</Tag>
+              <span style={{ 
+                fontSize: '13px', 
+                padding: '4px 12px', 
+                whiteSpace: 'nowrap', 
+                wordBreak: 'normal',
+                overflowWrap: 'normal',
+                flexShrink: 0,
+                display: 'inline-block',
+                backgroundColor: '#fffbe6',
+                color: '#faad14',
+                border: '1px solid #ffe58f',
+                borderRadius: '4px'
+              }}>
+                Alumni
+              </span>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
-              <Tag color="cyan" style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal', flexShrink: 0 }}>Wants to Register</Tag>
+              <span style={{ 
+                fontSize: '13px', 
+                padding: '4px 12px', 
+                whiteSpace: 'nowrap', 
+                wordBreak: 'normal',
+                overflowWrap: 'normal',
+                flexShrink: 0,
+                display: 'inline-block',
+                backgroundColor: '#e6fffb',
+                color: '#13c2c2',
+                border: '1px solid #87e8de',
+                borderRadius: '4px'
+              }}>
+                Wants to Register
+              </span>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
-              <Tag style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal', flexShrink: 0 }}>Not Alumni</Tag>
+              <span style={{ 
+                fontSize: '13px', 
+                padding: '4px 12px', 
+                whiteSpace: 'nowrap', 
+                wordBreak: 'normal',
+                overflowWrap: 'normal',
+                flexShrink: 0,
+                display: 'inline-block',
+                backgroundColor: '#fafafa',
+                color: '#595959',
+                border: '1px solid #d9d9d9',
+                borderRadius: '4px'
+              }}>
+                Not Alumni
+              </span>
             )}
           </div>
         </div>
 
         {/* Key Information */}
-        <div style={{ width: '100%' }}>
-          <div style={{ padding: '8px 0', width: '100%' }}>
+        <div style={{ width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
             <div style={{ 
               display: 'block',
               wordBreak: 'normal',
-              overflowWrap: 'break-word',
+              overflowWrap: 'normal',
               whiteSpace: 'normal',
               fontSize: '14px',
               lineHeight: '1.6',
-              color: '#8c8c8c'
+              color: '#8c8c8c',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              hyphens: 'none',
+              WebkitHyphens: 'none',
+              MsHyphens: 'none'
             }}>
               <strong style={{ color: '#595959' }}>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
             </div>
           </div>
-          <div style={{ padding: '8px 0', width: '100%' }}>
+          <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
             <div style={{ 
               display: 'block',
               wordBreak: 'normal',
-              overflowWrap: 'break-word',
+              overflowWrap: 'normal',
               whiteSpace: 'normal',
               fontSize: '14px',
               lineHeight: '1.6',
-              color: '#8c8c8c'
+              color: '#8c8c8c',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              hyphens: 'none',
+              WebkitHyphens: 'none',
+              MsHyphens: 'none'
             }}>
               <strong style={{ color: '#595959' }}>Gender:</strong> {survey.sex || 'N/A'}
             </div>
           </div>
-          <div style={{ padding: '8px 0', width: '100%' }}>
+          <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
             <div style={{ 
               display: 'block',
               wordBreak: 'normal',
-              overflowWrap: 'break-word',
+              overflowWrap: 'normal',
               whiteSpace: 'normal',
               fontSize: '14px',
               lineHeight: '1.6',
-              color: '#8c8c8c'
+              color: '#8c8c8c',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              hyphens: 'none',
+              WebkitHyphens: 'none',
+              MsHyphens: 'none'
             }}>
-              <strong style={{ color: '#595959' }}>Email:</strong> {survey.emailAddress || 'N/A'}
+              <strong style={{ color: '#595959' }}>Email:</strong> <span style={{ wordBreak: 'normal', overflowWrap: 'normal', whiteSpace: 'normal' }}>{survey.emailAddress || 'N/A'}</span>
             </div>
           </div>
           {survey.jobTitle && (
-            <div style={{ padding: '8px 0', width: '100%' }}>
+            <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
               <div style={{ 
                 display: 'block',
                 wordBreak: 'normal',
-                overflowWrap: 'break-word',
+                overflowWrap: 'normal',
                 whiteSpace: 'normal',
                 fontSize: '14px',
                 lineHeight: '1.6',
-                color: '#8c8c8c'
+                color: '#8c8c8c',
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+                hyphens: 'none',
+                WebkitHyphens: 'none',
+                MsHyphens: 'none'
               }}>
                 <strong style={{ color: '#595959' }}>Job:</strong> {survey.jobTitle}
               </div>
@@ -1685,7 +1789,8 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
           },
         ]}
       />
-    </Card>
+      </Card>
+    </>
   );
 });
 
