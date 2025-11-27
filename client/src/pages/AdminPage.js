@@ -733,26 +733,26 @@ function AdminPage() {
     <Layout className="admin-page" style={{ minHeight: '100vh' }}>
       <Header className="admin-header">
         <div className="admin-header-content">
-          <Space>
+          <div className="admin-header-left">
+            <div className="admin-header-brand">
+              <img src="/seal.png" alt="School Seal" className="admin-header-logo" />
+              <div className="admin-header-text">
+                <Title level={4} className="admin-header-title">Admin Panel</Title>
+                <Text className="admin-header-subtitle">Manage BSIT Graduate Survey Data</Text>
+              </div>
+            </div>
+          </div>
+          <div className="admin-header-right">
             <Link to="/">
-              <Button type="text" icon={<HomeOutlined />} style={{ color: 'white' }}>
+              <Button type="text" icon={<HomeOutlined />} className="admin-header-btn">
                 Home
               </Button>
             </Link>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <img src="/seal.png" alt="School Seal" style={{ width: '40px', height: '40px' }} />
-              <div>
-                <Title level={4} className="admin-header-title">Admin Panel</Title>
-                <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>Manage BSIT Graduate Survey Data</Text>
-              </div>
-            </div>
-          </Space>
-          <div className="admin-header-actions">
             <Button 
               type="text"
               icon={<LogoutOutlined />}
               onClick={handleLogout}
-              style={{ color: 'white' }}
+              className="admin-header-btn"
             >
               Logout
             </Button>
