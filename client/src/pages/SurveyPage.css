@@ -1150,7 +1150,7 @@
 
 @media (max-width: 768px) {
   .survey-page {
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
   }
 
   .survey-container {
@@ -1158,66 +1158,146 @@
   }
 
   .survey-header {
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
   }
 
   .survey-header h1 {
     font-size: 1.875rem;
+    margin-bottom: var(--spacing-lg);
   }
 
   .survey-header p {
-    font-size: 1rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .back-link {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9375rem;
+    margin-bottom: var(--spacing-xl);
   }
 
   .survey-form {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-2xl) var(--spacing-lg);
     border-radius: var(--radius-xl);
   }
 
   .form-section {
-    margin-bottom: var(--spacing-xl);
-    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
   }
 
   .form-section h2 {
-    font-size: 1.625rem;
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
   }
 
   .form-section h3 {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
+    margin: var(--spacing-xl) 0 var(--spacing-lg);
   }
 
   .form-row {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
+  }
+
+  .form-group {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .form-group label {
+    font-size: 1.0625rem;
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
   }
 
   .form-group input,
   .form-group select,
   .form-group textarea {
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    min-height: 48px;
+    border-radius: var(--radius-lg);
+  }
+
+  .form-group textarea {
+    min-height: 140px;
+    padding: 1rem 1.25rem;
+    line-height: 1.7;
+  }
+
+  .radio-group {
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+  }
+
+  .radio-group label {
+    font-size: 1rem;
+    padding: var(--spacing-sm) 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .radio-group input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: var(--spacing-sm);
+  }
+
+  .training-entry {
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .btn-add-training,
+  .btn-remove {
+    padding: 1rem 1.75rem;
+    font-size: 1rem;
+    min-height: 48px;
+    border-radius: var(--radius-lg);
+  }
+
+  .btn-submit,
+  .btn-primary {
+    padding: 1.125rem 2rem;
+    font-size: 1.0625rem;
+    min-height: 52px;
+    width: 100%;
+    margin-top: var(--spacing-xl);
+  }
+
+  .form-help {
     font-size: 0.9375rem;
+    margin-top: var(--spacing-sm);
+    line-height: 1.6;
   }
 
   .form-actions {
     flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-2xl);
   }
 
   .btn-submit,
   .btn-cancel {
     width: 100%;
+    min-height: 52px;
   }
 
   .rating-buttons {
     justify-content: center;
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
   }
 
-  .form-help {
-    font-size: 0.8125rem;
-  }
-
-  .training-entry {
-    padding: var(--spacing-md);
+  .rating-instruction {
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    font-size: 1rem;
   }
 
   .training-entry .form-row {

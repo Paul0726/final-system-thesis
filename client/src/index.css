@@ -538,6 +538,85 @@ input[type="number"]::-webkit-outer-spin-button {
     transform: scale(0.98);
   }
   
+  /* MOBILE SPACING IMPROVEMENTS - Much larger spacing for phone users */
+  .survey-page,
+  .landing-page,
+  .dashboard-page,
+  .admin-page {
+    padding: var(--spacing-lg) var(--spacing-md) !important;
+  }
+  
+  /* Larger padding for all containers */
+  [class*="container"],
+  .form-container,
+  .survey-form,
+  .landing-content,
+  .dashboard-content {
+    padding: var(--spacing-xl) var(--spacing-lg) !important;
+  }
+  
+  /* Larger margins between sections */
+  [class*="section"],
+  .form-section {
+    margin-bottom: var(--spacing-2xl) !important;
+    padding: var(--spacing-xl) !important;
+  }
+  
+  /* Larger buttons - minimum 48px height for easy tapping */
+  button,
+  .btn-primary,
+  .btn-secondary,
+  .btn-submit,
+  .btn-large,
+  a[class*="btn"] {
+    min-height: 48px !important;
+    padding: 1rem 1.75rem !important;
+    font-size: 1rem !important;
+    margin: var(--spacing-sm) 0 !important;
+  }
+  
+  /* Larger form inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    min-height: 48px !important;
+    padding: 1rem 1.25rem !important;
+    font-size: 1rem !important;
+    margin-bottom: var(--spacing-md) !important;
+  }
+  
+  textarea {
+    min-height: 140px !important;
+    padding: 1rem 1.25rem !important;
+  }
+  
+  /* Larger labels */
+  label {
+    font-size: 1.0625rem !important;
+    margin-bottom: var(--spacing-md) !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Larger gaps between form groups */
+  .form-group {
+    margin-bottom: var(--spacing-xl) !important;
+  }
+  
+  /* Larger spacing in lists */
+  ul,
+  ol {
+    padding-left: var(--spacing-xl) !important;
+  }
+  
+  li {
+    margin-bottom: var(--spacing-md) !important;
+    line-height: 1.7 !important;
+  }
+  
   /* Fix for text in cards and containers */
   .stat-card,
   .survey-card,
@@ -552,6 +631,8 @@ input[type="number"]::-webkit-outer-spin-button {
   .admin-content,
   .form-container {
     color: var(--text-dark) !important;
+    padding: var(--spacing-xl) !important;
+    margin-bottom: var(--spacing-xl) !important;
   }
   
   /* Ensure labels are readable */
