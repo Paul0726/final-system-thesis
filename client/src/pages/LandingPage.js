@@ -52,7 +52,7 @@ function LandingPage() {
           </div>
           <div className="maintenance-content">
             <h3>System Under Maintenance</h3>
-            <p>Ang sistema ay kasalukuyang inaayos upang mapabuti ang inyong karanasan. Maaari pa rin kayong makasagot ng survey habang patuloy naming pinapaganda ang interface at functionality ng system. Salamat sa inyong pag-unawa!</p>
+            <p>The system is currently under maintenance to improve your experience. You can still answer the survey while we continue to enhance the interface and functionality of the system. Thank you for your understanding!</p>
           </div>
         </div>
 
