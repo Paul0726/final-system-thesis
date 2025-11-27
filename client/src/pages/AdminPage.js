@@ -981,9 +981,9 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[20, 20]}>
+                <Row gutter={[20, 20]} style={{ width: '100%', margin: 0 }}>
                   {paginatedSurveys.map((survey, index) => (
-                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
+                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6} style={{ width: '100%', maxWidth: '100%' }}>
                       <SurveyCard 
                         survey={survey} 
                         index={index} 
@@ -1419,14 +1419,18 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
       style={{ 
         marginBottom: '0',
         width: '100%',
+        maxWidth: '100%',
         borderRadius: '12px',
-        minWidth: '300px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        overflow: 'visible'
       }}
       bodyStyle={{ 
         padding: '20px',
         wordBreak: 'break-word',
-        overflowWrap: 'break-word'
+        overflowWrap: 'break-word',
+        overflow: 'visible',
+        maxWidth: '100%',
+        width: '100%'
       }}
       actions={[
         <Button
@@ -1461,7 +1465,11 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
               overflowWrap: 'break-word',
               whiteSpace: 'normal',
               lineHeight: '1.5',
-              color: '#11823b'
+              color: '#11823b',
+              width: '100%',
+              maxWidth: '100%',
+              overflow: 'visible',
+              textOverflow: 'clip'
             }}
           >
             {survey.name || 'N/A'}
