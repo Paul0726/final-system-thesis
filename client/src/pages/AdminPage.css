@@ -28,154 +28,43 @@
   will-change: opacity, transform;
 }
 
-/* AGGRESSIVE MOBILE OPTIMIZATIONS - Disable ALL effects */
+/* MOBILE: SAME AS PC - JUST DISABLE HEAVY EFFECTS FOR PERFORMANCE */
 @media (max-width: 768px), (prefers-reduced-motion: reduce) {
-  .admin-page::before {
-    display: none !important;
-  }
-  
+  /* Disable heavy effects for performance */
+  .admin-page::before,
   .admin-page::after {
     display: none !important;
   }
   
   .admin-page {
     background-attachment: scroll !important;
-    background: var(--primary-green) !important;
   }
   
   .admin-container,
-  .survey-card {
+  .survey-card,
+  .admin-controls,
+  .admin-content {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     background: rgba(255, 255, 255, 0.95) !important;
   }
   
-  /* Prevent text from breaking into individual characters */
-  * {
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-    hyphens: auto !important;
-    -webkit-hyphens: auto !important;
-    -ms-hyphens: auto !important;
-  }
-  
-  /* Prevent character-level breaking in names and emails */
-  h1, h2, h3, h4, h5, h6,
-  p, span, div,
-  .survey-card-main h3,
-  .survey-meta {
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-    hyphens: auto !important;
-    -webkit-hyphens: auto !important;
-    -ms-hyphens: auto !important;
-    max-width: 100% !important;
-  }
-  
-  /* Disable all transitions */
+  /* Disable animations for performance */
   * {
     transition: none !important;
     animation: none !important;
   }
   
-  /* Fix button text colors on mobile */
-  button {
-    color: #ffffff !important;
-    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
+  /* Text handling */
+  * {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Touch optimization */
+  button, a {
     touch-action: manipulation;
-    user-select: none;
-  }
-  
-  button.btn-primary,
-  .btn-primary {
-    color: #ffffff !important;
-    background-color: var(--primary-green) !important;
-  }
-  
-  button.btn-secondary,
-  .btn-secondary {
-    color: var(--primary-green) !important;
-    background-color: var(--bg-white) !important;
-  }
-  
-  button:disabled {
-    color: var(--text-lighter-gray) !important;
-    background-color: var(--bg-gray-light) !important;
-  }
-  
-  /* Fix text readability - ALL text must be dark and readable */
-  .survey-card,
-  .admin-container,
-  .admin-controls,
-  .admin-content {
-    color: var(--text-dark) !important;
-  }
-  
-  .survey-card h3,
-  .survey-card h4,
-  .survey-card p,
-  .survey-card label,
-  .survey-card span,
-  .survey-meta,
-  .detail-section,
-  .detail-section p,
-  .detail-section strong {
-    color: var(--text-dark) !important;
-  }
-  
-  /* Fix all light gray text to dark */
-  .survey-meta,
-  [class*="meta"],
-  [class*="text-gray"],
-  [style*="color: #6b7280"],
-  [style*="color: #9ca3af"] {
-    color: var(--text-dark) !important;
-  }
-  
-  /* Fix pagination text */
-  .pagination button {
-    color: var(--primary-green) !important;
-  }
-  
-  .pagination button:disabled {
-    color: var(--text-lighter-gray) !important;
-  }
-  
-  /* Fix button visibility */
-  .btn-download,
-  .btn-delete {
-    color: var(--primary-green) !important;
-    background-color: var(--bg-gray-light) !important;
-    border: 1px solid var(--border-gray) !important;
-  }
-  
-  /* Fix all headings */
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--text-dark) !important;
-  }
-  
-  /* Fix admin header text */
-  .admin-header h1,
-  .admin-header p {
-    color: #ffffff !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-  }
-  
-  /* Fix filter and select text */
-  .filter-select,
-  .search-input {
-    color: var(--text-dark) !important;
-  }
-  
-  /* Fix table text */
-  .surveys-table td,
-  .surveys-table th {
-    color: var(--text-dark) !important;
-  }
-  
-  .surveys-table th {
-    background-color: var(--primary-green) !important;
-    color: #ffffff !important;
+    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
   }
 }
 
@@ -290,25 +179,6 @@
   height: 18px;
 }
 
-/* Mobile fixes for back link */
-@media (max-width: 768px) {
-  .back-link {
-    color: #ffffff !important;
-    font-weight: 700;
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-align: center;
-    line-height: 1.3;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
 
 .header-title {
   display: flex;
@@ -993,36 +863,19 @@
   flex-wrap: wrap;
 }
 
-/* Mobile: SAME LAYOUT AS PC BUT OPTIMIZED FOR PERFORMANCE */
+/* MOBILE: EXACT SAME LAYOUT AS PC - JUST SCALE DOWN */
 @media (max-width: 768px) {
+  /* Scale down padding proportionally */
   .admin-page {
     padding: var(--spacing-md);
   }
   
   .admin-container {
     padding: 0 var(--spacing-sm);
-    max-width: 100%;
-  }
-  
-  /* Keep same horizontal layout as desktop */
-  .header-top {
-    flex-direction: row;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-    justify-content: space-between;
-  }
-  
-  .back-link,
-  .logout-btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.8125rem;
-    white-space: nowrap;
-    flex: 0 1 auto;
-    min-width: auto;
   }
   
   .admin-header {
-    padding: var(--spacing-xl) var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
     margin-bottom: var(--spacing-lg);
   }
   
@@ -1031,22 +884,41 @@
     margin-bottom: var(--spacing-lg);
   }
   
-  .search-bar {
-    margin-bottom: var(--spacing-md);
-  }
-  
   .admin-content {
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
   }
   
-  /* Keep buttons in same horizontal layout */
-  .admin-actions {
-    gap: var(--spacing-sm);
-    padding: var(--spacing-md) 0;
-    margin-top: var(--spacing-md);
-    flex-wrap: wrap;
-    justify-content: center;
+  .survey-card-header {
+    padding: var(--spacing-md);
+  }
+  
+  .survey-card-details {
+    padding: var(--spacing-md);
+  }
+  
+  .detail-section {
+    padding: var(--spacing-md);
+  }
+  
+  /* Scale down font sizes but keep same layout */
+  .admin-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .survey-card-main h3 {
+    font-size: 1.125rem;
+  }
+  
+  .survey-meta {
+    font-size: 0.875rem;
+  }
+  
+  /* Scale down buttons but keep same layout */
+  .back-link,
+  .logout-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
   }
   
   .btn-reports,
@@ -1054,76 +926,13 @@
   .btn-secondary,
   .btn-refresh,
   .btn-download-all {
-    padding: 0.75rem 1rem;
-    font-size: 0.8125rem;
-    flex: 0 1 auto;
-    min-width: auto;
-    white-space: nowrap;
-  }
-  
-  /* Keep filter bar horizontal */
-  .filter-bar {
-    flex-direction: row;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.875rem;
   }
   
   .filter-select {
-    flex: 1 1 auto;
-    min-width: 140px;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
-  }
-  
-  .admin-stats {
-    margin-left: auto;
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
-  }
-  
-  /* Keep survey card same horizontal layout */
-  .survey-card-header {
-    padding: var(--spacing-md);
-  }
-  
-  .survey-card-main {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--spacing-md);
-    justify-content: space-between;
-  }
-  
-  .survey-card-main > div:first-child {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  
-  .survey-card-main h3 {
-    font-size: 1rem;
-    margin-bottom: var(--spacing-xs);
-    line-height: 1.4;
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-  
-  .survey-meta {
-    font-size: 0.8125rem;
-    margin-top: var(--spacing-xs);
-    line-height: 1.5;
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-  
-  /* Keep actions in same horizontal row */
-  .survey-card-actions {
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: var(--spacing-xs);
-    flex-wrap: nowrap;
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
-    width: auto;
   }
   
   .status-badge,
@@ -1131,80 +940,27 @@
   .alumni-interest-badge,
   .alumni-no-badge {
     font-size: 0.75rem;
-    padding: 0.375rem 0.625rem;
-    min-height: auto;
+    padding: 0.5rem 0.875rem;
   }
   
   .btn-download,
   .btn-delete {
-    min-width: 36px;
-    min-height: 36px;
-    padding: 0.5rem;
-  }
-  
-  .expand-icon {
-    min-width: 36px;
-    min-height: 36px;
-    margin-left: var(--spacing-xs);
-  }
-  
-  .survey-card-details {
-    padding: var(--spacing-md);
-  }
-  
-  .details-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--spacing-md);
-  }
-  
-  .detail-section {
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .detail-section h4 {
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    font-size: 1.125rem;
-  }
-  
-  .detail-section p {
-    margin: var(--spacing-sm) 0;
-    line-height: 1.6;
-    font-size: 0.875rem;
-  }
-  
-  .notifications-section,
-  .reports-section {
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .notification-actions {
-    flex-direction: row;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-md);
-    justify-content: flex-end;
-  }
-  
-  .btn-send-notification,
-  .btn-cancel {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
-    flex: 0 1 auto;
-    min-width: auto;
-  }
-  
-  .pagination {
-    gap: var(--spacing-xs);
-    padding-top: var(--spacing-md);
-    margin-top: var(--spacing-lg);
-  }
-  
-  .pagination button {
-    padding: 0.5rem 0.75rem;
     min-width: 40px;
-    font-size: 0.8125rem;
+    min-height: 40px;
+    padding: 0.625rem;
+  }
+  
+  /* Keep same gaps but slightly smaller */
+  .admin-actions {
+    gap: var(--spacing-sm);
+  }
+  
+  .survey-card-actions {
+    gap: var(--spacing-sm);
+  }
+  
+  .filter-bar {
+    gap: var(--spacing-sm);
   }
 }
 
@@ -1245,25 +1001,6 @@
   height: 18px;
 }
 
-/* Mobile fixes for logout button */
-@media (max-width: 768px) {
-  .logout-btn {
-    color: #ffffff !important;
-    font-weight: 700;
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-align: center;
-    line-height: 1.3;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
 
 /* Survey Card Styles */
 .surveys-list {
@@ -2227,112 +1964,39 @@
 }
 
 @media (max-width: 480px) {
-  /* Even smaller screens - keep same layout, just scale down */
+  /* Even smaller - just scale down more, same layout */
   .admin-page {
     padding: var(--spacing-sm);
   }
   
-  .admin-container {
-    padding: 0 var(--spacing-xs);
-  }
-  
   .admin-header h1 {
     font-size: 1.5rem;
-    margin-bottom: var(--spacing-sm);
-  }
-
-  .admin-header {
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-  }
-
-  .login-box {
-    padding: var(--spacing-md);
-  }
-
-  .login-box h2 {
-    font-size: 1.25rem;
-  }
-
-  .survey-card-header {
-    padding: var(--spacing-sm);
-  }
-  
-  .survey-card-main {
-    gap: var(--spacing-sm);
   }
   
   .survey-card-main h3 {
-    font-size: 0.9375rem;
-    margin-bottom: var(--spacing-xs);
+    font-size: 1rem;
   }
-
+  
   .survey-meta {
-    font-size: 0.75rem;
-    margin-top: var(--spacing-xs);
-    line-height: 1.4;
+    font-size: 0.8125rem;
   }
   
-  .survey-card-actions {
-    gap: var(--spacing-xs);
-  }
-  
-  .status-badge,
-  .alumni-badge,
-  .alumni-interest-badge,
-  .alumni-no-badge {
-    font-size: 0.6875rem;
-    padding: 0.25rem 0.5rem;
-  }
-  
-  .btn-download,
-  .btn-delete {
-    min-width: 32px;
-    min-height: 32px;
-    padding: 0.375rem;
+  .back-link,
+  .logout-btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
   }
   
   .btn-reports,
   .btn-notifications,
   .btn-secondary,
   .btn-refresh,
-  .btn-download-all,
-  .btn-send-notification,
-  .btn-cancel {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.75rem;
-  }
-  
-  .admin-actions {
-    gap: var(--spacing-xs);
-    padding: var(--spacing-sm) 0;
-  }
-  
-  .filter-select {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.8125rem;
-    min-width: 120px;
-  }
-  
-  .admin-controls {
-    padding: var(--spacing-sm);
-  }
-  
-  .admin-content {
-    padding: var(--spacing-sm);
-  }
-  
-  .detail-section {
-    padding: var(--spacing-sm);
-  }
-  
-  .detail-section p {
-    margin: var(--spacing-xs) 0;
+  .btn-download-all {
+    padding: 0.75rem 1.25rem;
     font-size: 0.8125rem;
   }
   
   .details-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-sm);
   }
 }

@@ -420,7 +420,8 @@ const PORT = process.env.PORT || 3000;
 
 // Trust proxy - Required for Railway and other reverse proxy deployments
 // This allows express-rate-limit to correctly identify client IPs
-app.set('trust proxy', true);
+// Set to 1 to trust only the first proxy (Railway's proxy)
+app.set('trust proxy', 1);
 
 // Fallback: In-memory database
 let surveys = [];
