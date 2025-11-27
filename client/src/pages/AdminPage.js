@@ -981,9 +981,9 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[16, 16]}>
+                <Row gutter={[20, 20]}>
                   {paginatedSurveys.map((survey, index) => (
-                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6} style={{ minWidth: '280px' }}>
+                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
                       <SurveyCard 
                         survey={survey} 
                         index={index} 
@@ -1419,11 +1419,12 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
       style={{ 
         marginBottom: '0',
         width: '100%',
-        borderRadius: '8px',
-        minWidth: '280px'
+        borderRadius: '12px',
+        minWidth: '300px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}
       bodyStyle={{ 
-        padding: '16px',
+        padding: '20px',
         wordBreak: 'break-word',
         overflowWrap: 'break-word'
       }}
@@ -1448,95 +1449,113 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         />
       ]}
     >
-      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
         {/* Name and Status */}
         <div style={{ width: '100%', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
           <Title 
-            level={5} 
+            level={4} 
             style={{ 
               margin: 0, 
-              marginBottom: '8px',
+              marginBottom: '12px',
               wordBreak: 'break-word',
               overflowWrap: 'break-word',
               whiteSpace: 'normal',
-              lineHeight: '1.4'
+              lineHeight: '1.5',
+              color: '#11823b'
             }}
           >
             {survey.name || 'N/A'}
           </Title>
-          <Space wrap size={[8, 8]} style={{ width: '100%' }}>
-            <Tag color={getStatusTagColor(surveyStatus)}>{surveyStatus || 'N/A'}</Tag>
+          <Space wrap size={[8, 8]} style={{ width: '100%', marginBottom: '4px' }}>
+            <Tag color={getStatusTagColor(surveyStatus)} style={{ fontSize: '13px', padding: '4px 12px' }}>
+              {surveyStatus || 'N/A'}
+            </Tag>
             {survey.isAlumni === 'Yes' && (
-              <Tag color="gold">Alumni</Tag>
+              <Tag color="gold" style={{ fontSize: '13px', padding: '4px 12px' }}>Alumni</Tag>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
-              <Tag color="cyan">Wants to Register</Tag>
+              <Tag color="cyan" style={{ fontSize: '13px', padding: '4px 12px' }}>Wants to Register</Tag>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
-              <Tag>Not Alumni</Tag>
+              <Tag style={{ fontSize: '13px', padding: '4px 12px' }}>Not Alumni</Tag>
             )}
           </Space>
         </div>
 
         {/* Key Information */}
-        <Space direction="vertical" size="small" style={{ width: '100%' }}>
-          <Text 
-            type="secondary" 
-            style={{ 
-              display: 'block',
-              wordBreak: 'break-word',
-              overflowWrap: 'break-word',
-              whiteSpace: 'normal'
-            }}
-          >
-            <strong>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
-          </Text>
-          <Text 
-            type="secondary" 
-            style={{ 
-              display: 'block',
-              wordBreak: 'break-word',
-              overflowWrap: 'break-word',
-              whiteSpace: 'normal'
-            }}
-          >
-            <strong>Gender:</strong> {survey.sex || 'N/A'}
-          </Text>
-          <Text 
-            type="secondary" 
-            style={{ 
-              display: 'block',
-              wordBreak: 'break-word',
-              overflowWrap: 'break-word',
-              whiteSpace: 'normal',
-              hyphens: 'auto'
-            }}
-          >
-            <strong>Email:</strong> {survey.emailAddress || 'N/A'}
-          </Text>
-          {survey.jobTitle && (
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <div style={{ padding: '8px 0' }}>
             <Text 
               type="secondary" 
               style={{ 
                 display: 'block',
                 wordBreak: 'break-word',
                 overflowWrap: 'break-word',
-                whiteSpace: 'normal'
+                whiteSpace: 'normal',
+                fontSize: '14px',
+                lineHeight: '1.6'
               }}
             >
-              <strong>Job:</strong> {survey.jobTitle}
+              <strong style={{ color: '#595959' }}>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
             </Text>
+          </div>
+          <div style={{ padding: '8px 0' }}>
+            <Text 
+              type="secondary" 
+              style={{ 
+                display: 'block',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                whiteSpace: 'normal',
+                fontSize: '14px',
+                lineHeight: '1.6'
+              }}
+            >
+              <strong style={{ color: '#595959' }}>Gender:</strong> {survey.sex || 'N/A'}
+            </Text>
+          </div>
+          <div style={{ padding: '8px 0' }}>
+            <Text 
+              type="secondary" 
+              style={{ 
+                display: 'block',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                whiteSpace: 'normal',
+                fontSize: '14px',
+                lineHeight: '1.6'
+              }}
+            >
+              <strong style={{ color: '#595959' }}>Email:</strong> {survey.emailAddress || 'N/A'}
+            </Text>
+          </div>
+          {survey.jobTitle && (
+            <div style={{ padding: '8px 0' }}>
+              <Text 
+                type="secondary" 
+                style={{ 
+                  display: 'block',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
+                  whiteSpace: 'normal',
+                  fontSize: '14px',
+                  lineHeight: '1.6'
+                }}
+              >
+                <strong style={{ color: '#595959' }}>Job:</strong> {survey.jobTitle}
+              </Text>
+            </div>
           )}
         </Space>
       </Space>
       
-      <Divider style={{ margin: '16px 0' }} />
+      <Divider style={{ margin: '20px 0' }} />
       <Collapse 
         ghost
         items={[
           {
             key: '1',
-            label: <Text strong>View Full Details</Text>,
+            label: <Text strong style={{ fontSize: '15px' }}>View Full Details</Text>,
             children: (
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12}>
