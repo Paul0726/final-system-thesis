@@ -519,18 +519,22 @@
 }
 
 .status-badge {
-  padding: 0.375rem 0.75rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-full);
   color: white;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  min-height: 36px;
 }
 
 .btn-download {
-  padding: 0.625rem;
+  padding: 0.75rem;
   border: 1px solid var(--border-gray);
   border-radius: var(--radius-lg);
   cursor: pointer;
@@ -540,6 +544,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
 }
 
 .btn-download:hover:not(:disabled) {
@@ -555,7 +562,7 @@
 }
 
 .btn-delete {
-  padding: 0.625rem;
+  padding: 0.75rem;
   border: 1px solid var(--border-gray);
   border-radius: var(--radius-lg);
   cursor: pointer;
@@ -565,6 +572,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
 }
 
 .btn-delete:hover:not(:disabled) {
@@ -960,7 +970,7 @@
   .header-top {
     flex-direction: row;
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
     justify-content: space-between;
   }
   
@@ -968,29 +978,37 @@
   .logout-btn {
     flex: 1;
     min-width: 0;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1.25rem;
     font-size: 0.875rem;
   }
   
   .admin-header {
     padding: var(--spacing-2xl) var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
   }
   
   .admin-controls {
     padding: var(--spacing-xl) var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+  }
+  
+  .search-bar {
     margin-bottom: var(--spacing-xl);
   }
   
   .admin-content {
     padding: var(--spacing-xl) var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
   }
   
   .admin-actions {
-    gap: var(--spacing-md);
-    padding: var(--spacing-lg) 0;
-    margin-top: var(--spacing-lg);
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl) 0;
+    margin-top: var(--spacing-xl);
+  }
+  
+  .surveys-list {
+    gap: var(--spacing-2xl);
   }
   
   .btn-reports,
@@ -1022,19 +1040,63 @@
   }
   
   .survey-card-header {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl) var(--spacing-lg);
   }
   
   .survey-card-main {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xl);
+    width: 100%;
+  }
+  
+  .survey-card-main > div:first-child {
+    width: 100%;
+  }
+  
+  .survey-card-main h3 {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+  }
+  
+  .survey-meta {
+    font-size: 0.9375rem;
+    margin-top: var(--spacing-xs);
+    line-height: 1.7;
   }
   
   .survey-card-actions {
     width: 100%;
-    justify-content: space-between;
-    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .status-badge,
+  .alumni-badge,
+  .alumni-interest-badge,
+  .alumni-no-badge {
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.875rem;
+    min-height: 40px;
+  }
+  
+  .btn-download,
+  .btn-delete {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0.875rem;
+  }
+  
+  .expand-icon {
+    min-width: 48px;
+    min-height: 48px;
+    margin-left: auto;
+    margin-top: var(--spacing-xs);
   }
   
   .survey-card-details {
@@ -1047,35 +1109,50 @@
   }
   
   .detail-section {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .detail-section h4 {
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+  }
+  
+  .detail-section p {
+    margin: var(--spacing-md) 0;
+    line-height: 1.8;
   }
   
   .notifications-section,
   .reports-section {
-    padding: var(--spacing-xl) var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
   }
   
   .notification-actions {
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-2xl);
   }
   
   .btn-send-notification,
   .btn-cancel {
     width: 100%;
     max-width: 100%;
+    padding: 1.125rem 2rem;
+    font-size: 1rem;
   }
   
   .pagination {
-    gap: var(--spacing-sm);
-    padding-top: var(--spacing-lg);
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-xl);
+    margin-top: var(--spacing-2xl);
   }
   
   .pagination button {
-    padding: 0.625rem 1rem;
-    min-width: 45px;
-    font-size: 0.875rem;
+    padding: 0.75rem 1.25rem;
+    min-width: 50px;
+    font-size: 0.9375rem;
   }
 }
 
@@ -1176,7 +1253,7 @@
 }
 
 .survey-card-header {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-2xl) var(--spacing-xl);
   cursor: pointer;
   transition: background var(--transition-base);
 }
@@ -1188,43 +1265,56 @@
 .survey-card-main {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-xl);
+  align-items: flex-start;
+  gap: var(--spacing-2xl);
   flex-wrap: wrap;
 }
 
 .survey-card-main h3 {
   color: var(--primary-green);
-  margin: 0 0 var(--spacing-xs) 0;
+  margin: 0 0 var(--spacing-sm) 0;
   font-size: 1.5rem;
   font-weight: 700;
+  line-height: 1.4;
+  word-break: break-word;
 }
 
 .survey-meta {
   color: var(--text-dark);
-  margin: 0;
+  margin: var(--spacing-sm) 0 0 0;
   font-size: 1rem;
   font-weight: 500;
+  line-height: 1.6;
+  word-break: break-word;
 }
 
 .survey-card-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
   flex-wrap: wrap;
   flex-shrink: 0;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 .expand-icon {
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   color: var(--primary-green);
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+  margin-left: var(--spacing-sm);
 }
 
 .alumni-badge {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   color: white;
-  padding: 0.5rem 0.875rem;
+  padding: 0.625rem 1rem;
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 700;
@@ -1233,6 +1323,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 36px;
 }
 
 .alumni-badge svg {
@@ -1244,7 +1335,7 @@
 .alumni-interest-badge {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
-  padding: 0.5rem 0.875rem;
+  padding: 0.625rem 1rem;
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 700;
@@ -1253,6 +1344,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 36px;
 }
 
 .alumni-interest-badge svg {
@@ -1264,7 +1356,7 @@
 .alumni-no-badge {
   background: var(--border-light);
   color: var(--text-dark);
-  padding: 0.5rem 0.875rem;
+  padding: 0.625rem 1rem;
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 700;
@@ -1272,6 +1364,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 36px;
 }
 
 .survey-card-details {
@@ -2071,10 +2164,12 @@
   
   .admin-header h1 {
     font-size: 1.75rem;
+    margin-bottom: var(--spacing-md);
   }
 
   .admin-header {
     padding: var(--spacing-xl) var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
   }
 
   .login-box {
@@ -2085,12 +2180,45 @@
     font-size: 1.5rem;
   }
 
+  .survey-card-header {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .survey-card-main {
+    gap: var(--spacing-lg);
+  }
+  
   .survey-card-main h3 {
     font-size: 1.125rem;
+    margin-bottom: var(--spacing-sm);
   }
 
   .survey-meta {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
+    margin-top: var(--spacing-xs);
+    line-height: 1.8;
+  }
+  
+  .survey-card-actions {
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-md);
+    margin-top: var(--spacing-md);
+  }
+  
+  .status-badge,
+  .alumni-badge,
+  .alumni-interest-badge,
+  .alumni-no-badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 38px;
+  }
+  
+  .btn-download,
+  .btn-delete {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.75rem;
   }
   
   .btn-reports,
@@ -2100,16 +2228,34 @@
   .btn-download-all,
   .btn-send-notification,
   .btn-cancel {
-    padding: 0.875rem 1.25rem;
-    font-size: 0.875rem;
+    padding: 1rem 1.5rem;
+    font-size: 0.9375rem;
   }
   
   .admin-actions {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) 0;
   }
   
   .filter-select {
-    padding: 0.875rem 1rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+  
+  .admin-controls {
+    padding: var(--spacing-lg);
+  }
+  
+  .admin-content {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .detail-section {
+    padding: var(--spacing-lg);
+  }
+  
+  .detail-section p {
+    margin: var(--spacing-sm) 0;
     font-size: 0.9375rem;
   }
 }
