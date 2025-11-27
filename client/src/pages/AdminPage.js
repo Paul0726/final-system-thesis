@@ -22,7 +22,8 @@ import {
   Spin,
   Tag,
   Divider,
-  Collapse
+  Collapse,
+  Pagination
 } from 'antd';
 import { 
   SearchOutlined, 
@@ -35,26 +36,24 @@ import {
   BellOutlined,
   FileTextOutlined,
   UserOutlined,
-  FilterOutlined
+  FilterOutlined,
+  ReloadOutlined
 } from '@ant-design/icons';
 import './AdminPage.css';
 
-// Destructure Typography components at module level
 const { Title, Text } = Typography;
+const { Header, Content } = Layout;
 
 const API_URL = process.env.NODE_ENV === 'production' 
   ? '/api' 
   : 'http://localhost:3000/api';
 
-// Pagination constants for performance
-const ITEMS_PER_PAGE = 20; // Show 20 items per page for better performance
+const ITEMS_PER_PAGE = 20;
 
-// Create axios instance with default config for admin requests
 const adminAxios = axios.create({
   baseURL: API_URL
 });
 
-// Add request interceptor to include admin token
 adminAxios.interceptors.request.use(
   (config) => {
     const adminToken = localStorage.getItem('adminToken');
@@ -71,7 +70,7 @@ adminAxios.interceptors.request.use(
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const email = 'dwcsjtracersystem@gmail.com'; // Admin email (hardcoded for security)
+  const email = 'dwcsjtracersystem@gmail.com';
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
@@ -80,31 +79,27 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
-  const [sortBy, setSortBy] = useState('year'); // 'year', 'name', 'gender'
+  const [sortBy, setSortBy] = useState('year');
   const [filterGender, setFilterGender] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   
-  // Technical Support Reports
   const [showReports, setShowReports] = useState(false);
   const [reports, setReports] = useState([]);
   const [reportsLoading, setReportsLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   
-  // Notification system state
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationSubject, setNotificationSubject] = useState('');
   const [notificationMessage, setNotificationMessage] = useState('');
-  const [recipientFilter, setRecipientFilter] = useState('all'); // 'all', 'employed', 'unemployed', 'self-employed', 'by-year'
+  const [recipientFilter, setRecipientFilter] = useState('all');
   const [selectedYear, setSelectedYear] = useState('');
   const [sendingNotification, setSendingNotification] = useState(false);
   const [notificationSuccess, setNotificationSuccess] = useState(false);
   const [notificationHistory, setNotificationHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   
-  // Debounce search term for better performance (300ms delay)
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  // Fetch unread reports count
   const fetchReportsCount = useCallback(async () => {
     try {
       const response = await adminAxios.get('/technical-support/reports/count');
@@ -116,23 +111,15 @@ function AdminPage() {
     }
   }, []);
 
-  // Fetch all surveys
   const fetchSurveys = useCallback(async () => {
     try {
       setLoading(true);
       const response = await adminAxios.get('/surveys');
-      console.log('API Response:', response.data);
       const surveysData = response.data.data || [];
-      console.log('Surveys data:', surveysData);
-      console.log('Number of surveys:', surveysData.length);
-      if (surveysData.length > 0) {
-        console.log('First survey:', surveysData[0]);
-      }
       setSurveys(surveysData);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching surveys:', error);
-      console.error('Error details:', error.response?.data || error.message);
       if (error.response?.status === 401) {
         alert('Unauthorized: Please login again.');
         localStorage.removeItem('adminToken');
@@ -147,7 +134,6 @@ function AdminPage() {
   }, []);
 
   useEffect(() => {
-    // Check if already authenticated
     const authToken = localStorage.getItem('adminToken');
     if (authToken === 'admin-token') {
       setIsAuthenticated(true);
@@ -156,7 +142,6 @@ function AdminPage() {
     }
   }, [fetchSurveys, fetchReportsCount]);
 
-  // Fetch all reports
   const fetchReports = async () => {
     try {
       setReportsLoading(true);
@@ -172,7 +157,6 @@ function AdminPage() {
     }
   };
 
-  // Mark report as read
   const markAsRead = async (reportId) => {
     try {
       await adminAxios.put(`/technical-support/reports/${reportId}/read`);
@@ -183,7 +167,6 @@ function AdminPage() {
     }
   };
 
-  // Delete report
   const deleteReport = async (reportId) => {
     if (!window.confirm('Are you sure you want to delete this report?')) return;
     
@@ -200,11 +183,10 @@ function AdminPage() {
     }
   };
 
-  // Toggle reports view
   const toggleReports = () => {
     if (!showReports) {
       fetchReports();
-      fetchReportsCount(); // Refresh count when opening
+      fetchReportsCount();
     }
     setShowReports(!showReports);
   };
@@ -226,10 +208,8 @@ function AdminPage() {
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
     if (!showNotifications) {
-      // Fetch history when opening
       fetchNotificationHistory();
     } else {
-      // Reset form when closing
       setNotificationSubject('');
       setNotificationMessage('');
       setRecipientFilter('all');
@@ -261,7 +241,6 @@ function AdminPage() {
         setNotificationMessage('');
         setRecipientFilter('all');
         setSelectedYear('');
-        // Refresh history after sending
         fetchNotificationHistory();
         alert(`Notification sent successfully to ${response.data.recipientCount} recipient(s)!`);
       } else {
@@ -269,22 +248,13 @@ function AdminPage() {
       }
     } catch (error) {
       console.error('Error sending notification:', error);
-      console.error('Error details:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message,
-        url: error.config?.url
-      });
       const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
-      const requestUrl = error.config?.url || error.config?.baseURL + '/send-notification' || '/api/send-notification';
-      alert(`Error sending notification: ${errorMessage}\n\nStatus: ${error.response?.status || 'N/A'}\nURL: ${requestUrl}`);
+      alert(`Error sending notification: ${errorMessage}`);
     } finally {
       setSendingNotification(false);
     }
   };
   
-  // Get unique years from surveys for filtering
   const availableYears = useMemo(() => {
     const years = new Set();
     surveys.forEach(survey => {
@@ -354,7 +324,6 @@ function AdminPage() {
         setLoading(true);
         const response = await adminAxios.delete(`/surveys/${id}`);
         if (response.data.success) {
-          // Refresh the surveys list to reflect the deletion
           await fetchSurveys();
           alert('✅ Survey deleted successfully from database!');
         } else {
@@ -370,14 +339,12 @@ function AdminPage() {
     }
   };
 
-  // Extract last name for sorting (memoized)
   const getLastName = useCallback((name) => {
     if (!name) return '';
     const parts = name.trim().split(' ');
     return parts[parts.length - 1] || '';
   }, []);
 
-  // Memoize filtered and sorted surveys for performance
   const filteredSurveys = useMemo(() => {
     return surveys
       .filter(survey => {
@@ -385,7 +352,6 @@ function AdminPage() {
           (survey.name && survey.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())) ||
           (survey.emailAddress && survey.emailAddress.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
         
-        // Determine status from isEmployed and employmentNature
         let surveyStatus = '';
         if (survey.isEmployed === 'Yes') {
           if (survey.employmentNature === 'Self-Employed') {
@@ -406,17 +372,14 @@ function AdminPage() {
       })
       .sort((a, b) => {
         if (sortBy === 'year') {
-          // Sort by graduation year (newest first, 2018-2024)
           const yearA = parseInt(a.schoolYearGraduated) || 0;
           const yearB = parseInt(b.schoolYearGraduated) || 0;
-          return yearB - yearA; // Descending (newest first)
+          return yearB - yearA;
         } else if (sortBy === 'name') {
-          // Sort alphabetically by last name
           const lastNameA = getLastName(a.name).toLowerCase();
           const lastNameB = getLastName(b.name).toLowerCase();
           return lastNameA.localeCompare(lastNameB);
         } else if (sortBy === 'gender') {
-          // Sort by gender (Male first, then Female)
           const genderA = (a.sex || '').toLowerCase();
           const genderB = (b.sex || '').toLowerCase();
           if (genderA === 'male' && genderB !== 'male') return -1;
@@ -427,7 +390,6 @@ function AdminPage() {
       });
   }, [surveys, debouncedSearchTerm, filterStatus, filterGender, sortBy, getLastName]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(filteredSurveys.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -435,7 +397,6 @@ function AdminPage() {
     return filteredSurveys.slice(startIndex, endIndex);
   }, [filteredSurveys, startIndex, endIndex]);
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearchTerm, filterStatus, filterGender, sortBy]);
@@ -449,7 +410,6 @@ function AdminPage() {
     }
   };
 
-  // Generate PDF for single survey
   const generatePDF = (survey) => {
     const doc = new jsPDF();
     let yPosition = 20;
@@ -457,7 +417,6 @@ function AdminPage() {
     const margin = 20;
     const maxWidth = pageWidth - (margin * 2);
 
-    // Helper function to add text with word wrap
     const addText = (text, x, y, maxWidth, fontSize = 10, isBold = false) => {
       doc.setFontSize(fontSize);
       doc.setFont('helvetica', isBold ? 'bold' : 'normal');
@@ -466,7 +425,6 @@ function AdminPage() {
       return y + (lines.length * (fontSize * 0.4));
     };
 
-    // Helper function to check if new page needed
     const checkNewPage = (requiredSpace) => {
       if (yPosition + requiredSpace > doc.internal.pageSize.getHeight() - 20) {
         doc.addPage();
@@ -476,7 +434,6 @@ function AdminPage() {
       return false;
     };
 
-    // Title
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('BSIT Graduate Tracer System', margin, yPosition);
@@ -487,7 +444,6 @@ function AdminPage() {
     doc.text('Survey Response Details', margin, yPosition);
     yPosition += 15;
 
-    // Personal Information Section
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('A. Personal Information', margin, yPosition);
@@ -508,7 +464,6 @@ function AdminPage() {
 
     checkNewPage(30);
     
-    // Education Section
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('B. Education', margin, yPosition);
@@ -524,7 +479,6 @@ function AdminPage() {
     yPosition = addText(`Other PRC License: ${survey.otherPRCLicense || 'N/A'}`, margin, yPosition, maxWidth, 10);
     yPosition = addText(`Professional Organizations: ${survey.professionalOrganizations || 'N/A'}`, margin, yPosition, maxWidth, 10);
     
-    // Trainings
     if (survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0) {
       yPosition += 5;
       doc.setFont('helvetica', 'bold');
@@ -543,7 +497,6 @@ function AdminPage() {
 
     checkNewPage(30);
     
-    // Employment Section
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('C. Employment', margin, yPosition);
@@ -563,7 +516,6 @@ function AdminPage() {
 
     checkNewPage(30);
     
-    // Ratings Section
     if (survey.ratings) {
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
@@ -599,104 +551,41 @@ function AdminPage() {
       yPosition += 5;
     }
 
-    checkNewPage(30);
-    
-    // Alumni & Feedback Section
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('E. Alumni Status & Feedback', margin, yPosition);
-    yPosition += 8;
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    yPosition = addText(`Is Alumni: ${survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}`, margin, yPosition, maxWidth, 10);
-    if (survey.isAlumni !== 'Yes') {
-      yPosition = addText(`Interested in Alumni Registration: ${survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}`, margin, yPosition, maxWidth, 10);
-    }
-    yPosition = addText(`School Rating: ${survey.schoolRating ? `${survey.schoolRating}/5` : 'N/A'}`, margin, yPosition, maxWidth, 10);
-    yPosition = addText(`System Rating: ${survey.systemRating ? `${survey.systemRating}/5` : 'N/A'}`, margin, yPosition, maxWidth, 10);
-    yPosition += 5;
-    
-    if (survey.schoolFeedback) {
-      checkNewPage(20);
-      doc.setFont('helvetica', 'bold');
-      doc.text('School Feedback:', margin, yPosition);
-      yPosition += 6;
-      doc.setFont('helvetica', 'normal');
-      yPosition = addText(survey.schoolFeedback, margin, yPosition, maxWidth, 10);
-      yPosition += 5;
-    }
-    
-    if (survey.systemFeedback) {
-      checkNewPage(20);
-      doc.setFont('helvetica', 'bold');
-      doc.text('System Feedback:', margin, yPosition);
-      yPosition += 6;
-      doc.setFont('helvetica', 'normal');
-      yPosition = addText(survey.systemFeedback, margin, yPosition, maxWidth, 10);
-    }
-    
-    // System Evaluation Section
     if (survey.systemEvaluation) {
-      checkNewPage(40);
+      checkNewPage(30);
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.text('F. System Evaluation', margin, yPosition);
+      doc.text('E. System Evaluation', margin, yPosition);
       yPosition += 8;
       
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       
-      if (survey.systemEvaluation.functionality) {
-        checkNewPage(20);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Functionality:', margin, yPosition);
-        yPosition += 6;
-        doc.setFont('helvetica', 'normal');
-        yPosition = addText(`  The system is easy to use and learned: ${survey.systemEvaluation.functionality.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system can be used with comfort and convenience: ${survey.systemEvaluation.functionality.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system is user-friendly: ${survey.systemEvaluation.functionality.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition += 3;
-      }
+      const evalSections = [
+        { key: 'functionality', label: 'Functionality' },
+        { key: 'reliability', label: 'Reliability' },
+        { key: 'accuracy', label: 'Accuracy' },
+        { key: 'efficiency', label: 'Efficiency' }
+      ];
       
-      if (survey.systemEvaluation.reliability) {
-        checkNewPage(20);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Reliability:', margin, yPosition);
-        yPosition += 6;
-        doc.setFont('helvetica', 'normal');
-        yPosition = addText(`  The system provides the correct desired output: ${survey.systemEvaluation.reliability.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  Absence of failures in the system: ${survey.systemEvaluation.reliability.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system is accurate in performance: ${survey.systemEvaluation.reliability.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition += 3;
-      }
-      
-      if (survey.systemEvaluation.accuracy) {
-        checkNewPage(20);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Accuracy:', margin, yPosition);
-        yPosition += 6;
-        doc.setFont('helvetica', 'normal');
-        yPosition = addText(`  The system gives accurate information/computation: ${survey.systemEvaluation.accuracy.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system provides accurate outputs: ${survey.systemEvaluation.accuracy.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system provides accurate reports: ${survey.systemEvaluation.accuracy.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition += 3;
-      }
-      
-      if (survey.systemEvaluation.efficiency) {
-        checkNewPage(20);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Efficiency:', margin, yPosition);
-        yPosition += 6;
-        doc.setFont('helvetica', 'normal');
-        yPosition = addText(`  The system is well organized and working properly: ${survey.systemEvaluation.efficiency.q1 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system is well organized for purpose: ${survey.systemEvaluation.efficiency.q2 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition = addText(`  The system is capable to produce the desired output without delaying the run time performance: ${survey.systemEvaluation.efficiency.q3 || 'N/A'}/5`, margin + 5, yPosition, maxWidth - 5, 9);
-        yPosition += 3;
-      }
+      evalSections.forEach(section => {
+        if (survey.systemEvaluation[section.key]) {
+          checkNewPage(15);
+          doc.setFont('helvetica', 'bold');
+          doc.text(`${section.label}:`, margin, yPosition);
+          yPosition += 6;
+          doc.setFont('helvetica', 'normal');
+          Object.keys(survey.systemEvaluation[section.key]).forEach(key => {
+            const value = survey.systemEvaluation[section.key][key];
+            if (value) {
+              yPosition = addText(`  ${key}: ${value}/5`, margin + 5, yPosition, maxWidth - 5, 9);
+            }
+          });
+          yPosition += 3;
+        }
+      });
     }
 
-    // Footer
     const totalPages = doc.internal.pages.length - 1;
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
@@ -705,12 +594,10 @@ function AdminPage() {
       doc.text(`Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - Page ${i} of ${totalPages}`, margin, doc.internal.pageSize.getHeight() - 10);
     }
 
-    // Save PDF
     const fileName = `Survey_${survey.name?.replace(/[^a-z0-9]/gi, '_') || 'Unknown'}_${survey.schoolYearGraduated || 'Unknown'}.pdf`;
     doc.save(fileName);
   };
 
-  // Generate PDF for all filtered surveys
   const generateAllPDFs = () => {
     if (filteredSurveys.length === 0) {
       alert('No surveys to export.');
@@ -721,33 +608,46 @@ function AdminPage() {
       filteredSurveys.forEach((survey, index) => {
         setTimeout(() => {
           generatePDF(survey);
-        }, index * 500); // Delay each download by 500ms to avoid browser blocking
+        }, index * 500);
       });
     }
   };
 
+  // Calculate statistics
+  const stats = useMemo(() => {
+    const employed = filteredSurveys.filter(s => {
+      if (s.isEmployed === 'Yes' && s.employmentNature !== 'Self-Employed') return true;
+      return false;
+    }).length;
+    
+    const selfEmployed = filteredSurveys.filter(s => {
+      if (s.isEmployed === 'Yes' && s.employmentNature === 'Self-Employed') return true;
+      return false;
+    }).length;
+    
+    const unemployed = filteredSurveys.filter(s => {
+      if (s.isEmployed === 'No' || s.employmentNature === 'Not Currently Employed') return true;
+      return false;
+    }).length;
+    
+    return { employed, selfEmployed, unemployed, total: filteredSurveys.length };
+  }, [filteredSurveys]);
+
   // Login Form
   if (!isAuthenticated) {
     return (
-      <Layout style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', padding: '20px' }}>
-          <Card 
-            style={{ 
-              width: '100%', 
-              maxWidth: '450px',
-              borderRadius: '12px',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
-            }}
-          >
+      <Layout className="admin-page">
+        <div className="admin-login-container">
+          <Card className="admin-login-card">
             <Space direction="vertical" size="large" style={{ width: '100%' }}>
               <div style={{ textAlign: 'center' }}>
-                <Typography.Title level={2}>Admin Login</Typography.Title>
-                <Typography.Text type="secondary">Request OTP to access admin panel</Typography.Text>
+                <Title level={2}>Admin Login</Title>
+                <Text type="secondary">Request OTP to access admin panel</Text>
               </div>
               
               {!otpSent ? (
                 <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                  <Typography.Text>Click the button below to receive a one-time password (OTP) via email.</Typography.Text>
+                  <Text>Click the button below to receive a one-time password (OTP) via email.</Text>
                   <Button 
                     type="primary"
                     size="large"
@@ -770,11 +670,11 @@ function AdminPage() {
                       textAlign: 'center'
                     }}>
                       <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '20px', marginRight: '8px' }} />
-                      <Typography.Text strong>OTP has been sent to your registered email address.</Typography.Text>
+                      <Text strong>OTP has been sent to your registered email address.</Text>
                       <br />
-                      <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
                         Please check your inbox and enter the 6-digit code below.
-                      </Typography.Text>
+                      </Text>
                     </div>
                   </Space>
                   
@@ -829,47 +729,85 @@ function AdminPage() {
     );
   }
 
-  const { Header, Content } = Layout;
-
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ 
-        background: 'linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%)',
-        padding: '16px 24px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '16px'
-      }}>
-        <Space>
-          <Link to="/">
-            <Button type="text" icon={<HomeOutlined />} style={{ color: 'white' }}>
-              Back to Home
-            </Button>
-          </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src="/seal.png" alt="School Seal" style={{ width: '40px', height: '40px' }} />
-            <div>
-              <Title level={4} style={{ color: 'white', margin: 0 }}>Admin Panel</Title>
-              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>Manage BSIT Graduate Survey Data</Text>
+    <Layout className="admin-page" style={{ minHeight: '100vh' }}>
+      <Header className="admin-header">
+        <div className="admin-header-content">
+          <Space>
+            <Link to="/">
+              <Button type="text" icon={<HomeOutlined />} style={{ color: 'white' }}>
+                Home
+              </Button>
+            </Link>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <img src="/seal.png" alt="School Seal" style={{ width: '40px', height: '40px' }} />
+              <div>
+                <Title level={4} className="admin-header-title">Admin Panel</Title>
+                <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>Manage BSIT Graduate Survey Data</Text>
+              </div>
             </div>
+          </Space>
+          <div className="admin-header-actions">
+            <Button 
+              type="text"
+              icon={<LogoutOutlined />}
+              onClick={handleLogout}
+              style={{ color: 'white' }}
+            >
+              Logout
+            </Button>
           </div>
-        </Space>
-        <Button 
-          type="text"
-          icon={<LogoutOutlined />}
-          onClick={handleLogout}
-          style={{ color: 'white' }}
-        >
-          Logout
-        </Button>
+        </div>
       </Header>
 
-      <Content style={{ padding: '24px', background: '#f0f2f5' }}>
+      <Content className="admin-content">
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          {/* Statistics */}
+          <Row gutter={[16, 16]} className="admin-stats">
+            <Col xs={24} sm={12} md={6}>
+              <Card className="admin-stat-card">
+                <Statistic
+                  title="Total Surveys"
+                  value={stats.total}
+                  valueStyle={{ color: '#11823b' }}
+                  prefix={<FileTextOutlined />}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card className="admin-stat-card">
+                <Statistic
+                  title="Employed"
+                  value={stats.employed}
+                  valueStyle={{ color: '#52c41a' }}
+                  prefix={<CheckCircleOutlined />}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card className="admin-stat-card">
+                <Statistic
+                  title="Self-Employed"
+                  value={stats.selfEmployed}
+                  valueStyle={{ color: '#1890ff' }}
+                  prefix={<UserOutlined />}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card className="admin-stat-card">
+                <Statistic
+                  title="Unemployed"
+                  value={stats.unemployed}
+                  valueStyle={{ color: '#faad14' }}
+                  prefix={<UserOutlined />}
+                />
+              </Card>
+            </Col>
+          </Row>
+
           {/* Search and Filters */}
-          <Card>
+          <Card className="admin-filters">
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
               <Input
                 size="large"
@@ -880,8 +818,8 @@ function AdminPage() {
                 allowClear
               />
               
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={8} md={6}>
+              <Row gutter={[16, 16]} className="admin-filters-row">
+                <Col xs={24} sm={12} md={8} className="admin-filter-item">
                   <Select
                     style={{ width: '100%' }}
                     size="large"
@@ -896,7 +834,7 @@ function AdminPage() {
                     <Select.Option value="Unemployed">Unemployed</Select.Option>
                   </Select>
                 </Col>
-                <Col xs={24} sm={8} md={6}>
+                <Col xs={24} sm={12} md={8} className="admin-filter-item">
                   <Select
                     style={{ width: '100%' }}
                     size="large"
@@ -910,7 +848,7 @@ function AdminPage() {
                     <Select.Option value="Female">Female</Select.Option>
                   </Select>
                 </Col>
-                <Col xs={24} sm={8} md={6}>
+                <Col xs={24} sm={12} md={8} className="admin-filter-item">
                   <Select
                     style={{ width: '100%' }}
                     size="large"
@@ -922,20 +860,12 @@ function AdminPage() {
                     <Select.Option value="gender">Sort by Gender</Select.Option>
                   </Select>
                 </Col>
-                <Col xs={24} sm={24} md={6}>
-                  <Statistic
-                    title="Total Surveys"
-                    value={filteredSurveys.length}
-                    suffix={`/ ${surveys.length}`}
-                    valueStyle={{ color: '#11823b' }}
-                  />
-                </Col>
               </Row>
             </Space>
           </Card>
 
           {/* Surveys Content */}
-          <Card bodyStyle={{ padding: '16px' }}>
+          <Card>
             {loading ? (
               <div style={{ textAlign: 'center', padding: '60px 0' }}>
                 <Spin size="large" />
@@ -950,7 +880,6 @@ function AdminPage() {
                   <Space direction="vertical" size="small">
                     <Text strong>No Surveys Yet</Text>
                     <Text type="secondary">There are no survey responses in the database.</Text>
-                    <Text type="secondary">Submit a survey first to see data here.</Text>
                   </Space>
                 }
               >
@@ -981,9 +910,9 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[20, 20]} style={{ width: '100%', margin: 0 }}>
+                <Row gutter={[20, 20]} className="admin-survey-grid">
                   {paginatedSurveys.map((survey, index) => (
-                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6} style={{ width: '100%', maxWidth: '100%' }}>
+                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
                       <SurveyCard 
                         survey={survey} 
                         index={index} 
@@ -995,33 +924,16 @@ function AdminPage() {
                   ))}
                 </Row>
                 
-                {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div style={{ 
-                    display: 'flex', 
-                    justifyContent: 'center', 
-                    alignItems: 'center',
-                    marginTop: '24px',
-                    gap: '16px',
-                    flexWrap: 'wrap'
-                  }}>
-                    <Button
-                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </Button>
-                    
-                    <Text>
-                      Page <Text strong>{currentPage}</Text> of <Text strong>{totalPages}</Text>
-                    </Text>
-                    
-                    <Button
-                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </Button>
+                  <div className="admin-pagination">
+                    <Pagination
+                      current={currentPage}
+                      total={filteredSurveys.length}
+                      pageSize={ITEMS_PER_PAGE}
+                      onChange={setCurrentPage}
+                      showSizeChanger={false}
+                      showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} surveys`}
+                    />
                   </div>
                 )}
               </>
@@ -1052,7 +964,7 @@ function AdminPage() {
                 <Button size="large">View Dashboard</Button>
               </Link>
               <Button 
-                icon={<UserOutlined />}
+                icon={<ReloadOutlined />}
                 onClick={fetchSurveys}
                 size="large"
               >
@@ -1071,7 +983,7 @@ function AdminPage() {
             </Space>
           </Card>
 
-          {/* Notification System Section */}
+          {/* Notification Modal */}
           {showNotifications && (
             <Card 
               title={
@@ -1199,7 +1111,6 @@ function AdminPage() {
                 
                 <Divider />
                 
-                {/* Notification History Section */}
                 <Card 
                   size="small"
                   title={
@@ -1211,7 +1122,7 @@ function AdminPage() {
                   extra={
                     <Button 
                       type="text"
-                      icon={<UserOutlined />}
+                      icon={<ReloadOutlined />}
                       onClick={fetchNotificationHistory}
                       loading={loadingHistory}
                     >
@@ -1269,7 +1180,7 @@ function AdminPage() {
             </Card>
           )}
 
-          {/* Technical Support Reports Section */}
+          {/* Technical Support Reports */}
           {showReports && (
             <Card
               title={
@@ -1282,7 +1193,7 @@ function AdminPage() {
                 </Space>
               }
               extra={
-                <Button type="text" icon={<UserOutlined />} onClick={fetchReports}>
+                <Button type="text" icon={<ReloadOutlined />} onClick={fetchReports}>
                   Refresh
                 </Button>
               }
@@ -1379,9 +1290,8 @@ function AdminPage() {
   );
 }
 
-// Survey Card Component (Memoized for performance)
+// Survey Card Component
 const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
-  // Determine status
   let surveyStatus = '';
   if (survey.isEmployed === 'Yes') {
     if (survey.employmentNature === 'Self-Employed') {
@@ -1414,45 +1324,9 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
   };
   
   return (
-    <>
-      <style>{`
-        .survey-card-${index} * {
-          word-break: normal !important;
-          overflow-wrap: normal !important;
-          white-space: normal !important;
-          hyphens: none !important;
-          -webkit-hyphens: none !important;
-          -ms-hyphens: none !important;
-        }
-        .survey-card-${index} h4,
-        .survey-card-${index} div,
-        .survey-card-${index} span {
-          word-break: normal !important;
-          overflow-wrap: normal !important;
-          white-space: normal !important;
-        }
-      `}</style>
-      <Card
-        className={`survey-card-${index}`}
-        hoverable
-        style={{ 
-          marginBottom: '0',
-          width: '100%',
-          maxWidth: '100%',
-          borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          overflow: 'visible'
-        }}
-        bodyStyle={{ 
-          padding: '20px',
-          wordBreak: 'normal',
-          overflowWrap: 'normal',
-          whiteSpace: 'normal',
-          overflow: 'visible',
-          maxWidth: '100%',
-          width: '100%',
-          minWidth: 0
-        }}
+    <Card
+      className="admin-survey-card"
+      hoverable
       actions={[
         <Button
           key="download"
@@ -1474,193 +1348,51 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         />
       ]}
     >
-      <div style={{ width: '100%', boxSizing: 'border-box' }}>
-        {/* Name and Status */}
-        <div style={{ width: '100%', marginBottom: '16px', boxSizing: 'border-box' }}>
-          <div style={{ 
-            margin: 0, 
-            marginBottom: '12px',
-            wordBreak: 'normal',
-            overflowWrap: 'normal',
-            whiteSpace: 'normal',
-            lineHeight: '1.5',
-            color: '#11823b',
-            width: '100%',
-            maxWidth: '100%',
-            fontSize: '18px',
-            fontWeight: '600',
-            display: 'block',
-            boxSizing: 'border-box',
-            hyphens: 'none',
-            WebkitHyphens: 'none',
-            MsHyphens: 'none'
-          }}>
-            {survey.name || 'N/A'}
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '4px', width: '100%' }}>
-            <span style={{ 
-              fontSize: '13px', 
-              padding: '4px 12px', 
-              whiteSpace: 'nowrap', 
-              wordBreak: 'normal',
-              overflowWrap: 'normal',
-              flexShrink: 0,
-              display: 'inline-block',
-              backgroundColor: getStatusTagColor(surveyStatus) === 'green' ? '#f6ffed' : getStatusTagColor(surveyStatus) === 'blue' ? '#e6f7ff' : '#fff7e6',
-              color: getStatusTagColor(surveyStatus) === 'green' ? '#52c41a' : getStatusTagColor(surveyStatus) === 'blue' ? '#1890ff' : '#faad14',
-              border: `1px solid ${getStatusTagColor(surveyStatus) === 'green' ? '#b7eb8f' : getStatusTagColor(surveyStatus) === 'blue' ? '#91d5ff' : '#ffe58f'}`,
-              borderRadius: '4px'
-            }}>
-              {surveyStatus || 'N/A'}
-            </span>
-            {survey.isAlumni === 'Yes' && (
-              <span style={{ 
-                fontSize: '13px', 
-                padding: '4px 12px', 
-                whiteSpace: 'nowrap', 
-                wordBreak: 'normal',
-                overflowWrap: 'normal',
-                flexShrink: 0,
-                display: 'inline-block',
-                backgroundColor: '#fffbe6',
-                color: '#faad14',
-                border: '1px solid #ffe58f',
-                borderRadius: '4px'
-              }}>
-                Alumni
-              </span>
-            )}
-            {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
-              <span style={{ 
-                fontSize: '13px', 
-                padding: '4px 12px', 
-                whiteSpace: 'nowrap', 
-                wordBreak: 'normal',
-                overflowWrap: 'normal',
-                flexShrink: 0,
-                display: 'inline-block',
-                backgroundColor: '#e6fffb',
-                color: '#13c2c2',
-                border: '1px solid #87e8de',
-                borderRadius: '4px'
-              }}>
-                Wants to Register
-              </span>
-            )}
-            {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
-              <span style={{ 
-                fontSize: '13px', 
-                padding: '4px 12px', 
-                whiteSpace: 'nowrap', 
-                wordBreak: 'normal',
-                overflowWrap: 'normal',
-                flexShrink: 0,
-                display: 'inline-block',
-                backgroundColor: '#fafafa',
-                color: '#595959',
-                border: '1px solid #d9d9d9',
-                borderRadius: '4px'
-              }}>
-                Not Alumni
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Key Information */}
-        <div style={{ width: '100%', boxSizing: 'border-box' }}>
-          <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
-            <div style={{ 
-              display: 'block',
-              wordBreak: 'normal',
-              overflowWrap: 'normal',
-              whiteSpace: 'normal',
-              fontSize: '14px',
-              lineHeight: '1.6',
-              color: '#8c8c8c',
-              width: '100%',
-              maxWidth: '100%',
-              boxSizing: 'border-box',
-              hyphens: 'none',
-              WebkitHyphens: 'none',
-              MsHyphens: 'none'
-            }}>
-              <strong style={{ color: '#595959' }}>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
-            </div>
-          </div>
-          <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
-            <div style={{ 
-              display: 'block',
-              wordBreak: 'normal',
-              overflowWrap: 'normal',
-              whiteSpace: 'normal',
-              fontSize: '14px',
-              lineHeight: '1.6',
-              color: '#8c8c8c',
-              width: '100%',
-              maxWidth: '100%',
-              boxSizing: 'border-box',
-              hyphens: 'none',
-              WebkitHyphens: 'none',
-              MsHyphens: 'none'
-            }}>
-              <strong style={{ color: '#595959' }}>Gender:</strong> {survey.sex || 'N/A'}
-            </div>
-          </div>
-          <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
-            <div style={{ 
-              display: 'block',
-              wordBreak: 'normal',
-              overflowWrap: 'normal',
-              whiteSpace: 'normal',
-              fontSize: '14px',
-              lineHeight: '1.6',
-              color: '#8c8c8c',
-              width: '100%',
-              maxWidth: '100%',
-              boxSizing: 'border-box',
-              hyphens: 'none',
-              WebkitHyphens: 'none',
-              MsHyphens: 'none'
-            }}>
-              <strong style={{ color: '#595959' }}>Email:</strong> <span style={{ wordBreak: 'normal', overflowWrap: 'normal', whiteSpace: 'normal' }}>{survey.emailAddress || 'N/A'}</span>
-            </div>
-          </div>
-          {survey.jobTitle && (
-            <div style={{ padding: '8px 0', width: '100%', boxSizing: 'border-box' }}>
-              <div style={{ 
-                display: 'block',
-                wordBreak: 'normal',
-                overflowWrap: 'normal',
-                whiteSpace: 'normal',
-                fontSize: '14px',
-                lineHeight: '1.6',
-                color: '#8c8c8c',
-                width: '100%',
-                maxWidth: '100%',
-                boxSizing: 'border-box',
-                hyphens: 'none',
-                WebkitHyphens: 'none',
-                MsHyphens: 'none'
-              }}>
-                <strong style={{ color: '#595959' }}>Job:</strong> {survey.jobTitle}
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="admin-survey-name">
+        {survey.name || 'N/A'}
       </div>
       
-      <Divider style={{ margin: '20px 0' }} />
+      <div className="admin-survey-tags">
+        <Tag color={getStatusTagColor(surveyStatus)} className="admin-survey-tag">
+          {surveyStatus || 'N/A'}
+        </Tag>
+        {survey.isAlumni === 'Yes' && (
+          <Tag color="gold" className="admin-survey-tag">Alumni</Tag>
+        )}
+        {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
+          <Tag color="cyan" className="admin-survey-tag">Wants to Register</Tag>
+        )}
+        {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
+          <Tag className="admin-survey-tag">Not Alumni</Tag>
+        )}
+      </div>
+
+      <div className="admin-survey-info">
+        <strong>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
+      </div>
+      <div className="admin-survey-info">
+        <strong>Gender:</strong> {survey.sex || 'N/A'}
+      </div>
+      <div className="admin-survey-info">
+        <strong>Email:</strong> {survey.emailAddress || 'N/A'}
+      </div>
+      {survey.jobTitle && (
+        <div className="admin-survey-info">
+          <strong>Job:</strong> {survey.jobTitle}
+        </div>
+      )}
+      
+      <Divider style={{ margin: '16px 0' }} />
       <Collapse 
         ghost
         items={[
           {
             key: '1',
-            label: <Text strong style={{ fontSize: '15px' }}>View Full Details</Text>,
+            label: <Text strong>View Full Details</Text>,
             children: (
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Personal Information" style={{ marginBottom: '16px' }}>
+                  <Card size="small" title="Personal Information">
                     <Space direction="vertical" size="small" style={{ width: '100%' }}>
                       <Text><strong>Name:</strong> {survey.name || 'N/A'}</Text>
                       <Text><strong>Email:</strong> {survey.emailAddress || 'N/A'}</Text>
@@ -1676,7 +1408,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
                 </Col>
                 
                 <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Education" style={{ marginBottom: '16px' }}>
+                  <Card size="small" title="Education">
                     <Space direction="vertical" size="small" style={{ width: '100%' }}>
                       <Text><strong>Course Graduated:</strong> {survey.courseGraduated || 'N/A'}</Text>
                       <Text><strong>School Year Graduated:</strong> {survey.schoolYearGraduated || 'N/A'}</Text>
@@ -1690,7 +1422,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
                 </Col>
                 
                 <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Employment" style={{ marginBottom: '16px' }}>
+                  <Card size="small" title="Employment">
                     <Space direction="vertical" size="small" style={{ width: '100%' }}>
                       <Text><strong>Is Employed:</strong> {survey.isEmployed || 'N/A'}</Text>
                       <Text><strong>Employment Nature:</strong> {survey.employmentNature || 'N/A'}</Text>
@@ -1705,7 +1437,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
                 </Col>
                 
                 <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Alumni & Ratings" style={{ marginBottom: '16px' }}>
+                  <Card size="small" title="Alumni & Ratings">
                     <Space direction="vertical" size="small" style={{ width: '100%' }}>
                       <Text><strong>Is Alumni:</strong> {survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}</Text>
                       {survey.isAlumni !== 'Yes' && (
@@ -1721,7 +1453,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
                 
                 {survey.systemEvaluation && (
                   <Col xs={24} sm={24} md={24}>
-                    <Card size="small" title="System Evaluation" style={{ marginBottom: '16px' }}>
+                    <Card size="small" title="System Evaluation">
                       {survey.systemEvaluation.functionality && (
                         <div style={{ marginBottom: '15px' }}>
                           <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</Title>
@@ -1771,7 +1503,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
                 
                 {survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0 && (
                   <Col xs={24} sm={24} md={24}>
-                    <Card size="small" title="Trainings" style={{ marginBottom: '16px' }}>
+                    <Card size="small" title="Trainings">
                       {survey.trainings.map((training, idx) => (
                         <Card key={idx} size="small" style={{ marginBottom: '8px' }}>
                           <Space direction="vertical" size="small">
@@ -1789,11 +1521,8 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
           },
         ]}
       />
-      </Card>
-    </>
+    </Card>
   );
 });
 
 export default AdminPage;
-
- 
