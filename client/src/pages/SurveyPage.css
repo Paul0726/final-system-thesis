@@ -2,10 +2,11 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
   background-attachment: fixed;
-  padding: var(--spacing-lg);
+  padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
   width: 100%;
   overflow-x: hidden;
   position: relative;
+  box-sizing: border-box;
 }
 
 .survey-page::before {
@@ -27,19 +28,15 @@
   will-change: opacity, transform;
 }
 
-/* AGGRESSIVE MOBILE OPTIMIZATIONS - Disable ALL effects */
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
-  .survey-page::before {
-    display: none !important;
-  }
-  
+/* UNIVERSAL: Disable heavy effects for performance */
+@media (prefers-reduced-motion: reduce) {
+  .survey-page::before,
   .survey-page::after {
     display: none !important;
   }
   
   .survey-page {
     background-attachment: scroll !important;
-    background: var(--primary-green) !important;
   }
   
   .form-container,
@@ -49,46 +46,9 @@
     background: rgba(255, 255, 255, 0.95) !important;
   }
   
-  /* Disable all transitions */
   * {
     transition: none !important;
     animation: none !important;
-  }
-  
-  /* Fix button text colors on mobile */
-  button {
-    color: #ffffff !important;
-    -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
-    touch-action: manipulation;
-    user-select: none;
-  }
-  
-  .btn-primary,
-  .btn-submit,
-  .btn-cancel {
-    color: #ffffff !important;
-    background-color: var(--primary-green) !important;
-  }
-  
-  .btn-secondary {
-    color: var(--primary-green) !important;
-    background-color: var(--bg-white) !important;
-  }
-  
-  button:disabled {
-    color: var(--text-lighter-gray) !important;
-    background-color: var(--bg-gray-light) !important;
-  }
-  
-  /* Fix text readability */
-  .form-container,
-  .validation-modal {
-    color: var(--text-dark) !important;
-  }
-  
-  label {
-    color: var(--text-dark) !important;
-    font-weight: 500 !important;
   }
 }
 
@@ -316,31 +276,42 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 30vw, 400px), 1fr));
+  gap: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group {
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: clamp(var(--spacing-md), 2vw, var(--spacing-xl));
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group label {
   display: block;
   color: var(--text-dark);
   font-weight: 700;
-  margin-bottom: var(--spacing-sm);
-  font-size: 1rem;
+  margin-bottom: clamp(0.25rem, 0.5vw, var(--spacing-sm));
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
   letter-spacing: -0.2px;
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.875rem 1.125rem;
+  padding: clamp(0.75rem, 1.2vw, 0.875rem) clamp(1rem, 1.5vw, 1.125rem);
   border: 2px solid var(--border-gray);
   border-radius: var(--radius-lg);
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  box-sizing: border-box;
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
   font-family: inherit;
   transition: all var(--transition-base);
   background: var(--bg-white) !important;
