@@ -1461,7 +1461,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
             style={{ 
               margin: 0, 
               marginBottom: '12px',
-              wordBreak: 'break-word',
+              wordBreak: 'normal',
               overflowWrap: 'break-word',
               whiteSpace: 'normal',
               lineHeight: '1.5',
@@ -1474,20 +1474,20 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
           >
             {survey.name || 'N/A'}
           </Title>
-          <Space wrap size={[8, 8]} style={{ width: '100%', marginBottom: '4px' }}>
-            <Tag color={getStatusTagColor(surveyStatus)} style={{ fontSize: '13px', padding: '4px 12px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
+            <Tag color={getStatusTagColor(surveyStatus)} style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal' }}>
               {surveyStatus || 'N/A'}
             </Tag>
             {survey.isAlumni === 'Yes' && (
-              <Tag color="gold" style={{ fontSize: '13px', padding: '4px 12px' }}>Alumni</Tag>
+              <Tag color="gold" style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal' }}>Alumni</Tag>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
-              <Tag color="cyan" style={{ fontSize: '13px', padding: '4px 12px' }}>Wants to Register</Tag>
+              <Tag color="cyan" style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal' }}>Wants to Register</Tag>
             )}
             {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
-              <Tag style={{ fontSize: '13px', padding: '4px 12px' }}>Not Alumni</Tag>
+              <Tag style={{ fontSize: '13px', padding: '4px 12px', whiteSpace: 'nowrap', wordBreak: 'normal' }}>Not Alumni</Tag>
             )}
-          </Space>
+          </div>
         </div>
 
         {/* Key Information */}
@@ -1497,7 +1497,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
               type="secondary" 
               style={{ 
                 display: 'block',
-                wordBreak: 'break-word',
+                wordBreak: 'normal',
                 overflowWrap: 'break-word',
                 whiteSpace: 'normal',
                 fontSize: '14px',

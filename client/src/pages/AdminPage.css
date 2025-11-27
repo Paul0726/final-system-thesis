@@ -536,7 +536,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: fit-content;
-  word-break: keep-all;
+  word-break: normal;
   box-sizing: border-box;
   touch-action: manipulation;
 }
@@ -581,7 +581,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: fit-content;
-  word-break: keep-all;
+  word-break: normal;
   box-sizing: border-box;
   touch-action: manipulation;
 }
@@ -630,7 +630,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: fit-content;
-  word-break: keep-all;
+  word-break: normal;
   box-sizing: border-box;
   touch-action: manipulation;
 }
@@ -1313,7 +1313,7 @@
   text-overflow: ellipsis;
   min-width: fit-content;
   max-width: 100%;
-  word-break: keep-all;
+  word-break: normal;
 }
 
 .btn-send-notification:hover:not(:disabled) {
@@ -1358,7 +1358,7 @@
   text-overflow: ellipsis;
   min-width: fit-content;
   max-width: 100%;
-  word-break: keep-all;
+  word-break: normal;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1392,7 +1392,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: fit-content;
-  word-break: keep-all;
+  word-break: normal;
   box-sizing: border-box;
 }
 
@@ -1501,7 +1501,7 @@
   word-wrap: break-word;
 }
 
-/* Fix text breaking in Ant Design Cards - AGGRESSIVE FIXES */
+/* Fix text breaking in Ant Design Cards - ULTRA AGGRESSIVE FIXES */
 .ant-card {
   width: 100% !important;
   max-width: 100% !important;
@@ -1509,7 +1509,7 @@
 }
 
 .ant-card-body {
-  word-break: break-word !important;
+  word-break: normal !important;
   overflow-wrap: break-word !important;
   white-space: normal !important;
   overflow: visible !important;
@@ -1519,7 +1519,7 @@
 }
 
 .ant-card-body * {
-  word-break: break-word !important;
+  word-break: normal !important;
   overflow-wrap: break-word !important;
   white-space: normal !important;
   text-overflow: clip !important;
@@ -1529,34 +1529,55 @@
 .ant-card-body h4,
 .ant-card-body h5,
 .ant-card-body .ant-typography,
-.ant-card-body .ant-typography-title {
-  word-break: break-word !important;
+.ant-card-body .ant-typography-title,
+.ant-card-body .ant-typography-title h4,
+.ant-card-body .ant-typography-title h5 {
+  word-break: normal !important;
   overflow-wrap: break-word !important;
   white-space: normal !important;
   hyphens: none !important;
+  -webkit-hyphens: none !important;
+  -ms-hyphens: none !important;
   text-overflow: clip !important;
   overflow: visible !important;
   width: 100% !important;
   max-width: 100% !important;
+  line-height: 1.5 !important;
 }
 
 .ant-card-body .ant-tag {
   white-space: normal !important;
   word-break: normal !important;
+  overflow-wrap: normal !important;
   text-overflow: clip !important;
   overflow: visible !important;
   max-width: 100% !important;
+  display: inline-block !important;
+  line-height: 1.5 !important;
 }
 
 .ant-card-body .ant-space-item {
-  width: 100% !important;
+  width: auto !important;
   max-width: 100% !important;
   overflow: visible !important;
+  word-break: normal !important;
+  white-space: normal !important;
 }
 
 .ant-card-body .ant-space {
   width: 100% !important;
   max-width: 100% !important;
+  word-break: normal !important;
+}
+
+/* Fix for Space wrap */
+.ant-card-body .ant-space.ant-space-wrap {
+  word-break: normal !important;
+}
+
+.ant-card-body .ant-space.ant-space-wrap .ant-space-item {
+  word-break: normal !important;
+  white-space: normal !important;
 }
 
 /* Improve card spacing and layout */
