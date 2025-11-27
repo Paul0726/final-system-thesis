@@ -981,9 +981,9 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[12, 12]}>
+                <Row gutter={[16, 16]}>
                   {paginatedSurveys.map((survey, index) => (
-                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
+                    <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6} style={{ minWidth: '280px' }}>
                       <SurveyCard 
                         survey={survey} 
                         index={index} 
@@ -1419,9 +1419,14 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
       style={{ 
         marginBottom: '0',
         width: '100%',
-        borderRadius: '8px'
+        borderRadius: '8px',
+        minWidth: '280px'
       }}
-      bodyStyle={{ padding: '16px' }}
+      bodyStyle={{ 
+        padding: '16px',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word'
+      }}
       actions={[
         <Button
           key="download"
@@ -1445,11 +1450,21 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         {/* Name and Status */}
-        <div>
-          <Title level={5} style={{ margin: 0, marginBottom: '8px' }}>
+        <div style={{ width: '100%', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+          <Title 
+            level={5} 
+            style={{ 
+              margin: 0, 
+              marginBottom: '8px',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
+              lineHeight: '1.4'
+            }}
+          >
             {survey.name || 'N/A'}
           </Title>
-          <Space wrap size={[8, 8]}>
+          <Space wrap size={[8, 8]} style={{ width: '100%' }}>
             <Tag color={getStatusTagColor(surveyStatus)}>{surveyStatus || 'N/A'}</Tag>
             {survey.isAlumni === 'Yes' && (
               <Tag color="gold">Alumni</Tag>
@@ -1465,17 +1480,50 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
 
         {/* Key Information */}
         <Space direction="vertical" size="small" style={{ width: '100%' }}>
-          <Text type="secondary" style={{ display: 'block' }}>
+          <Text 
+            type="secondary" 
+            style={{ 
+              display: 'block',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal'
+            }}
+          >
             <strong>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
           </Text>
-          <Text type="secondary" style={{ display: 'block' }}>
+          <Text 
+            type="secondary" 
+            style={{ 
+              display: 'block',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal'
+            }}
+          >
             <strong>Gender:</strong> {survey.sex || 'N/A'}
           </Text>
-          <Text type="secondary" style={{ display: 'block', wordBreak: 'break-word' }}>
+          <Text 
+            type="secondary" 
+            style={{ 
+              display: 'block',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
+              hyphens: 'auto'
+            }}
+          >
             <strong>Email:</strong> {survey.emailAddress || 'N/A'}
           </Text>
           {survey.jobTitle && (
-            <Text type="secondary" style={{ display: 'block' }}>
+            <Text 
+              type="secondary" 
+              style={{ 
+                display: 'block',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                whiteSpace: 'normal'
+              }}
+            >
               <strong>Job:</strong> {survey.jobTitle}
             </Text>
           )}

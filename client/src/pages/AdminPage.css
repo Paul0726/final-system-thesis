@@ -1501,6 +1501,32 @@
   word-wrap: break-word;
 }
 
+/* Fix text breaking in Ant Design Cards */
+.ant-card-body {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+}
+
+.ant-card-body * {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+}
+
+.ant-card-body h5,
+.ant-card-body .ant-typography {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  hyphens: none !important;
+}
+
+.ant-card-body .ant-tag {
+  white-space: normal !important;
+  word-break: normal !important;
+}
+
 @media (max-width: 768px) {
   .notifications-section {
     padding: var(--spacing-lg);
