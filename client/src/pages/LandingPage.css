@@ -151,6 +151,73 @@
   border-radius: var(--radius-full);
 }
 
+/* Maintenance Notice */
+.maintenance-notice {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  padding: clamp(var(--spacing-md), 2vw, var(--spacing-xl));
+  border-radius: var(--radius-xl);
+  margin: 0 auto var(--spacing-xl);
+  max-width: 900px;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
+  box-shadow: 
+    0 8px 24px rgba(245, 158, 11, 0.3),
+    0 0 0 2px rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  animation: fadeInDown 0.6s ease-out 0.3s both;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.maintenance-icon {
+  flex-shrink: 0;
+  width: clamp(40px, 5vw, 56px);
+  height: clamp(40px, 5vw, 56px);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.5rem, 1vw, 0.75rem);
+  box-sizing: border-box;
+}
+
+.maintenance-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: #ffffff;
+}
+
+.maintenance-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.maintenance-content h3 {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  margin: 0 0 clamp(0.5rem, 1vw, var(--spacing-sm)) 0;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.maintenance-content p {
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.6;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .landing-header h1 {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   margin-bottom: var(--spacing-md);
