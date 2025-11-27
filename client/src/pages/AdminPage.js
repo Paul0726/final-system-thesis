@@ -42,6 +42,9 @@ import {
 } from '@ant-design/icons';
 import './AdminPage.css';
 
+// Destructure Typography components at module level
+const { Title, Text } = Typography;
+
 const API_URL = process.env.NODE_ENV === 'production' 
   ? '/api' 
   : 'http://localhost:3000/api';
@@ -830,7 +833,6 @@ function AdminPage() {
   }
 
   const { Header, Content } = Layout;
-  const { Title, Text } = Typography;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -1087,210 +1089,186 @@ function AdminPage() {
                 </Button>
               }
             >
-            <div className="notifications-header">
-              <h2>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" style={{ marginRight: '10px', verticalAlign: 'middle' }}>
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                  <path d="M21 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path>
-                </svg>
-                Send Notification to Respondents
-              </h2>
-              <button 
-                onClick={toggleNotifications}
-                className="btn-close"
-                title="Close"
-              >
-                ×
-              </button>
-            </div>
-            
-            {notificationSuccess && (
-              <div className="notification-success-message">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                Notification sent successfully!
-              </div>
-            )}
-            
-            <div className="notification-form">
-              <div className="form-group">
-                <label htmlFor="notification-subject">
-                  Subject <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  id="notification-subject"
-                  value={notificationSubject}
-                  onChange={(e) => setNotificationSubject(e.target.value)}
-                  placeholder="e.g., Important: Please Complete Additional Survey"
-                  className="form-input"
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="notification-message">
-                  Message <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <textarea
-                  id="notification-message"
-                  value={notificationMessage}
-                  onChange={(e) => setNotificationMessage(e.target.value)}
-                  placeholder="Enter your message here. This will be sent to selected respondents via email."
-                  className="form-textarea"
-                  rows="8"
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="recipient-filter">
-                  Send To <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <select
-                  id="recipient-filter"
-                  value={recipientFilter}
-                  onChange={(e) => {
-                    setRecipientFilter(e.target.value);
-                    if (e.target.value !== 'by-year') {
-                      setSelectedYear('');
+              <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                {notificationSuccess && (
+                  <div style={{ 
+                    padding: '12px', 
+                    background: '#f6ffed', 
+                    border: '1px solid #b7eb8f', 
+                    borderRadius: '6px',
+                    textAlign: 'center'
+                  }}>
+                    <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '20px', marginRight: '8px' }} />
+                    <Text strong>Notification sent successfully!</Text>
+                  </div>
+                )}
+                
+                <Form layout="vertical">
+                  <Form.Item 
+                    label={
+                      <span>
+                        Subject <Text type="danger">*</Text>
+                      </span>
                     }
-                  }}
-                  className="form-select"
-                >
-                  <option value="all">All Respondents</option>
-                  <option value="employed">Employed Only</option>
-                  <option value="unemployed">Unemployed Only</option>
-                  <option value="self-employed">Self-Employed Only</option>
-                  <option value="by-year">By Graduation Year</option>
-                </select>
-              </div>
-              
-              {recipientFilter === 'by-year' && (
-                <div className="form-group">
-                  <label htmlFor="selected-year">
-                    Graduation Year <span style={{ color: '#ef4444' }}>*</span>
-                  </label>
-                  <select
-                    id="selected-year"
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    className="form-select"
-                    required
                   >
-                    <option value="">Select Year</option>
-                    {availableYears.map(year => (
-                      <option key={year} value={year}>{year}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              
-              <div className="notification-actions">
-                <button
-                  onClick={handleSendNotification}
-                  disabled={sendingNotification || !notificationSubject.trim() || !notificationMessage.trim() || (recipientFilter === 'by-year' && !selectedYear)}
-                  className="btn-send-notification"
-                >
-                  {sendingNotification ? (
-                    <>
-                      <svg className="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                        <circle cx="12" cy="12" r="10" strokeOpacity="0.25"></circle>
-                        <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round"></path>
-                      </svg>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                      </svg>
-                      Send Notification
-                    </>
+                    <Input
+                      size="large"
+                      value={notificationSubject}
+                      onChange={(e) => setNotificationSubject(e.target.value)}
+                      placeholder="e.g., Important: Please Complete Additional Survey"
+                    />
+                  </Form.Item>
+                  
+                  <Form.Item 
+                    label={
+                      <span>
+                        Message <Text type="danger">*</Text>
+                      </span>
+                    }
+                  >
+                    <Input.TextArea
+                      rows={8}
+                      value={notificationMessage}
+                      onChange={(e) => setNotificationMessage(e.target.value)}
+                      placeholder="Enter your message here. This will be sent to selected respondents via email."
+                    />
+                  </Form.Item>
+                  
+                  <Form.Item 
+                    label={
+                      <span>
+                        Send To <Text type="danger">*</Text>
+                      </span>
+                    }
+                  >
+                    <Select
+                      size="large"
+                      value={recipientFilter}
+                      onChange={(value) => {
+                        setRecipientFilter(value);
+                        if (value !== 'by-year') {
+                          setSelectedYear('');
+                        }
+                      }}
+                    >
+                      <Select.Option value="all">All Respondents</Select.Option>
+                      <Select.Option value="employed">Employed Only</Select.Option>
+                      <Select.Option value="unemployed">Unemployed Only</Select.Option>
+                      <Select.Option value="self-employed">Self-Employed Only</Select.Option>
+                      <Select.Option value="by-year">By Graduation Year</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  
+                  {recipientFilter === 'by-year' && (
+                    <Form.Item 
+                      label={
+                        <span>
+                          Graduation Year <Text type="danger">*</Text>
+                        </span>
+                      }
+                    >
+                      <Select
+                        size="large"
+                        value={selectedYear}
+                        onChange={setSelectedYear}
+                        placeholder="Select Year"
+                      >
+                        {availableYears.map(year => (
+                          <Select.Option key={year} value={year}>{year}</Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
                   )}
-                </button>
-                <button
-                  onClick={toggleNotifications}
-                  className="btn-cancel"
+                  
+                  <Space>
+                    <Button
+                      type="primary"
+                      size="large"
+                      icon={<BellOutlined />}
+                      onClick={handleSendNotification}
+                      loading={sendingNotification}
+                      disabled={!notificationSubject.trim() || !notificationMessage.trim() || (recipientFilter === 'by-year' && !selectedYear)}
+                    >
+                      Send Notification
+                    </Button>
+                    <Button
+                      size="large"
+                      onClick={toggleNotifications}
+                    >
+                      Cancel
+                    </Button>
+                  </Space>
+                </Form>
+                
+                <Divider />
+                
+                {/* Notification History Section */}
+                <Card 
+                  size="small"
+                  title={
+                    <Space>
+                      <FileTextOutlined />
+                      <span>Notification History</span>
+                    </Space>
+                  }
+                  extra={
+                    <Button 
+                      type="text"
+                      icon={<UserOutlined />}
+                      onClick={fetchNotificationHistory}
+                      loading={loadingHistory}
+                    >
+                      Refresh
+                    </Button>
+                  }
                 >
-                  Cancel
-                </button>
-              </div>
-            </div>
-            
-            {/* Notification History Section */}
-            <div className="notification-history-section">
-              <div className="notification-history-header">
-                <h3>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
-                  </svg>
-                  Notification History
-                </h3>
-                <button 
-                  onClick={fetchNotificationHistory} 
-                  className="btn-refresh-small" 
-                  title="Refresh history"
-                  disabled={loadingHistory}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                    <polyline points="23 4 23 10 17 10"></polyline>
-                    <polyline points="1 20 1 14 7 14"></polyline>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                  </svg>
-                </button>
-              </div>
-              
-              {loadingHistory ? (
-                <div className="loading-message">Loading history...</div>
-              ) : notificationHistory.length === 0 ? (
-                <div className="empty-message">No notification history yet.</div>
-              ) : (
-                <div className="notification-history-list">
-                  {notificationHistory.map((item) => (
-                    <div key={item.id} className="notification-history-item">
-                      <div className="history-item-header">
-                        <div className="history-item-meta">
-                          <h4>{item.subject}</h4>
-                          <div className="history-item-details">
-                            <span className="history-badge">
-                              {item.recipient_filter === 'all' ? 'All Respondents' :
-                               item.recipient_filter === 'employed' ? 'Employed Only' :
-                               item.recipient_filter === 'unemployed' ? 'Unemployed Only' :
-                               item.recipient_filter === 'self-employed' ? 'Self-Employed Only' :
-                               item.recipient_filter === 'by-year' ? `Year: ${item.selected_year || 'N/A'}` :
-                               item.recipient_filter}
-                            </span>
-                            <span className="history-recipient-count">
-                              {item.recipient_count} recipient{item.recipient_count !== 1 ? 's' : ''}
-                            </span>
-                            <span className="history-date">
-                              {new Date(item.sent_at).toLocaleString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="history-item-message">
-                        <p>{item.message}</p>
+                  {loadingHistory ? (
+                    <div style={{ textAlign: 'center', padding: '20px' }}>
+                      <Spin />
+                      <div style={{ marginTop: '8px' }}>
+                        <Text>Loading history...</Text>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  ) : notificationHistory.length === 0 ? (
+                    <Empty description="No notification history yet." />
+                  ) : (
+                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                      {notificationHistory.map((item) => (
+                        <Card key={item.id} size="small">
+                          <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                            <div>
+                              <Title level={5}>{item.subject}</Title>
+                              <Space wrap>
+                                <Tag>
+                                  {item.recipient_filter === 'all' ? 'All Respondents' :
+                                   item.recipient_filter === 'employed' ? 'Employed Only' :
+                                   item.recipient_filter === 'unemployed' ? 'Unemployed Only' :
+                                   item.recipient_filter === 'self-employed' ? 'Self-Employed Only' :
+                                   item.recipient_filter === 'by-year' ? `Year: ${item.selected_year || 'N/A'}` :
+                                   item.recipient_filter}
+                                </Tag>
+                                <Text type="secondary">
+                                  {item.recipient_count} recipient{item.recipient_count !== 1 ? 's' : ''}
+                                </Text>
+                                <Text type="secondary">
+                                  {new Date(item.sent_at).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </Text>
+                              </Space>
+                            </div>
+                            <Text>{item.message}</Text>
+                          </Space>
+                        </Card>
+                      ))}
+                    </Space>
+                  )}
+                </Card>
+              </Space>
             </Card>
           )}
 
@@ -1312,82 +1290,90 @@ function AdminPage() {
                 </Button>
               }
             >
-            <div className="reports-header">
-              <h2>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" style={{ marginRight: '10px', verticalAlign: 'middle' }}>
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  <line x1="9" y1="10" x2="15" y2="10"></line>
-                  <line x1="9" y1="14" x2="13" y2="14"></line>
-                </svg>
-                Technical Support Reports
-                {unreadCount > 0 && (
-                  <span className="reports-count">({unreadCount} unread)</span>
-                )}
-              </h2>
-              <button onClick={fetchReports} className="btn-refresh-small" title="Refresh reports">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                  <polyline points="23 4 23 10 17 10"></polyline>
-                  <polyline points="1 20 1 14 7 14"></polyline>
-                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-              </button>
-            </div>
-
-            {reportsLoading ? (
-              <div className="loading-message">Loading reports...</div>
-            ) : reports.length === 0 ? (
-              <div className="empty-message">No reports yet.</div>
-            ) : (
-              <div className="reports-list">
-                {reports.map((report) => (
-                  <div key={report.id} className={`report-card ${!report.is_read ? 'unread' : ''}`}>
-                    <div className="report-header">
-                      <div className="report-meta">
-                        <div className="report-priority">
-                          <span className={`priority-badge priority-${report.priority?.toLowerCase() || 'medium'}`}>
-                            {report.priority || 'Medium'}
-                          </span>
-                          <span className="report-type">{report.issue_type}</span>
-                        </div>
-                        <div className="report-date">
-                          {new Date(report.created_at).toLocaleString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </div>
-                      </div>
-                      {!report.is_read && (
-                        <span className="unread-indicator">New</span>
-                      )}
-                    </div>
-                    <div className="report-content">
-                      <h3>{report.subject}</h3>
-                      <div className="report-info">
-                        <p><strong>Reporter:</strong> {report.name}</p>
-                        <p><strong>Email:</strong> {report.email}</p>
-                      </div>
-                      <div className="report-description">
-                        <strong>Description:</strong>
-                        <p>{report.description}</p>
-                      </div>
-                    </div>
-                    <div className="report-actions">
-                      {!report.is_read && (
-                        <button onClick={() => markAsRead(report.id)} className="btn-mark-read">
-                          Mark as Read
-                        </button>
-                      )}
-                      <button onClick={() => deleteReport(report.id)} className="btn-delete-report">
-                        Delete
-                      </button>
-                    </div>
+              {reportsLoading ? (
+                <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                  <Spin size="large" />
+                  <div style={{ marginTop: '16px' }}>
+                    <Text>Loading reports...</Text>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ) : reports.length === 0 ? (
+                <Empty description="No reports yet." />
+              ) : (
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                  {reports.map((report) => (
+                    <Card 
+                      key={report.id}
+                      size="small"
+                      style={{ 
+                        borderLeft: !report.is_read ? '4px solid #1890ff' : undefined,
+                        background: !report.is_read ? '#f0f9ff' : undefined
+                      }}
+                    >
+                      <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+                          <Space wrap>
+                            <Tag color={
+                              report.priority?.toLowerCase() === 'high' ? 'red' :
+                              report.priority?.toLowerCase() === 'medium' ? 'orange' : 'blue'
+                            }>
+                              {report.priority || 'Medium'}
+                            </Tag>
+                            <Tag>{report.issue_type}</Tag>
+                            {!report.is_read && (
+                              <Badge status="processing" text="New" />
+                            )}
+                          </Space>
+                          <Text type="secondary" style={{ fontSize: '12px' }}>
+                            {new Date(report.created_at).toLocaleString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </Text>
+                        </div>
+                        <Title level={5}>{report.subject}</Title>
+                        <Space direction="vertical" size="small">
+                          <Text><strong>Reporter:</strong> {report.name}</Text>
+                          <Text><strong>Email:</strong> {report.email}</Text>
+                        </Space>
+                        <Divider style={{ margin: '8px 0' }} />
+                        <Text><strong>Description:</strong></Text>
+                        <Text>{report.description}</Text>
+                        <Space>
+                          {!report.is_read && (
+                            <Button 
+                              size="small"
+                              onClick={() => markAsRead(report.id)}
+                            >
+                              Mark as Read
+                            </Button>
+                          )}
+                          <Button 
+                            size="small"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => {
+                              Modal.confirm({
+                                title: 'Delete Report',
+                                content: 'Are you sure you want to delete this report?',
+                                okText: 'Yes, Delete',
+                                okType: 'danger',
+                                cancelText: 'Cancel',
+                                onOk: () => deleteReport(report.id),
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      </Space>
+                    </Card>
+                  ))}
+                </Space>
+              )}
             </Card>
           )}
         </Space>
