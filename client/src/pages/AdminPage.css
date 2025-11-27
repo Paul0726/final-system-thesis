@@ -951,6 +951,16 @@
   box-sizing: border-box;
 }
 
+.survey-card-main > div:first-child {
+  flex: 1 1 auto;
+  min-width: 200px;
+  max-width: calc(100% - 300px);
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
+  box-sizing: border-box;
+}
+
 .survey-card-main h3 {
   color: var(--primary-green);
   margin: 0 0 clamp(0.25rem, 0.5vw, var(--spacing-sm)) 0;
