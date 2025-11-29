@@ -1120,4 +1120,133 @@
   font-size: 0.875rem;
 }
 
-/* ALL MOBILE-SPECIFIC CSS REMOVED - USING UNIVERSAL RESPONSIVE DESIGN */
+/* ============================================
+   MOBILE OVERFLOW FIXES
+   ============================================ */
+@media (max-width: 768px) {
+  .survey-page {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .survey-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .survey-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: var(--spacing-lg) var(--spacing-md) !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .form-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: var(--spacing-lg) var(--spacing-md) !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .form-section h2,
+  .form-section h3 {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: var(--spacing-md) !important;
+  }
+
+  .form-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .form-group label {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-submit,
+  button[type="submit"],
+  button[type="button"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  .button-group,
+  .form-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--spacing-sm) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  ul, ol {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: var(--spacing-lg) !important;
+    box-sizing: border-box !important;
+  }
+
+  li {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .rating-section,
+  .rating-question {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .rating-buttons {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: var(--spacing-xs) !important;
+  }
+
+  .rating-label {
+    min-width: auto !important;
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+  }
+}
