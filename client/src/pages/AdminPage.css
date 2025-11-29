@@ -405,10 +405,34 @@
    ============================================ */
 @media (max-width: 768px) {
   /* Reset PC styles for mobile */
+  /* Override global mobile styles from index.css */
   .admin-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
+    min-height: 100vh !important;
+    background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%) !important;
+    padding: 0 !important;
   }
+  
+  /* Override global button styles from index.css */
+  .admin-page button,
+  .admin-page .ant-btn {
+    min-height: auto !important;
+    padding: inherit !important;
+    font-size: inherit !important;
+    margin: inherit !important;
+  }
+  
+  /* Override global input styles from index.css */
+  .admin-page input,
+  .admin-page select,
+  .admin-page textarea,
+  .admin-page .ant-input,
+  .admin-page .ant-select-selector {
+    min-height: auto !important;
+    padding: inherit !important;
+    font-size: inherit !important;
+    margin-bottom: inherit !important;
+  }
+  
   /* ============================================
      MOBILE DESIGN - Content & Layout
      ============================================ */

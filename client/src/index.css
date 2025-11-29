@@ -574,10 +574,10 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
   /* MOBILE SPACING IMPROVEMENTS - Much larger spacing for phone users */
+  /* Exclude admin-page - it has its own mobile styles */
   .survey-page,
   .landing-page,
-  .dashboard-page,
-  .admin-page {
+  .dashboard-page {
     padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg)) clamp(var(--spacing-sm), 1.5vw, var(--spacing-md)) !important;
   }
   
@@ -598,12 +598,13 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
   /* Larger buttons - minimum 48px height for easy tapping */
-  button,
-  .btn-primary,
-  .btn-secondary,
-  .btn-submit,
-  .btn-large,
-  a[class*="btn"] {
+  /* Exclude admin-page buttons - they have their own mobile styles */
+  :not(.admin-page) button,
+  :not(.admin-page) .btn-primary,
+  :not(.admin-page) .btn-secondary,
+  :not(.admin-page) .btn-submit,
+  :not(.admin-page) .btn-large,
+  :not(.admin-page) a[class*="btn"] {
     min-height: 48px !important;
     padding: 1rem 1.75rem !important;
     font-size: 1rem !important;
@@ -611,13 +612,14 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
   /* Larger form inputs */
-  input[type="text"],
-  input[type="email"],
-  input[type="number"],
-  input[type="tel"],
-  input[type="date"],
-  select,
-  textarea {
+  /* Exclude admin-page inputs - they have their own mobile styles */
+  :not(.admin-page) input[type="text"],
+  :not(.admin-page) input[type="email"],
+  :not(.admin-page) input[type="number"],
+  :not(.admin-page) input[type="tel"],
+  :not(.admin-page) input[type="date"],
+  :not(.admin-page) select,
+  :not(.admin-page) textarea {
     min-height: 48px !important;
     padding: 1rem 1.25rem !important;
     font-size: 1rem !important;
