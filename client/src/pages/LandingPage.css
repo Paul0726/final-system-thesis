@@ -177,7 +177,7 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* Main Content Container - Minimalist Compact */
+/* Main Content Container - Minimalist Compact with Visual Elements */
 .landing-content {
   background: var(--bg-white);
   border-radius: var(--radius-lg);
@@ -191,13 +191,68 @@
   margin-right: auto;
   position: relative;
   z-index: var(--z-base);
+  overflow: hidden;
 }
 
-/* Hero Section - Compact */
+/* Decorative Elements Inside Content */
+.landing-content::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(17, 130, 59, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-content::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(17, 130, 59, 0.04) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero Section - Compact with Visual Interest */
 .landing-hero {
   text-align: center;
   margin-bottom: var(--spacing-xl);
   padding: var(--spacing-lg) 0;
+  position: relative;
+}
+
+/* Decorative Lines */
+.landing-hero::before,
+.landing-hero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+  border-radius: var(--radius-full);
+}
+
+.landing-hero::before {
+  top: 0;
+}
+
+.landing-hero::after {
+  bottom: 0;
 }
 
 .landing-hero h2 {
@@ -305,12 +360,26 @@
   flex-shrink: 0;
 }
 
-/* Features Grid - Minimalist Compact Cards */
+/* Features Grid - Minimalist Compact Cards with Visual Interest */
 .landing-features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
+  position: relative;
+}
+
+/* Decorative Pattern Between Features */
+.landing-features::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .feature-card {
@@ -323,6 +392,24 @@
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  z-index: 1;
+}
+
+/* Subtle accent line on hover */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-green), var(--primary-green-light));
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
 }
 
 .feature-card:hover {
@@ -590,6 +677,20 @@
   border: 1px solid var(--border-light);
   margin-bottom: var(--spacing-lg);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative Elements */
+.ratings-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+  opacity: 0.3;
 }
 
 .ratings-section h2 {
@@ -766,6 +867,20 @@
   border: 1px solid var(--border-light);
   margin-bottom: var(--spacing-lg);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative Elements */
+.developers-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+  opacity: 0.3;
 }
 
 .developers-section h2 {
@@ -878,6 +993,19 @@
   border: 1px solid var(--border-light);
   margin-bottom: var(--spacing-lg);
   overflow: hidden;
+  position: relative;
+}
+
+/* Decorative Corner Element */
+.privacy-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(17, 130, 59, 0.03) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .privacy-header {

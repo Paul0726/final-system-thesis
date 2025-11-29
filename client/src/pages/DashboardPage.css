@@ -98,12 +98,12 @@
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
-/* Stats Grid - Behance Card Grid */
+/* Stats Grid - Compact Clean Layout */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   position: relative;
   z-index: var(--z-base);
 }
@@ -111,8 +111,8 @@
 .stat-card {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
   background: var(--bg-white);
   border-radius: var(--radius-md);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
@@ -128,16 +128,16 @@
 }
 
 .stat-icon {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   color: var(--primary-green);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-gray-light);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-sm);
+  background: linear-gradient(135deg, rgba(17, 130, 59, 0.1) 0%, rgba(17, 130, 59, 0.05) 100%);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xs);
   transition: all var(--transition-base);
 }
 
@@ -151,18 +151,24 @@
   height: 100%;
 }
 
+.stat-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .stat-info h3 {
-  font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+  font-size: clamp(1.375rem, 2vw, 1.625rem);
   color: var(--text-dark);
-  margin-bottom: var(--spacing-xs);
-  font-weight: 600;
+  margin-bottom: 2px;
+  font-weight: 700;
   line-height: 1.2;
 }
 
 .stat-info p {
   color: var(--text-gray);
-  font-size: 0.875rem;
-  font-weight: 400;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin: 0;
 }
 
 /* Charts Grid - Behance Clean Cards */
@@ -206,15 +212,71 @@
   font-weight: 400;
 }
 
-/* Dashboard Actions */
+/* Dashboard Actions - Enhanced Buttons */
 .dashboard-actions {
   display: flex;
   gap: var(--spacing-md);
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: var(--spacing-xl);
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-light);
   position: relative;
   z-index: var(--z-base);
+}
+
+.dashboard-actions .btn-primary {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  color: white;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.3);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-actions .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.dashboard-actions .btn-primary:hover::before {
+  left: 100%;
+}
+
+.dashboard-actions .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.4);
+}
+
+.dashboard-actions .btn-secondary {
+  background: var(--bg-white);
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.dashboard-actions .btn-secondary:hover {
+  background: var(--primary-green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(17, 130, 59, 0.2);
 }
 
 /* ============================================
@@ -247,20 +309,28 @@
   }
   
   .stats-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
   }
   
   .stat-card {
-    padding: var(--spacing-lg);
-    flex-direction: column;
-    text-align: center;
-    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    flex-direction: row;
+    text-align: left;
+    gap: var(--spacing-sm);
   }
   
   .stat-icon {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .stat-info h3 {
+    font-size: 1.25rem;
+  }
+  
+  .stat-info p {
+    font-size: 0.75rem;
   }
   
   .charts-grid {
