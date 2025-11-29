@@ -1,4 +1,6 @@
-/* Modern Admin Page - Universal Design */
+/* ============================================
+   ADMIN PAGE - PC DESIGN (Desktop Only)
+   ============================================ */
 .admin-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
@@ -116,7 +118,9 @@
   margin: 0 auto;
 }
 
-/* Statistics Cards - PC Design */
+/* ============================================
+   PC DESIGN - Statistics Cards
+   ============================================ */
 .admin-stats {
   margin-bottom: 20px;
 }
@@ -169,7 +173,9 @@
   min-width: 200px;
 }
 
-/* Survey Cards - PC Design (Grid Layout) */
+/* ============================================
+   PC DESIGN - Survey Cards (Grid Layout)
+   ============================================ */
 .admin-survey-grid {
   margin-bottom: 24px;
 }
@@ -393,8 +399,16 @@
   text-align: center;
 }
 
-/* Responsive */
+/* ============================================
+   ADMIN PAGE - MOBILE DESIGN (Mobile Only)
+   All mobile styles override PC styles
+   ============================================ */
 @media (max-width: 768px) {
+  /* Reset PC styles for mobile */
+  .admin-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
+  }
   .admin-content {
     padding: 4px !important;
   }
@@ -476,7 +490,10 @@
     padding: 4px 8px !important;
   }
   
-  /* Statistics Cards - Mobile Minimalist */
+  /* ============================================
+     MOBILE DESIGN - Statistics Cards
+     Completely overrides PC styles
+     ============================================ */
   .admin-stat-card {
     border-radius: 4px !important;
     margin-bottom: 6px !important;
@@ -524,7 +541,10 @@
     margin-bottom: 6px !important;
   }
   
-  /* Survey Cards - Mobile Minimalist (Single Column) */
+  /* ============================================
+     MOBILE DESIGN - Survey Cards (Single Column)
+     Completely overrides PC grid layout
+     ============================================ */
   .admin-survey-grid {
     margin-bottom: 16px !important;
     display: flex !important;
@@ -607,6 +627,7 @@
   .admin-survey-card .ant-card-actions {
     padding: 4px 0 !important;
     min-height: auto !important;
+    border-top: 1px solid #f0f0f0 !important;
   }
   
   .admin-survey-card .ant-card-actions > li {
@@ -618,20 +639,6 @@
     padding: 2px 6px !important;
     font-size: 11px !important;
     height: 24px !important;
-  }
-  
-  .admin-survey-card .ant-card-actions {
-    padding: 6px 0 !important;
-    border-top: 1px solid #f0f0f0 !important;
-  }
-  
-  .admin-survey-card .ant-card-actions > li {
-    margin: 2px 0 !important;
-  }
-  
-  .admin-survey-card .ant-card-actions .ant-btn {
-    padding: 4px 8px !important;
-    font-size: 12px !important;
   }
   
   /* Details Modal - Mobile Minimalist */
