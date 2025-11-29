@@ -22,7 +22,6 @@ import {
   Spin,
   Tag,
   Divider,
-  Collapse,
   Pagination
 } from 'antd';
 import { 
@@ -1292,6 +1291,8 @@ function AdminPage() {
 
 // Survey Card Component
 const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  
   let surveyStatus = '';
   if (survey.isEmployed === 'Yes') {
     if (survey.employmentNature === 'Self-Employed') {
@@ -1383,144 +1384,174 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
       )}
       
       <Divider style={{ margin: '16px 0' }} />
-      <Collapse 
-        ghost
-        items={[
-          {
-            key: '1',
-            label: <Text strong>View Full Details</Text>,
-            children: (
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Personal Information">
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      <Text><strong>Name:</strong> {survey.name || 'N/A'}</Text>
-                      <Text><strong>Email:</strong> {survey.emailAddress || 'N/A'}</Text>
-                      <Text><strong>Mobile:</strong> {survey.mobileNumber || 'N/A'}</Text>
-                      <Text><strong>Date of Birth:</strong> {survey.dateOfBirth ? new Date(survey.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</Text>
-                      <Text><strong>Age:</strong> {survey.age || 'N/A'}</Text>
-                      <Text><strong>Sex:</strong> {survey.sex || 'N/A'}</Text>
-                      <Text><strong>Civil Status:</strong> {survey.civilStatus || 'N/A'}</Text>
-                      <Text><strong>Permanent Address:</strong> {survey.permanentAddress || 'N/A'}</Text>
-                      <Text><strong>Current Location:</strong> {survey.currentLocation || 'N/A'}</Text>
-                    </Space>
-                  </Card>
-                </Col>
-                
-                <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Education">
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      <Text><strong>Course Graduated:</strong> {survey.courseGraduated || 'N/A'}</Text>
-                      <Text><strong>School Year Graduated:</strong> {survey.schoolYearGraduated || 'N/A'}</Text>
-                      <Text><strong>Max Academic Achievement:</strong> {survey.maxAcademicAchievement || 'N/A'}</Text>
-                      <Text><strong>Civil Service:</strong> {survey.civilService || 'N/A'}</Text>
-                      <Text><strong>LET License:</strong> {survey.letLicense || 'N/A'}</Text>
-                      <Text><strong>Other PRC License:</strong> {survey.otherPRCLicense || 'N/A'}</Text>
-                      <Text><strong>Professional Organizations:</strong> {survey.professionalOrganizations || 'N/A'}</Text>
-                    </Space>
-                  </Card>
-                </Col>
-                
-                <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Employment">
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      <Text><strong>Is Employed:</strong> {survey.isEmployed || 'N/A'}</Text>
-                      <Text><strong>Employment Nature:</strong> {survey.employmentNature || 'N/A'}</Text>
-                      <Text><strong>Employment Classification:</strong> {survey.employmentClassification || 'N/A'}</Text>
-                      <Text><strong>Job Title:</strong> {survey.jobTitle || 'N/A'}</Text>
-                      <Text><strong>Place of Work:</strong> {survey.placeOfWork || 'N/A'}</Text>
-                      <Text><strong>IT Field:</strong> {survey.isITField || 'N/A'}</Text>
-                      <Text><strong>Monthly Income:</strong> {survey.monthlyIncome || 'N/A'}</Text>
-                      <Text><strong>Additional Revenue Sources:</strong> {survey.additionalRevenueSources || 'N/A'}</Text>
-                    </Space>
-                  </Card>
-                </Col>
-                
-                <Col xs={24} sm={12} md={12}>
-                  <Card size="small" title="Alumni & Ratings">
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      <Text><strong>Is Alumni:</strong> {survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}</Text>
-                      {survey.isAlumni !== 'Yes' && (
-                        <Text><strong>Interested in Alumni Registration:</strong> {survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}</Text>
-                      )}
-                      <Text><strong>School Rating:</strong> {survey.schoolRating ? <><StarRating rating={survey.schoolRating} size="small" /> <span>({survey.schoolRating}/5)</span></> : 'N/A'}</Text>
-                      <Text><strong>System Rating:</strong> {survey.systemRating ? <><StarRating rating={survey.systemRating} size="small" /> <span>({survey.systemRating}/5)</span></> : 'N/A'}</Text>
-                      <Text><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</Text>
-                      <Text><strong>System Feedback:</strong> {survey.systemFeedback || 'N/A'}</Text>
-                    </Space>
-                  </Card>
-                </Col>
-                
-                {survey.systemEvaluation && (
-                  <Col xs={24} sm={24} md={24}>
-                    <Card size="small" title="System Evaluation">
-                      {survey.systemEvaluation.functionality && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</Title>
-                          <Space direction="vertical" size="small">
-                            <Text><strong>The system is easy to use and learned:</strong> {survey.systemEvaluation.functionality.q1 || 'N/A'}/5</Text>
-                            <Text><strong>The system can be used with comfort and convenience:</strong> {survey.systemEvaluation.functionality.q2 || 'N/A'}/5</Text>
-                            <Text><strong>The system is user-friendly:</strong> {survey.systemEvaluation.functionality.q3 || 'N/A'}/5</Text>
-                          </Space>
-                        </div>
-                      )}
-                      
-                      {survey.systemEvaluation.reliability && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Reliability</Title>
-                          <Space direction="vertical" size="small">
-                            <Text><strong>The system provides the correct desired output:</strong> {survey.systemEvaluation.reliability.q1 || 'N/A'}/5</Text>
-                            <Text><strong>Absence of failures in the system:</strong> {survey.systemEvaluation.reliability.q2 || 'N/A'}/5</Text>
-                            <Text><strong>The system is accurate in performance:</strong> {survey.systemEvaluation.reliability.q3 || 'N/A'}/5</Text>
-                          </Space>
-                        </div>
-                      )}
-                      
-                      {survey.systemEvaluation.accuracy && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Accuracy</Title>
-                          <Space direction="vertical" size="small">
-                            <Text><strong>The system gives accurate information/computation:</strong> {survey.systemEvaluation.accuracy.q1 || 'N/A'}/5</Text>
-                            <Text><strong>The system provides accurate outputs:</strong> {survey.systemEvaluation.accuracy.q2 || 'N/A'}/5</Text>
-                            <Text><strong>The system provides accurate reports:</strong> {survey.systemEvaluation.accuracy.q3 || 'N/A'}/5</Text>
-                          </Space>
-                        </div>
-                      )}
-                      
-                      {survey.systemEvaluation.efficiency && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Efficiency</Title>
-                          <Space direction="vertical" size="small">
-                            <Text><strong>The system is well organized and working properly:</strong> {survey.systemEvaluation.efficiency.q1 || 'N/A'}/5</Text>
-                            <Text><strong>The system is well organized for purpose:</strong> {survey.systemEvaluation.efficiency.q2 || 'N/A'}/5</Text>
-                            <Text><strong>The system is capable to produce the desired output without delaying the run time performance:</strong> {survey.systemEvaluation.efficiency.q3 || 'N/A'}/5</Text>
-                          </Space>
-                        </div>
-                      )}
-                    </Card>
-                  </Col>
-                )}
-                
-                {survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0 && (
-                  <Col xs={24} sm={24} md={24}>
-                    <Card size="small" title="Trainings">
-                      {survey.trainings.map((training, idx) => (
-                        <Card key={idx} size="small" style={{ marginBottom: '8px' }}>
-                          <Space direction="vertical" size="small">
-                            <Text><strong>Title:</strong> {training.title || 'N/A'}</Text>
-                            <Text><strong>Duration:</strong> {training.duration || 'N/A'}</Text>
-                            <Text><strong>Trainer:</strong> {training.trainer || 'N/A'}</Text>
-                          </Space>
-                        </Card>
-                      ))}
-                    </Card>
-                  </Col>
-                )}
-              </Row>
-            ),
-          },
+      <Button 
+        type="primary" 
+        block 
+        icon={<FileTextOutlined />}
+        onClick={() => setShowDetailsModal(true)}
+        style={{ marginTop: '8px' }}
+      >
+        View Full Details
+      </Button>
+      
+      <Modal
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <UserOutlined style={{ fontSize: '20px', color: '#11823b' }} />
+            <span>Respondent Details - {survey.name || 'N/A'}</span>
+          </div>
+        }
+        open={showDetailsModal}
+        onCancel={() => setShowDetailsModal(false)}
+        footer={[
+          <Button key="close" onClick={() => setShowDetailsModal(false)}>
+            Close
+          </Button>,
+          <Button 
+            key="download" 
+            type="primary" 
+            icon={<DownloadOutlined />}
+            onClick={() => {
+              onDownloadPDF(survey);
+              setShowDetailsModal(false);
+            }}
+          >
+            Download PDF
+          </Button>
         ]}
-      />
+        width={1000}
+        className="admin-details-modal"
+      >
+        <div style={{ maxHeight: '70vh', overflowY: 'auto', padding: '8px' }}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={12}>
+              <Card size="small" title="Personal Information" className="admin-details-card">
+                <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                  <Text><strong>Name:</strong> {survey.name || 'N/A'}</Text>
+                  <Text><strong>Email:</strong> {survey.emailAddress || 'N/A'}</Text>
+                  <Text><strong>Mobile:</strong> {survey.mobileNumber || 'N/A'}</Text>
+                  <Text><strong>Date of Birth:</strong> {survey.dateOfBirth ? new Date(survey.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}</Text>
+                  <Text><strong>Age:</strong> {survey.age || 'N/A'}</Text>
+                  <Text><strong>Sex:</strong> {survey.sex || 'N/A'}</Text>
+                  <Text><strong>Civil Status:</strong> {survey.civilStatus || 'N/A'}</Text>
+                  <Text><strong>Permanent Address:</strong> {survey.permanentAddress || 'N/A'}</Text>
+                  <Text><strong>Current Location:</strong> {survey.currentLocation || 'N/A'}</Text>
+                </Space>
+              </Card>
+            </Col>
+            
+            <Col xs={24} sm={12} md={12}>
+              <Card size="small" title="Education" className="admin-details-card">
+                <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                  <Text><strong>Course Graduated:</strong> {survey.courseGraduated || 'N/A'}</Text>
+                  <Text><strong>School Year Graduated:</strong> {survey.schoolYearGraduated || 'N/A'}</Text>
+                  <Text><strong>Max Academic Achievement:</strong> {survey.maxAcademicAchievement || 'N/A'}</Text>
+                  <Text><strong>Civil Service:</strong> {survey.civilService || 'N/A'}</Text>
+                  <Text><strong>LET License:</strong> {survey.letLicense || 'N/A'}</Text>
+                  <Text><strong>Other PRC License:</strong> {survey.otherPRCLicense || 'N/A'}</Text>
+                  <Text><strong>Professional Organizations:</strong> {survey.professionalOrganizations || 'N/A'}</Text>
+                </Space>
+              </Card>
+            </Col>
+            
+            <Col xs={24} sm={12} md={12}>
+              <Card size="small" title="Employment" className="admin-details-card">
+                <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                  <Text><strong>Is Employed:</strong> {survey.isEmployed || 'N/A'}</Text>
+                  <Text><strong>Employment Nature:</strong> {survey.employmentNature || 'N/A'}</Text>
+                  <Text><strong>Employment Classification:</strong> {survey.employmentClassification || 'N/A'}</Text>
+                  <Text><strong>Job Title:</strong> {survey.jobTitle || 'N/A'}</Text>
+                  <Text><strong>Place of Work:</strong> {survey.placeOfWork || 'N/A'}</Text>
+                  <Text><strong>IT Field:</strong> {survey.isITField || 'N/A'}</Text>
+                  <Text><strong>Monthly Income:</strong> {survey.monthlyIncome || 'N/A'}</Text>
+                  <Text><strong>Additional Revenue Sources:</strong> {survey.additionalRevenueSources || 'N/A'}</Text>
+                </Space>
+              </Card>
+            </Col>
+            
+            <Col xs={24} sm={12} md={12}>
+              <Card size="small" title="Alumni & Ratings" className="admin-details-card">
+                <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                  <Text><strong>Is Alumni:</strong> {survey.isAlumni === 'Yes' ? 'Yes (Alumni)' : survey.isAlumni === 'No' ? 'No (Not Alumni)' : 'N/A'}</Text>
+                  {survey.isAlumni !== 'Yes' && (
+                    <Text><strong>Interested in Alumni Registration:</strong> {survey.interestedAlumni === 'Yes' ? 'Yes (Wants to Register)' : survey.interestedAlumni === 'No' ? 'No (Not Interested)' : 'N/A'}</Text>
+                  )}
+                  <Text><strong>School Rating:</strong> {survey.schoolRating ? <><StarRating rating={survey.schoolRating} size="small" /> <span>({survey.schoolRating}/5)</span></> : 'N/A'}</Text>
+                  <Text><strong>System Rating:</strong> {survey.systemRating ? <><StarRating rating={survey.systemRating} size="small" /> <span>({survey.systemRating}/5)</span></> : 'N/A'}</Text>
+                  <Text><strong>School Feedback:</strong> {survey.schoolFeedback || 'N/A'}</Text>
+                  <Text><strong>System Feedback:</strong> {survey.systemFeedback || 'N/A'}</Text>
+                </Space>
+              </Card>
+            </Col>
+            
+            {survey.systemEvaluation && (
+              <Col xs={24} sm={24} md={24}>
+                <Card size="small" title="System Evaluation" className="admin-details-card">
+                  {survey.systemEvaluation.functionality && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</Title>
+                      <Space direction="vertical" size="small">
+                        <Text><strong>The system is easy to use and learned:</strong> {survey.systemEvaluation.functionality.q1 || 'N/A'}/5</Text>
+                        <Text><strong>The system can be used with comfort and convenience:</strong> {survey.systemEvaluation.functionality.q2 || 'N/A'}/5</Text>
+                        <Text><strong>The system is user-friendly:</strong> {survey.systemEvaluation.functionality.q3 || 'N/A'}/5</Text>
+                      </Space>
+                    </div>
+                  )}
+                  
+                  {survey.systemEvaluation.reliability && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Reliability</Title>
+                      <Space direction="vertical" size="small">
+                        <Text><strong>The system provides the correct desired output:</strong> {survey.systemEvaluation.reliability.q1 || 'N/A'}/5</Text>
+                        <Text><strong>Absence of failures in the system:</strong> {survey.systemEvaluation.reliability.q2 || 'N/A'}/5</Text>
+                        <Text><strong>The system is accurate in performance:</strong> {survey.systemEvaluation.reliability.q3 || 'N/A'}/5</Text>
+                      </Space>
+                    </div>
+                  )}
+                  
+                  {survey.systemEvaluation.accuracy && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Accuracy</Title>
+                      <Space direction="vertical" size="small">
+                        <Text><strong>The system gives accurate information/computation:</strong> {survey.systemEvaluation.accuracy.q1 || 'N/A'}/5</Text>
+                        <Text><strong>The system provides accurate outputs:</strong> {survey.systemEvaluation.accuracy.q2 || 'N/A'}/5</Text>
+                        <Text><strong>The system provides accurate reports:</strong> {survey.systemEvaluation.accuracy.q3 || 'N/A'}/5</Text>
+                      </Space>
+                    </div>
+                  )}
+                  
+                  {survey.systemEvaluation.efficiency && (
+                    <div style={{ marginBottom: '15px' }}>
+                      <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Efficiency</Title>
+                      <Space direction="vertical" size="small">
+                        <Text><strong>The system is well organized and working properly:</strong> {survey.systemEvaluation.efficiency.q1 || 'N/A'}/5</Text>
+                        <Text><strong>The system is well organized for purpose:</strong> {survey.systemEvaluation.efficiency.q2 || 'N/A'}/5</Text>
+                        <Text><strong>The system is capable to produce the desired output without delaying the run time performance:</strong> {survey.systemEvaluation.efficiency.q3 || 'N/A'}/5</Text>
+                      </Space>
+                    </div>
+                  )}
+                </Card>
+              </Col>
+            )}
+            
+            {survey.trainings && Array.isArray(survey.trainings) && survey.trainings.length > 0 && (
+              <Col xs={24} sm={24} md={24}>
+                <Card size="small" title="Trainings" className="admin-details-card">
+                  {survey.trainings.map((training, idx) => (
+                    <Card key={idx} size="small" style={{ marginBottom: '8px' }}>
+                      <Space direction="vertical" size="small">
+                        <Text><strong>Title:</strong> {training.title || 'N/A'}</Text>
+                        <Text><strong>Duration:</strong> {training.duration || 'N/A'}</Text>
+                        <Text><strong>Trainer:</strong> {training.trainer || 'N/A'}</Text>
+                      </Space>
+                    </Card>
+                  ))}
+                </Card>
+              </Col>
+            )}
+          </Row>
+        </div>
+      </Modal>
     </Card>
   );
 });

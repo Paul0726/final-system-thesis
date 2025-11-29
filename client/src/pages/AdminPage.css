@@ -225,6 +225,72 @@
   padding: 24px;
 }
 
+/* Details Modal */
+.admin-details-modal .ant-modal-header {
+  border-bottom: 2px solid #11823b;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
+}
+
+.admin-details-modal .ant-modal-title {
+  color: white !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.admin-details-modal .ant-modal-close {
+  color: white !important;
+}
+
+.admin-details-modal .ant-modal-close:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.admin-details-modal .ant-modal-body {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.admin-details-modal .ant-modal-footer {
+  border-top: 1px solid #f0f0f0;
+  padding: 16px 24px;
+}
+
+.admin-details-card {
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.admin-details-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-details-card .ant-card-head {
+  background: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 12px 16px;
+}
+
+.admin-details-card .ant-card-head-title {
+  font-weight: 600;
+  color: #11823b;
+  font-size: 15px;
+}
+
+.admin-details-card .ant-card-body {
+  padding: 16px;
+}
+
+.admin-details-card .ant-typography {
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
 /* Empty State */
 .admin-empty {
   padding: 60px 20px;
