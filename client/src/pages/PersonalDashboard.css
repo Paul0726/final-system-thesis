@@ -27,25 +27,7 @@
   will-change: opacity, transform;
 }
 
-/* Mobile optimizations - Disable ALL effects */
-/* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px), (prefers-reduced-motion: reduce) {
-  .personal-dashboard-page::before {
-    display: none !important;
-  }
-  
-  .personal-dashboard-page {
-    background-attachment: scroll !important;
-    background: var(--primary-green) !important;
-    padding: var(--spacing-md) !important;
-  }
-  
-  .form-container {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-  }
-  
-  /* Disable all transitions */
+/* MOBILE REMOVED - PC ONLY */
   * {
     transition: none !important;
     animation: none !important;
