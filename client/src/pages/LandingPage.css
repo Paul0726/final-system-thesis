@@ -395,10 +395,27 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    padding: 0;
+  }
+  
+  .star-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    margin: 0 auto;
+    gap: 2px;
+    flex-wrap: nowrap;
   }
   
   .star-rating.star-large .star {
     font-size: 1.5rem;
+  }
+  
+  .star-rating .star {
+    display: inline-block;
+    text-align: center;
+    line-height: 1;
   }
   
   .rating-value {
@@ -528,6 +545,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  text-align: center;
 }
 
 .rating-value {
@@ -575,7 +594,34 @@
   }
   
   .star-rating {
-    gap: 1px;
+    gap: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    margin: 0 auto;
+    flex-wrap: nowrap;
+  }
+  
+  .star-rating .star {
+    display: inline-block;
+    text-align: center;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  
+  /* Ensure rating cards are properly centered */
+  .rating-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .rating-card > * {
+    text-align: center;
+    width: 100%;
   }
 }
 
