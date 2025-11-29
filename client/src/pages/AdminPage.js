@@ -1397,26 +1397,28 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
           setShowDetailsModal(false);
         }}
         maskClosable={true}
-        footer={[
-          <Button key="close" onClick={(e) => {
-            e.stopPropagation();
-            setShowDetailsModal(false);
-          }}>
-            Close
-          </Button>,
-          <Button 
-            key="download" 
-            type="primary" 
-            icon={<DownloadOutlined />}
-            onClick={(e) => {
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <Button key="close" onClick={(e) => {
               e.stopPropagation();
-              onDownloadPDF(survey);
               setShowDetailsModal(false);
-            }}
-          >
-            Download PDF
-          </Button>
-        ]}
+            }}>
+              Close
+            </Button>
+            <Button 
+              key="download" 
+              type="primary" 
+              icon={<DownloadOutlined />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDownloadPDF(survey);
+                setShowDetailsModal(false);
+              }}
+            >
+              Download PDF
+            </Button>
+          </div>
+        }
         width={isMobile ? '95%' : 1000}
         className="admin-details-modal"
         style={{ top: isMobile ? 10 : 50 }}
