@@ -596,6 +596,7 @@ input[type="number"]::-webkit-outer-spin-button {
   
   /* Larger buttons - minimum 48px height for easy tapping */
   /* Exclude admin-page buttons - they have their own mobile styles */
+  /* NOTE: Padding and width are overridden by overflow fixes below */
   :not(.admin-page) button,
   :not(.admin-page) .btn-primary,
   :not(.admin-page) .btn-secondary,
@@ -603,8 +604,6 @@ input[type="number"]::-webkit-outer-spin-button {
   :not(.admin-page) .btn-large,
   :not(.admin-page) a[class*="btn"] {
     min-height: 48px !important;
-    padding: 1rem 1.75rem !important;
-    font-size: 1rem !important;
     margin: var(--spacing-sm) 0 !important;
   }
   
