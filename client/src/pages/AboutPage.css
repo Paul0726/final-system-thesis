@@ -23,7 +23,6 @@
   }
 }
 */
-*/
 
 .about-container {
   max-width: 1100px;
@@ -412,7 +411,9 @@
   }
 }
 
-/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 480px) {
+/* MOBILE REMOVED - PC ONLY */
+/*
+@media (max-width: 480px) {
   .about-header h1 {
     font-size: 1.875rem;
     word-wrap: break-word !important;
