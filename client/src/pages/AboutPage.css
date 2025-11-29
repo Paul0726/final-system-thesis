@@ -277,7 +277,9 @@
   box-shadow: var(--shadow-md);
 }
 
-/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */
+/*
+@media (max-width: 768px) {
   .about-page {
     padding: var(--spacing-md);
     width: 100% !important;
