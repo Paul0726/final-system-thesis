@@ -883,6 +883,11 @@
   font-size: 1.625rem;
   margin-bottom: var(--spacing-md);
   font-weight: 700;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .rating-stars {
@@ -890,6 +895,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Star Rating Component Styles */
@@ -897,6 +906,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
+  max-width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 .star-rating.star-small .star {
@@ -915,6 +929,9 @@
   display: inline-block;
   color: var(--border-gray);
   transition: color var(--transition-fast);
+  flex-shrink: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .star.star-filled {
@@ -937,12 +954,24 @@
   font-size: 2rem;
   font-weight: 800;
   margin-bottom: var(--spacing-sm);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .rating-count {
   color: var(--text-dark);
   font-size: 1rem;
   font-weight: 500;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* Feedback Section */
@@ -1558,6 +1587,46 @@
     padding: var(--spacing-lg) var(--spacing-md);
     border-radius: var(--radius-lg);
     box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .rating-card h3 {
+    font-size: 1.25rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
+  }
+
+  .rating-stars {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 var(--spacing-xs);
+    overflow: hidden;
+  }
+
+  .star-rating {
+    width: 100%;
+    max-width: 100%;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .star-rating.star-large .star {
+    font-size: 1.5rem;
+  }
+
+  .rating-value {
+    font-size: 1.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
+  }
+
+  .rating-count {
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
   }
 
   .rating-card h3 {
@@ -1827,14 +1896,46 @@
 
   .rating-card {
     padding: var(--spacing-md) var(--spacing-sm);
+    overflow-x: hidden;
   }
 
   .rating-card h3 {
     font-size: 1.125rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
+  }
+
+  .rating-stars {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 var(--spacing-xs);
+    overflow: hidden;
+  }
+
+  .star-rating {
+    width: 100%;
+    max-width: 100%;
+    gap: 3px;
+    justify-content: center;
+  }
+
+  .star-rating.star-large .star {
+    font-size: 1.25rem;
   }
 
   .rating-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
+  }
+
+  .rating-count {
+    font-size: 0.8125rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
   }
 
   .feedback-section {
