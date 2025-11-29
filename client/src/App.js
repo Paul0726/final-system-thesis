@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
 // Lazy load pages for better performance on low-end devices
@@ -13,14 +14,20 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const TechnicalSupport = lazy(() => import('./pages/TechnicalSupport'));
 const EvaluationResultsPage = lazy(() => import('./pages/EvaluationResultsPage'));
 
-// Loading component
-const LoadingSpinner = () => (
+// Optimized Loading component - prevents blank screen
+const LoadingSpinner = React.memo(() => (
   <div style={{ 
     display: 'flex', 
     justifyContent: 'center', 
     alignItems: 'center', 
     minHeight: '100vh',
-    background: '#1e453e'
+    background: '#1e453e',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999
   }}>
     <div style={{ 
       color: 'white', 
@@ -45,28 +52,33 @@ const LoadingSpinner = () => (
       `}</style>
     </div>
   </div>
-);
+));
 
 function App() {
   // Updated: 2025-11-18 - IT Field feature added
+  // Performance optimizations: Error boundaries and optimized loading
   return (
-    <Router>
-      <div className="App">
-        <Suspense fallback={<LoadingSpinner />}>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/survey" element={<SurveyPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/personal-dashboard" element={<PersonalDashboard />} />
-            <Route path="/login" element={<UserLogin />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/technical-support" element={<TechnicalSupport />} />
-            <Route path="/evaluation-results" element={<EvaluationResultsPage />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <div className="App">
+          <Suspense fallback={<LoadingSpinner />}>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/survey" element={<SurveyPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/personal-dashboard" element={<PersonalDashboard />} />
+                <Route path="/login" element={<UserLogin />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/technical-support" element={<TechnicalSupport />} />
+                <Route path="/evaluation-results" element={<EvaluationResultsPage />} />
+              </Routes>
+            </ErrorBoundary>
+          </Suspense>
+        </div>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

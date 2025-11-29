@@ -497,6 +497,12 @@ table tr:hover {
     --spacing-2xl: 2rem;
   }
   
+  /* Disable expensive effects on mobile for better performance */
+  body::before,
+  body::after {
+    display: none; /* Disable animated background on mobile */
+  }
+  
   button,
   .btn,
   a.btn {
@@ -509,8 +515,27 @@ table tr:hover {
   .card,
   .stat-card,
   .survey-card,
-  .feature-card {
+  .feature-card,
+  .rating-card,
+  .feedback-card,
+  .developer-card,
+  [class*="card"] {
     border-radius: var(--radius-md);
+    /* Reduce backdrop-filter on mobile for better performance */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    /* Fallback solid background */
+    background: rgba(193, 208, 181, 0.9);
+    /* Prevent blank screen on scroll */
+    will-change: auto;
+    transform: none;
+    -webkit-transform: none;
+  }
+  
+  /* Prevent blank screen on scroll */
+  * {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
   
   input,

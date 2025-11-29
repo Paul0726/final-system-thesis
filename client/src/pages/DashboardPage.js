@@ -42,7 +42,25 @@ function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    fetchStats();
+    let mounted = true;
+    const loadStats = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/stats`, {
+          timeout: 10000
+        });
+        if (mounted) {
+          setStats(response.data.data);
+        }
+      } catch (error) {
+        if (mounted) {
+          console.error('Error fetching stats:', error);
+        }
+      }
+    };
+    loadStats();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const fetchStats = async () => {

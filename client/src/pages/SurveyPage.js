@@ -566,6 +566,40 @@ function SurveyPage() {
     );
   }
 
+  // Prevent blank screen on errors
+  if (submitted) {
+    return (
+      <div className="survey-page">
+        <div className="survey-container">
+          <div style={{
+            padding: '40px 20px',
+            textAlign: 'center',
+            background: 'rgba(193, 208, 181, 0.4)',
+            borderRadius: '12px',
+            margin: '20px auto',
+            maxWidth: '600px'
+          }}>
+            <h2 style={{ color: '#1e453e', marginBottom: '20px' }}>✅ Survey Submitted Successfully!</h2>
+            <p style={{ color: '#4a4a4a', marginBottom: '30px' }}>
+              Thank you for your response. Your feedback is valuable to us.
+            </p>
+            <Link to="/" style={{
+              display: 'inline-block',
+              padding: '12px 24px',
+              background: '#1e453e',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '8px',
+              fontWeight: '500'
+            }}>
+              Return to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="survey-page">
       <ValidationModal />

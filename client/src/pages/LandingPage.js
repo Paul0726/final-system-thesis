@@ -14,7 +14,25 @@ function LandingPage() {
   const [ratings, setRatings] = useState({ school: 0, system: 0, total: 0 });
 
   useEffect(() => {
-    fetchRatings();
+    let mounted = true;
+    const loadRatings = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/feedbacks`, {
+          timeout: 10000
+        });
+        if (mounted && response.data.success) {
+          setRatings(response.data.ratings || { school: 0, system: 0, total: 0 });
+        }
+      } catch (error) {
+        if (mounted) {
+          console.error('Error fetching ratings:', error);
+        }
+      }
+    };
+    loadRatings();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const fetchRatings = async () => {

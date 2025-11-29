@@ -140,7 +140,8 @@ function AdminPage() {
       fetchSurveys();
       fetchReportsCount();
     }
-  }, [fetchSurveys, fetchReportsCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount to prevent infinite loops
 
   const fetchReports = async () => {
     try {
