@@ -7,16 +7,7 @@
   overflow-x: hidden;
 }
 
-/* MOBILE REMOVED - PC ONLY */ /* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 480px) {
-  .support-header h1 {
-    font-size: 1.875rem;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
+/* MOBILE REMOVED - PC ONLY */
 
   .header-icon {
     width: 32px;

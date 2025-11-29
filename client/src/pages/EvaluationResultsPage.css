@@ -268,14 +268,7 @@
 
 /* Responsive Design */
 /* Responsive Design */
-/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
-  .evaluation-results-page {
-    padding: var(--spacing-md);
-    width: 100% !important;
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-    box-sizing: border-box !important;
-  }
+/* MOBILE REMOVED - PC ONLY */
 
   .evaluation-container {
     width: 100% !important;
