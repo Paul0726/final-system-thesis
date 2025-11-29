@@ -300,14 +300,14 @@
 /* Responsive */
 @media (max-width: 768px) {
   .admin-content {
-    padding: 12px;
+    padding: 8px;
   }
   
   .admin-header-content {
-    padding: 12px 16px;
+    padding: 10px 12px;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 10px;
   }
   
   .admin-header-left {
@@ -319,16 +319,16 @@
   }
   
   .admin-header-logo {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
   
   .admin-header-title {
-    font-size: 18px !important;
+    font-size: 16px !important;
   }
   
   .admin-header-subtitle {
-    font-size: 12px !important;
+    font-size: 11px !important;
   }
   
   .admin-header-right {
@@ -339,10 +339,19 @@
   .admin-header-btn {
     flex: 1;
     justify-content: center;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+  }
+  
+  .admin-filters {
+    padding: 12px !important;
+    border-radius: 8px !important;
+    margin-bottom: 16px !important;
   }
   
   .admin-filters-row {
     flex-direction: column;
+    gap: 10px !important;
   }
   
   .admin-filter-item {
@@ -350,91 +359,172 @@
     min-width: 100%;
   }
   
-  /* Survey Cards - Mobile Optimizations */
-  .admin-survey-card .ant-card-body {
+  /* Statistics Cards - Mobile Minimalist */
+  .admin-stat-card {
+    border-radius: 8px !important;
+  }
+  
+  .admin-stat-card .ant-card-body {
     padding: 12px !important;
   }
   
+  /* Survey Cards - Mobile Minimalist */
+  .admin-survey-card {
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  .admin-survey-card:hover {
+    transform: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .admin-survey-card .ant-card-body {
+    padding: 10px !important;
+  }
+  
+  .admin-survey-card .ant-card-actions {
+    padding: 8px 0 !important;
+  }
+  
+  .admin-survey-card .ant-card-actions > li {
+    margin: 4px 0 !important;
+  }
+  
   .admin-survey-name {
-    font-size: 16px !important;
-    margin-bottom: 8px !important;
+    font-size: 15px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.3 !important;
+    padding: 0 !important;
+    font-weight: 500 !important;
+  }
+  
+  .admin-survey-info {
+    font-size: 12px !important;
+    margin-bottom: 4px !important;
     line-height: 1.4 !important;
     padding: 0 !important;
   }
   
-  .admin-survey-info {
-    font-size: 13px !important;
-    margin-bottom: 6px !important;
-    line-height: 1.5 !important;
-    padding: 2px 0 !important;
+  .admin-survey-info strong {
+    font-size: 12px !important;
+    margin-right: 6px !important;
   }
   
   .admin-survey-tags {
-    margin-bottom: 10px !important;
-    gap: 6px !important;
+    margin-bottom: 8px !important;
+    gap: 4px !important;
   }
   
   .admin-survey-tag {
-    font-size: 11px !important;
-    padding: 2px 8px !important;
+    font-size: 10px !important;
+    padding: 1px 6px !important;
     margin: 0 !important;
+    line-height: 1.5 !important;
+    border-radius: 4px !important;
   }
   
-  /* Details Modal - Mobile Optimizations */
+  .admin-survey-grid {
+    margin-bottom: 16px !important;
+  }
+  
+  .admin-survey-grid .ant-col {
+    margin-bottom: 12px !important;
+  }
+  
+  /* Details Modal - Mobile Minimalist */
   .admin-details-modal .ant-modal {
-    max-width: 95vw !important;
-    margin: 10px auto !important;
+    max-width: 98vw !important;
+    margin: 5px auto !important;
+    top: 5px !important;
   }
   
   .admin-details-modal .ant-modal-content {
     margin: 0 !important;
+    border-radius: 8px !important;
   }
   
   .admin-details-modal .ant-modal-header {
-    padding: 16px 16px !important;
+    padding: 12px 14px !important;
+    border-radius: 8px 8px 0 0 !important;
   }
   
   .admin-details-modal .ant-modal-title {
-    font-size: 16px !important;
+    font-size: 15px !important;
   }
   
   .admin-details-modal .ant-modal-body {
-    padding: 16px 12px !important;
-    max-height: 75vh !important;
+    padding: 12px 10px !important;
+    max-height: 80vh !important;
   }
   
   .admin-details-modal .ant-modal-footer {
-    padding: 12px 16px !important;
+    padding: 10px 14px !important;
+    border-radius: 0 0 8px 8px !important;
+  }
+  
+  .admin-details-modal .ant-btn {
+    padding: 4px 12px !important;
+    font-size: 13px !important;
+    height: auto !important;
   }
   
   .admin-details-card {
-    margin-bottom: 12px !important;
+    margin-bottom: 10px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   }
   
   .admin-details-card .ant-card-head {
-    padding: 10px 12px !important;
+    padding: 8px 10px !important;
+    min-height: auto !important;
   }
   
   .admin-details-card .ant-card-head-title {
-    font-size: 14px !important;
+    font-size: 13px !important;
+    padding: 0 !important;
   }
   
   .admin-details-card .ant-card-body {
-    padding: 12px !important;
+    padding: 10px !important;
   }
   
   .admin-details-card .ant-typography {
-    font-size: 13px !important;
-    line-height: 1.6 !important;
-    margin-bottom: 10px !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 6px !important;
   }
   
   .admin-details-card .ant-space {
-    gap: 8px !important;
+    gap: 6px !important;
   }
   
   .admin-details-card .ant-space-item {
-    margin-bottom: 4px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  /* Pagination - Mobile */
+  .admin-pagination {
+    margin-top: 16px !important;
+  }
+  
+  .admin-pagination .ant-pagination-item {
+    min-width: 28px !important;
+    height: 28px !important;
+    line-height: 26px !important;
+    font-size: 12px !important;
+  }
+  
+  /* Divider - Mobile */
+  .admin-survey-card .ant-divider {
+    margin: 10px 0 !important;
+  }
+  
+  /* Button - Mobile */
+  .admin-survey-card .ant-btn {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    height: auto !important;
   }
 }
 

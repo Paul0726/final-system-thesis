@@ -1392,13 +1392,18 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         </div>
       )}
       
-      <Divider style={{ margin: '16px 0' }} />
+      <Divider style={{ margin: isMobile ? '8px 0' : '16px 0' }} />
       <Button 
         type="primary" 
         block 
         icon={<FileTextOutlined />}
         onClick={() => setShowDetailsModal(true)}
-        style={{ marginTop: '8px' }}
+        style={{ 
+          marginTop: isMobile ? '4px' : '8px',
+          fontSize: isMobile ? '12px' : '14px',
+          height: isMobile ? '32px' : 'auto',
+          padding: isMobile ? '4px 8px' : undefined
+        }}
       >
         View Full Details
       </Button>
