@@ -214,39 +214,15 @@
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
-/* Stats Grid - Compact Clean Layout with Center Card */
+/* Stats Grid - Even Balanced Layout */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
   position: relative;
   z-index: var(--z-base);
-}
-
-/* Center Card Highlight */
-.stat-card-center {
-  position: relative;
-  transform: scale(1.05);
-  z-index: 2;
-}
-
-.stat-card-center::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-  border-radius: var(--radius-md);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity var(--transition-base);
-}
-
-.stat-card-center:hover::before {
-  opacity: 1;
+  justify-items: stretch;
 }
 
 .stat-card {
@@ -511,29 +487,6 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-sm);
-  }
-  
-  /* Mobile: Center Unemployed in 2x3 grid */
-  .stats-grid .stat-card:nth-child(3) {
-    grid-column: 1 / -1;
-    order: 3;
-    transform: scale(1.02);
-  }
-  
-  .stats-grid .stat-card:nth-child(1) {
-    order: 1;
-  }
-  
-  .stats-grid .stat-card:nth-child(2) {
-    order: 2;
-  }
-  
-  .stats-grid .stat-card:nth-child(4) {
-    order: 4;
-  }
-  
-  .stats-grid .stat-card:nth-child(5) {
-    order: 5;
   }
   
   .stat-card {

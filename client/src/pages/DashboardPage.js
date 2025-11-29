@@ -143,18 +143,6 @@ function DashboardPage() {
                 <p>Employed</p>
               </div>
             </div>
-            <div className="stat-card stat-card-center">
-              <div className="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <div className="stat-info">
-                <h3>{stats.unemployed || 0}</h3>
-                <p>Unemployed</p>
-              </div>
-            </div>
             <div className="stat-card">
               <div className="stat-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -177,6 +165,18 @@ function DashboardPage() {
               <div className="stat-info">
                 <h3>{stats.letLicense || 0}</h3>
                 <p>LET License</p>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div className="stat-info">
+                <h3>{stats.unemployed || 0}</h3>
+                <p>Unemployed</p>
               </div>
             </div>
           </div>
