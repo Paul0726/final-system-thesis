@@ -8,24 +8,3 @@
 }
 
 /* MOBILE REMOVED - PC ONLY */
-
-  .header-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .support-content {
-    padding: var(--spacing-lg) var(--spacing-md);
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .support-info h2 {
-    font-size: 1.5rem;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
