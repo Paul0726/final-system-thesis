@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
   background-attachment: fixed;
-  padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
+  padding: var(--spacing-lg);
   width: 100%;
   overflow-x: hidden;
   position: relative;
@@ -30,14 +30,16 @@
   will-change: opacity, transform;
 }
 
-/* UNIVERSAL: Disable heavy effects for performance (prefers-reduced-motion only) */
-@media (prefers-reduced-motion: reduce) {
+/* Mobile optimizations - Disable ALL effects */
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .user-login-page::before {
     display: none !important;
   }
   
   .user-login-page {
     background-attachment: scroll !important;
+    background: var(--primary-green) !important;
+    padding: var(--spacing-md) !important;
   }
   
   .login-box {
@@ -46,6 +48,7 @@
     background: rgba(255, 255, 255, 0.95) !important;
   }
   
+  /* Disable all transitions */
   * {
     transition: none !important;
     animation: none !important;
@@ -65,7 +68,7 @@
 
 .user-login-container {
   width: 100%;
-  max-width: clamp(90%, 550px, 95%);
+  max-width: 550px;
   position: relative;
   z-index: 1;
 }
@@ -74,8 +77,8 @@
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-radius: clamp(var(--radius-lg), 2vw, var(--radius-2xl));
-  padding: clamp(var(--spacing-xl), 3vw, var(--spacing-2xl));
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-2xl);
   color: var(--text-dark);
   box-shadow: 
     var(--shadow-2xl),
@@ -99,8 +102,8 @@
 .login-box h2 {
   color: var(--primary-green);
   text-align: center;
-  margin-bottom: clamp(var(--spacing-xs), 1vw, var(--spacing-sm));
-  font-size: clamp(1.625rem, 3vw, 2rem);
+  margin-bottom: var(--spacing-sm);
+  font-size: 2rem;
   font-weight: 700;
 }
 
@@ -271,21 +274,22 @@
 }
 
 /* Mobile fixes for link buttons */
-/* Universal responsive - all sizes scale automatically */
-.link-button {
-  color: var(--primary-green) !important;
-  font-weight: 700;
-  text-decoration: underline;
+@media (max-width: 768px) {
+  .link-button {
+    color: var(--primary-green) !important;
+    font-weight: 700;
+    text-decoration: underline;
+  }
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
-  gap: clamp(var(--spacing-xs), 1vw, var(--spacing-sm));
+  gap: var(--spacing-sm);
   color: var(--primary-green) !important;
   text-decoration: none;
-  margin-top: clamp(var(--spacing-lg), 2vw, var(--spacing-xl));
-  padding: clamp(0.625rem, 1.2vw, 0.75rem) clamp(1rem, 1.5vw, 1.25rem);
+  margin-top: var(--spacing-xl);
+  padding: 0.75rem 1.25rem;
   background: var(--bg-white) !important;
   backdrop-filter: blur(10px);
   border-radius: var(--radius-full);
@@ -294,7 +298,7 @@
   font-weight: 700;
   width: 100%;
   justify-content: center;
-  font-size: clamp(0.875rem, 1.2vw, 0.9375rem);
+  font-size: 0.9375rem;
   touch-action: manipulation;
   -webkit-tap-highlight-color: rgba(17, 130, 59, 0.3);
 }
@@ -304,4 +308,24 @@
   border-color: var(--primary-green-dark) !important;
   transform: translateX(-5px);
   box-shadow: var(--shadow-md);
+}
+
+/* Mobile fixes for back link */
+@media (max-width: 768px) {
+  .back-link {
+    color: var(--primary-green) !important;
+    background: var(--bg-white) !important;
+    border: 2px solid var(--primary-green) !important;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+
+  .login-box h2 {
+    font-size: 1.625rem;
+  }
 }

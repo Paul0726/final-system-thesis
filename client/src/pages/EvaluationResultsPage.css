@@ -1,7 +1,7 @@
 .evaluation-results-page {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
-  padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
+  padding: var(--spacing-lg);
 }
 
 .evaluation-container {
@@ -69,7 +69,7 @@
 }
 
 .evaluation-content {
-  padding: clamp(var(--spacing-lg), 3vw, var(--spacing-2xl));
+  padding: var(--spacing-2xl);
 }
 
 .evaluation-table-section {
@@ -267,52 +267,62 @@
 }
 
 /* Responsive Design */
-/* Universal responsive - all sizes scale automatically */
-.evaluation-header {
-  padding: clamp(var(--spacing-lg), 2vw, var(--spacing-xl));
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .evaluation-results-page {
+    padding: var(--spacing-md);
+  }
 
-.evaluation-header .header-title {
-  flex-wrap: wrap;
-  text-align: center;
-}
+  .evaluation-content {
+    padding: var(--spacing-lg);
+  }
 
-.evaluation-header .header-seal {
-  width: clamp(70px, 10vw, 90px);
-  height: clamp(70px, 10vw, 90px);
-}
+  .evaluation-header {
+    padding: var(--spacing-lg);
+  }
 
-.evaluation-header h1 {
-  font-size: clamp(1.625rem, 3vw, 2rem);
-}
+  .evaluation-header .header-title {
+    flex-direction: column;
+    text-align: center;
+  }
 
-.evaluation-table-section h2 {
-  font-size: clamp(1.5rem, 2.5vw, 1.75rem);
-}
+  .evaluation-header .header-seal {
+    width: 70px;
+    height: 70px;
+  }
 
-.evaluation-table {
-  font-size: clamp(0.8125rem, 1.2vw, 0.9375rem);
-}
+  .evaluation-header h1 {
+    font-size: 1.625rem;
+  }
 
-.evaluation-table th,
-.evaluation-table td {
-  padding: clamp(var(--spacing-xs), 1vw, var(--spacing-md));
-  font-size: clamp(0.8125rem, 1.2vw, 1rem);
-}
+  .evaluation-table-section h2 {
+    font-size: 1.5rem;
+  }
 
-.evaluation-table th:first-child,
-.evaluation-table td:first-child {
-  max-width: clamp(150px, 25vw, 200px);
-  word-wrap: break-word;
-}
+  .evaluation-table {
+    font-size: 0.875rem;
+  }
 
-.rating-badge {
-  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
-  padding: clamp(0.375rem, 0.8vw, 0.5rem) clamp(0.625rem, 1.2vw, 0.875rem);
-  min-width: clamp(90px, 15vw, 110px);
-}
+  .evaluation-table th,
+  .evaluation-table td {
+    padding: var(--spacing-sm);
+    font-size: 0.8125rem;
+  }
 
-.evaluation-description {
-  font-size: clamp(0.875rem, 1.2vw, 0.9375rem);
-  padding: clamp(var(--spacing-xs), 1vw, var(--spacing-md));
+  .evaluation-table th:first-child,
+  .evaluation-table td:first-child {
+    max-width: 200px;
+    word-wrap: break-word;
+  }
+
+  .rating-badge {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.625rem;
+    min-width: 90px;
+  }
+
+  .evaluation-description {
+    font-size: 0.875rem;
+    padding: var(--spacing-sm);
+  }
 }

@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
   background-attachment: fixed;
-  padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
+  padding: var(--spacing-lg);
   width: 100%;
   overflow-x: hidden;
   position: relative;
@@ -28,8 +28,8 @@
   will-change: opacity, transform;
 }
 
-/* UNIVERSAL: Disable heavy effects for performance */
-@media (prefers-reduced-motion: reduce) {
+/* Mobile optimizations - Disable heavy effects */
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .survey-page::before,
   .survey-page::after {
     display: none !important;
@@ -37,6 +37,7 @@
   
   .survey-page {
     background-attachment: scroll !important;
+    padding: var(--spacing-md) !important;
   }
   
   .form-container,
@@ -611,31 +612,31 @@
   }
 }
 
-/* Universal responsive - no media queries needed */
-.validation-modal {
-  max-width: clamp(90%, 95vw, 95%);
-  margin: clamp(var(--spacing-sm), 2vw, var(--spacing-md));
-}
-
-.validation-modal-header {
-  padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
-}
-
-.validation-modal-header h2 {
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-}
-
-.validation-modal-content {
-  padding: clamp(var(--spacing-lg), 2vw, var(--spacing-xl));
-}
-
-.validation-modal-actions {
-  flex-direction: column;
-  gap: clamp(var(--spacing-sm), 1vw, var(--spacing-md));
-}
-
-.validation-modal-actions .btn-primary {
-  width: 100%;
+@media (max-width: 768px) {
+  .validation-modal {
+    max-width: 95%;
+    margin: var(--spacing-sm);
+  }
+  
+  .validation-modal-header {
+    padding: var(--spacing-md);
+  }
+  
+  .validation-modal-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .validation-modal-content {
+    padding: var(--spacing-lg);
+  }
+  
+  .validation-modal-actions {
+    flex-direction: column;
+  }
+  
+  .validation-modal-actions .btn-primary {
+    width: 100%;
+  }
 }
 
 /* Alumni Modal */
