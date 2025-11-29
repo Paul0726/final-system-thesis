@@ -1292,6 +1292,15 @@ function AdminPage() {
 // Survey Card Component
 const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatusColor, onDownloadPDF }) {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   let surveyStatus = '';
   if (survey.isEmployed === 'Yes') {
@@ -1419,11 +1428,12 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
             Download PDF
           </Button>
         ]}
-        width={1000}
+        width={isMobile ? '95%' : 1000}
         className="admin-details-modal"
+        style={{ top: isMobile ? 10 : 50 }}
       >
-        <div style={{ maxHeight: '70vh', overflowY: 'auto', padding: '8px' }}>
-          <Row gutter={[16, 16]}>
+        <div style={{ maxHeight: isMobile ? '75vh' : '70vh', overflowY: 'auto', padding: isMobile ? '4px' : '8px' }}>
+          <Row gutter={isMobile ? [12, 12] : [16, 16]}>
             <Col xs={24} sm={12} md={12}>
               <Card size="small" title="Personal Information" className="admin-details-card">
                 <Space direction="vertical" size="small" style={{ width: '100%' }}>

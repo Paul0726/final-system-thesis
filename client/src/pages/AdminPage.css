@@ -300,7 +300,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .admin-content {
-    padding: 16px;
+    padding: 12px;
   }
   
   .admin-header-content {
@@ -348,6 +348,93 @@
   .admin-filter-item {
     width: 100%;
     min-width: 100%;
+  }
+  
+  /* Survey Cards - Mobile Optimizations */
+  .admin-survey-card .ant-card-body {
+    padding: 12px !important;
+  }
+  
+  .admin-survey-name {
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+    line-height: 1.4 !important;
+    padding: 0 !important;
+  }
+  
+  .admin-survey-info {
+    font-size: 13px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.5 !important;
+    padding: 2px 0 !important;
+  }
+  
+  .admin-survey-tags {
+    margin-bottom: 10px !important;
+    gap: 6px !important;
+  }
+  
+  .admin-survey-tag {
+    font-size: 11px !important;
+    padding: 2px 8px !important;
+    margin: 0 !important;
+  }
+  
+  /* Details Modal - Mobile Optimizations */
+  .admin-details-modal .ant-modal {
+    max-width: 95vw !important;
+    margin: 10px auto !important;
+  }
+  
+  .admin-details-modal .ant-modal-content {
+    margin: 0 !important;
+  }
+  
+  .admin-details-modal .ant-modal-header {
+    padding: 16px 16px !important;
+  }
+  
+  .admin-details-modal .ant-modal-title {
+    font-size: 16px !important;
+  }
+  
+  .admin-details-modal .ant-modal-body {
+    padding: 16px 12px !important;
+    max-height: 75vh !important;
+  }
+  
+  .admin-details-modal .ant-modal-footer {
+    padding: 12px 16px !important;
+  }
+  
+  .admin-details-card {
+    margin-bottom: 12px !important;
+  }
+  
+  .admin-details-card .ant-card-head {
+    padding: 10px 12px !important;
+  }
+  
+  .admin-details-card .ant-card-head-title {
+    font-size: 14px !important;
+  }
+  
+  .admin-details-card .ant-card-body {
+    padding: 12px !important;
+  }
+  
+  .admin-details-card .ant-typography {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .admin-details-card .ant-space {
+    gap: 8px !important;
+  }
+  
+  .admin-details-card .ant-space-item {
+    margin-bottom: 4px !important;
   }
 }
 
