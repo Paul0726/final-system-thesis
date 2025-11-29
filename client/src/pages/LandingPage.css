@@ -30,11 +30,6 @@
 }
 
 /* MOBILE REMOVED - PC ONLY */
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
-}
 
 .landing-page::after {
   content: '';
