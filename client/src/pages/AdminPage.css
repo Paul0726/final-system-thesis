@@ -153,59 +153,94 @@
   min-width: 200px;
 }
 
-/* Survey Cards */
+/* Survey Cards - Minimalist Design */
 .admin-survey-grid {
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .admin-survey-card {
-  height: 100%;
-  border-radius: 12px;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  margin-bottom: 12px;
 }
 
 .admin-survey-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  border-color: #d9d9d9;
 }
 
 .admin-survey-card .ant-card-body {
-  padding: 20px;
+  padding: 16px 20px;
+}
+
+.admin-survey-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-survey-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .admin-survey-name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: #11823b;
-  margin-bottom: 12px;
-  word-break: normal;
-  overflow-wrap: break-word;
-}
-
-.admin-survey-info {
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #595959;
-  word-break: normal;
-  overflow-wrap: break-word;
-}
-
-.admin-survey-info strong {
   color: #262626;
-  margin-right: 8px;
+  margin: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.4;
 }
 
-.admin-survey-tags {
+.admin-survey-meta {
   display: flex;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
+}
+
+.admin-survey-status {
+  display: inline-flex;
+}
+
+.admin-survey-year,
+.admin-survey-gender {
+  font-size: 13px;
+  color: #8c8c8c;
+  line-height: 1.4;
+}
+
+.admin-survey-arrow {
+  color: #8c8c8c;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.admin-survey-card:hover .admin-survey-arrow {
+  color: #11823b;
+  transform: translateX(2px);
 }
 
 .admin-survey-tag {
   white-space: nowrap;
   word-break: normal;
+  font-size: 11px;
+  padding: 2px 8px;
+  margin: 0;
+  border-radius: 4px;
 }
 
 /* Pagination */
@@ -371,65 +406,76 @@
   /* Survey Cards - Mobile Minimalist */
   .admin-survey-card {
     border-radius: 8px !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+    margin-bottom: 8px !important;
   }
   
   .admin-survey-card:hover {
-    transform: none !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   }
   
   .admin-survey-card .ant-card-body {
-    padding: 10px !important;
+    padding: 12px 14px !important;
   }
   
-  .admin-survey-card .ant-card-actions {
-    padding: 8px 0 !important;
+  .admin-survey-card-content {
+    gap: 12px !important;
   }
   
-  .admin-survey-card .ant-card-actions > li {
-    margin: 4px 0 !important;
+  .admin-survey-main {
+    gap: 6px !important;
   }
   
   .admin-survey-name {
     font-size: 15px !important;
-    margin-bottom: 6px !important;
+    font-weight: 600 !important;
     line-height: 1.3 !important;
-    padding: 0 !important;
-    font-weight: 500 !important;
   }
   
-  .admin-survey-info {
+  .admin-survey-meta {
+    gap: 8px !important;
+  }
+  
+  .admin-survey-year,
+  .admin-survey-gender {
     font-size: 12px !important;
-    margin-bottom: 4px !important;
-    line-height: 1.4 !important;
-    padding: 0 !important;
   }
   
-  .admin-survey-info strong {
-    font-size: 12px !important;
-    margin-right: 6px !important;
-  }
-  
-  .admin-survey-tags {
-    margin-bottom: 8px !important;
-    gap: 4px !important;
+  .admin-survey-arrow {
+    font-size: 14px !important;
   }
   
   .admin-survey-tag {
     font-size: 10px !important;
     padding: 1px 6px !important;
-    margin: 0 !important;
-    line-height: 1.5 !important;
-    border-radius: 4px !important;
   }
   
   .admin-survey-grid {
     margin-bottom: 16px !important;
+    gap: 0 !important;
   }
   
   .admin-survey-grid .ant-col {
-    margin-bottom: 12px !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .admin-survey-grid .ant-row {
+    margin: 0 !important;
+  }
+  
+  .admin-survey-card .ant-card-actions {
+    padding: 6px 0 !important;
+    border-top: 1px solid #f0f0f0 !important;
+  }
+  
+  .admin-survey-card .ant-card-actions > li {
+    margin: 2px 0 !important;
+  }
+  
+  .admin-survey-card .ant-card-actions .ant-btn {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
   }
   
   /* Details Modal - Mobile Minimalist */

@@ -36,7 +36,8 @@ import {
   FileTextOutlined,
   UserOutlined,
   FilterOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  RightOutlined
 } from '@ant-design/icons';
 import './AdminPage.css';
 
@@ -909,7 +910,7 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[20, 20]} className="admin-survey-grid">
+                <Row gutter={[0, 0]} className="admin-survey-grid">
                   {paginatedSurveys.map((survey, index) => (
                     <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
                       <SurveyCard 
@@ -1337,6 +1338,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
     <Card
       className="admin-survey-card"
       hoverable
+      onClick={() => setShowDetailsModal(true)}
       actions={[
         <Button
           key="download"
@@ -1358,55 +1360,29 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         />
       ]}
     >
-      <div className="admin-survey-name">
-        {survey.name || 'N/A'}
-      </div>
-      
-      <div className="admin-survey-tags">
-        <Tag color={getStatusTagColor(surveyStatus)} className="admin-survey-tag">
-          {surveyStatus || 'N/A'}
-        </Tag>
-        {survey.isAlumni === 'Yes' && (
-          <Tag color="gold" className="admin-survey-tag">Alumni</Tag>
-        )}
-        {survey.isAlumni === 'No' && survey.interestedAlumni === 'Yes' && (
-          <Tag color="cyan" className="admin-survey-tag">Wants to Register</Tag>
-        )}
-        {survey.isAlumni === 'No' && survey.interestedAlumni === 'No' && (
-          <Tag className="admin-survey-tag">Not Alumni</Tag>
-        )}
-      </div>
-
-      <div className="admin-survey-info">
-        <strong>Year:</strong> {survey.schoolYearGraduated || 'N/A'}
-      </div>
-      <div className="admin-survey-info">
-        <strong>Gender:</strong> {survey.sex || 'N/A'}
-      </div>
-      <div className="admin-survey-info">
-        <strong>Email:</strong> {survey.emailAddress || 'N/A'}
-      </div>
-      {survey.jobTitle && (
-        <div className="admin-survey-info">
-          <strong>Job:</strong> {survey.jobTitle}
+      <div className="admin-survey-card-content">
+        <div className="admin-survey-main">
+          <div className="admin-survey-name">
+            {survey.name || 'N/A'}
+          </div>
+          <div className="admin-survey-meta">
+            <span className="admin-survey-status">
+              <Tag color={getStatusTagColor(surveyStatus)} className="admin-survey-tag">
+                {surveyStatus || 'N/A'}
+              </Tag>
+            </span>
+            <span className="admin-survey-year">
+              {survey.schoolYearGraduated || 'N/A'}
+            </span>
+            <span className="admin-survey-gender">
+              {survey.sex || 'N/A'}
+            </span>
+          </div>
         </div>
-      )}
-      
-      <Divider style={{ margin: isMobile ? '8px 0' : '16px 0' }} />
-      <Button 
-        type="primary" 
-        block 
-        icon={<FileTextOutlined />}
-        onClick={() => setShowDetailsModal(true)}
-        style={{ 
-          marginTop: isMobile ? '4px' : '8px',
-          fontSize: isMobile ? '12px' : '14px',
-          height: isMobile ? '32px' : 'auto',
-          padding: isMobile ? '4px 8px' : undefined
-        }}
-      >
-        View Full Details
-      </Button>
+        <div className="admin-survey-arrow">
+          <RightOutlined />
+        </div>
+      </div>
       
       <Modal
         title={
