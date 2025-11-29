@@ -396,11 +396,16 @@
 /* Responsive */
 @media (max-width: 768px) {
   .admin-content {
-    padding: 6px;
+    padding: 4px !important;
   }
   
   .admin-content .ant-card {
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
+    border-radius: 4px !important;
+  }
+  
+  .admin-content .ant-card-body {
+    padding: 8px !important;
   }
   
   .admin-header-content {
@@ -444,14 +449,14 @@
   }
   
   .admin-filters {
-    padding: 8px !important;
-    border-radius: 6px !important;
-    margin-bottom: 12px !important;
+    padding: 6px !important;
+    border-radius: 4px !important;
+    margin-bottom: 8px !important;
   }
   
   .admin-filters-row {
     flex-direction: column;
-    gap: 8px !important;
+    gap: 6px !important;
   }
   
   .admin-filter-item {
@@ -461,44 +466,62 @@
   
   .admin-filter-item .ant-input,
   .admin-filter-item .ant-select-selector {
-    padding: 6px 10px !important;
-    font-size: 13px !important;
-    height: 36px !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+    line-height: 24px !important;
+  }
+  
+  .admin-filter-item .ant-input-affix-wrapper {
+    padding: 4px 8px !important;
   }
   
   /* Statistics Cards - Mobile Minimalist */
   .admin-stat-card {
-    border-radius: 6px !important;
-    margin-bottom: 8px !important;
+    border-radius: 4px !important;
+    margin-bottom: 6px !important;
   }
   
   .admin-stat-card .ant-card-body {
-    padding: 10px 12px !important;
+    padding: 8px 10px !important;
+    min-height: auto !important;
+  }
+  
+  .admin-stat-card .ant-statistic {
+    margin: 0 !important;
   }
   
   .admin-stat-card .ant-statistic-title {
-    font-size: 11px !important;
-    margin-bottom: 4px !important;
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
   }
   
   .admin-stat-card .ant-statistic-content {
-    font-size: 16px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
   }
   
   .admin-stat-card .ant-statistic-content-value {
-    font-size: 16px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+  }
+  
+  .admin-stat-card .anticon {
+    font-size: 14px !important;
   }
   
   .admin-stats {
-    margin-bottom: 10px !important;
+    margin-bottom: 8px !important;
   }
   
   .admin-stats .ant-row {
-    margin: 0 -4px !important;
+    margin: 0 -3px !important;
   }
   
   .admin-stats .ant-col {
-    padding: 0 4px !important;
+    padding: 0 3px !important;
+    margin-bottom: 6px !important;
   }
   
   /* Survey Cards - Mobile Minimalist (Single Column) */
@@ -535,41 +558,66 @@
     transform: none !important;
   }
   
+  .admin-survey-card {
+    margin-bottom: 4px !important;
+  }
+  
   .admin-survey-card .ant-card-body {
     padding: 6px 8px !important;
+    min-height: auto !important;
   }
   
   .admin-survey-card-content {
-    gap: 6px !important;
+    gap: 5px !important;
   }
   
   .admin-survey-main {
-    gap: 3px !important;
+    gap: 2px !important;
   }
   
   .admin-survey-name {
     font-size: 12px !important;
     font-weight: 600 !important;
-    line-height: 1.3 !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
   }
   
   .admin-survey-meta {
-    gap: 5px !important;
+    gap: 4px !important;
   }
   
   .admin-survey-year,
   .admin-survey-gender {
     font-size: 9px !important;
+    line-height: 1.2 !important;
   }
   
   .admin-survey-arrow {
-    font-size: 11px !important;
+    font-size: 10px !important;
   }
   
   .admin-survey-tag {
     font-size: 8px !important;
-    padding: 1px 4px !important;
+    padding: 0 4px !important;
     line-height: 1.2 !important;
+    height: 16px !important;
+    margin: 0 !important;
+  }
+  
+  .admin-survey-card .ant-card-actions {
+    padding: 4px 0 !important;
+    min-height: auto !important;
+  }
+  
+  .admin-survey-card .ant-card-actions > li {
+    margin: 0 !important;
+    padding: 2px 0 !important;
+  }
+  
+  .admin-survey-card .ant-card-actions .ant-btn {
+    padding: 2px 6px !important;
+    font-size: 11px !important;
+    height: 24px !important;
   }
   
   .admin-survey-card .ant-card-actions {
