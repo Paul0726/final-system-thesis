@@ -1,0 +1,37 @@
+========================================
+RAILWAY DEPLOYMENT COMMANDS
+========================================
+
+OPTION 1: Simple Empty Commit (Fastest)
+----------------------------------------
+git commit --allow-empty -m "Redeploy"
+git push origin main
+
+OPTION 2: With Trigger File
+----------------------------------------
+echo %date% %time% > DEPLOY_NOW.txt
+git add DEPLOY_NOW.txt
+git commit -m "Redeploy trigger"
+git push origin main
+
+OPTION 3: Force All Changes
+----------------------------------------
+git add -A
+git commit -m "Redeploy: All changes"
+git push origin main
+
+OPTION 4: One-Line Command (PowerShell)
+----------------------------------------
+powershell -Command "git commit --allow-empty -m 'Redeploy'; git push origin main"
+
+========================================
+QUICK STEPS:
+========================================
+1. Open Command Prompt or PowerShell
+2. Navigate to project folder:
+   cd "C:\final system thesis"
+3. Run one of the commands above
+4. Check Railway dashboard for deployment
+
+========================================
+

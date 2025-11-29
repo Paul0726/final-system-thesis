@@ -1,31 +1,178 @@
 /* ============================================
-   PC-ONLY LAYOUT - NO MOBILE STYLES
-   Fixed: Removed broken :root block causing build failure
-   Date: 2025-01-27
+   MODERN UI SYSTEM - COMPREHENSIVE REFACTOR
+   Fully Responsive | Clean | Modern | Aesthetic
    ============================================ */
-* {
+
+/* ============================================
+   CSS VARIABLES - Design Tokens
+   ============================================ */
+:root {
+  /* Colors - Primary Green Theme */
+  --primary-green: #11823b;
+  --primary-green-dark: #0d6b2f;
+  --primary-green-darker: #0a5524;
+  --primary-green-light: #1a9d4f;
+  --light-green: #dce3c7;
+  
+  /* Neutral Colors */
+  --bg-white: #ffffff;
+  --bg-gray: #f9fafb;
+  --bg-gray-light: #f3f4f6;
+  --text-dark: #1f2937;
+  --text-gray: #6b7280;
+  --text-lighter-gray: #9ca3af;
+  --border-gray: #e5e7eb;
+  --error: #ef4444;
+  
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 3rem;      /* 48px */
+  --spacing-3xl: 4rem;      /* 64px */
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-2xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-green-lg: 0 10px 30px rgba(17, 130, 59, 0.3);
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-Index Scale */
+  --z-base: 1;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Modern Green buttons - white text with gradient and shadow */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-dark);
+  line-height: 1.6;
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-dark);
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+h2 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+}
+
+p {
+  line-height: 1.7;
+  color: var(--text-gray);
+}
+
+/* White text on green backgrounds */
+.dashboard-header h1,
+.dashboard-header p,
+.evaluation-header h1,
+.evaluation-header p,
+.admin-header h1,
+.admin-header p,
+.landing-header h1,
+.landing-subtitle,
+[style*="color: white"],
+[class*="header"] h1,
+[class*="header"] p {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   BUTTONS - Modern Design System
+   ============================================ */
+button,
+.btn,
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: 0.875rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Primary Button - Green Gradient */
 button.btn-primary,
 .btn-primary,
-button[class*="btn-primary"],
-button[style*="background: #11823b"],
-button[style*="background-color: #11823b"],
 a.btn-primary,
-a[class*="btn-primary"] {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%) !important;
-  background-color: var(--primary-green) !important;
-  border: none !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.4), 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  position: relative !important;
-  overflow: hidden !important;
+button[class*="btn-primary"] {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.4), 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 button.btn-primary::before,
@@ -50,210 +197,71 @@ a.btn-primary:hover::before {
 button.btn-primary:hover,
 .btn-primary:hover,
 a.btn-primary:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 button.btn-primary:active,
 .btn-primary:active,
 a.btn-primary:active {
-  transform: translateY(0) scale(0.98) !important;
+  transform: translateY(0) scale(0.98);
 }
 
-/* Modern White buttons - green text with glassmorphism */
+/* Secondary Button - White with Border */
 button.btn-secondary,
 .btn-secondary,
-button[class*="btn-secondary"],
-button[style*="background: white"],
-button[style*="background-color: white"],
 a.btn-secondary,
-a[class*="btn-secondary"] {
-  color: var(--primary-green) !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  background-color: var(--bg-white) !important;
-  border: 2px solid var(--primary-green) !important;
-  border-color: var(--primary-green) !important;
-  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
+button[class*="btn-secondary"] {
+  color: var(--primary-green);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--primary-green);
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 button.btn-secondary:hover,
 .btn-secondary:hover,
 a.btn-secondary:hover {
-  background: rgba(255, 255, 255, 1) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.3), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-  border-color: #0d6b2f !important;
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.3), inset 0 1px 0 rgba(255, 255, 255, 1);
+  border-color: var(--primary-green-dark);
 }
 
 button.btn-secondary:active,
 .btn-secondary:active,
 a.btn-secondary:active {
-  transform: translateY(0) scale(0.98) !important;
+  transform: translateY(0) scale(0.98);
 }
 
-/* Action buttons - ensure visible */
+/* Action Buttons */
 .btn-download,
-.btn-delete,
 .btn-refresh,
-.btn-mark-read,
-.btn-delete-report {
-  color: var(--primary-green) !important;
-  background-color: var(--bg-gray) !important;
-  border: 1px solid var(--border-gray) !important;
+.btn-mark-read {
+  color: var(--primary-green);
+  background-color: var(--bg-gray);
+  border: 1px solid var(--border-gray);
 }
 
 .btn-delete,
 .btn-delete-report {
-  color: var(--error) !important;
+  color: var(--error);
+  background-color: var(--bg-gray);
+  border: 1px solid var(--border-gray);
 }
 
-/* Disabled buttons */
-button:disabled {
-  color: var(--text-lighter-gray) !important;
-  background-color: var(--bg-gray-light) !important;
-  border-color: var(--border-gray) !important;
-  opacity: 0.6 !important;
+/* Disabled State */
+button:disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
-/* Links - ensure readable */
-a {
-  color: var(--primary-green) !important;
-}
-
-/* Text on colored backgrounds */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-dark) !important;
-}
-
-/* White text on green backgrounds - keep white */
-.dashboard-header h1,
-.dashboard-header p,
-.evaluation-header h1,
-.evaluation-header p,
-.admin-header h1,
-.admin-header p,
-.landing-header h1,
-.landing-subtitle,
-[style*="color: white"],
-[class*="header"] h1,
-[class*="header"] p {
-  color: #ffffff !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Modern smooth transitions for all interactive elements */
-button, a, input, select, textarea {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-button:focus, a:focus, input:focus, select:focus, textarea:focus {
-  outline: 2px solid var(--primary-green) !important;
-  outline-offset: 2px !important;
-}
-
-/* Universal text handling */
-* {
-  word-break: normal !important;
-  overflow-wrap: normal !important;
-  white-space: normal !important;
-  hyphens: none !important;
-  -webkit-hyphens: none !important;
-  -ms-hyphens: none !important;
-}
-
-/* Override for AdminPage cards specifically */
-.admin-page .ant-card,
-.admin-page .ant-card-body,
-.admin-page .ant-card-body * {
-  word-break: normal !important;
-  overflow-wrap: normal !important;
-  white-space: normal !important;
-  hyphens: none !important;
-  -webkit-hyphens: none !important;
-  -ms-hyphens: none !important;
-}
-
-/* Ensure labels are readable */
-label {
-  color: var(--text-dark) !important;
-  font-weight: 500 !important;
-}
-
-/* Fix for text in modals */
-.modal,
-.validation-modal,
-[class*="modal"] {
-  color: var(--text-dark) !important;
-}
-
-/* Fix for pagination text */
-.pagination,
-[class*="pagination"] {
-  color: var(--primary-green) !important;
-}
-
-/* Fix for table text */
-table,
-table td {
-  color: var(--text-dark) !important;
-}
-
-table th {
-  background-color: var(--primary-green) !important;
-  color: #ffffff !important;
-}
-
-/* Rating badges */
-.rating-badge,
-[class*="rating-badge"] {
-  color: #ffffff !important;
-}
-
-/* Fix empty state text */
-.empty-state,
-.loading,
-.empty-message {
-  color: var(--text-dark) !important;
-}
-
-/* Fix all headings in cards */
-.survey-card h3,
-.survey-card h4,
-.detail-section h4,
-.detail-section h5 {
-  color: var(--primary-green) !important;
-}
-
-/* Modern select dropdown styling */
-select {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 2px solid rgba(17, 130, 59, 0.2) !important;
-  border-radius: 8px !important;
-  padding: 0.75rem 1rem !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-}
-
-select:hover {
-  border-color: var(--primary-green) !important;
-  box-shadow: 0 4px 12px rgba(17, 130, 59, 0.15) !important;
-}
-
-select:focus {
-  border-color: var(--primary-green) !important;
-  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1) !important;
-}
-
-select option {
-  color: var(--text-dark) !important;
-  background-color: var(--bg-white) !important;
-  padding: 0.5rem !important;
-}
-
-/* Modern Card Styles - Glassmorphism Effect */
+/* ============================================
+   CARDS - Glassmorphism Design
+   ============================================ */
 .card,
 .stat-card,
 .survey-card,
@@ -262,18 +270,18 @@ select option {
 .feedback-card,
 .developer-card,
 [class*="card"] {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  overflow: hidden !important;
-  position: relative !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all var(--transition-base);
+  overflow: hidden;
+  position: relative;
 }
 
 .card:hover,
@@ -284,84 +292,278 @@ select option {
 .feedback-card:hover,
 .developer-card:hover,
 [class*="card"]:hover {
-  transform: translateY(-4px) !important;
+  transform: translateY(-4px);
   box-shadow: 
     0 12px 40px rgba(0, 0, 0, 0.15),
     0 4px 12px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-/* Modern Input Fields */
+/* ============================================
+   FORM ELEMENTS - Modern Inputs
+   ============================================ */
 input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="tel"],
 input[type="date"],
 input[type="password"],
+textarea,
+select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(17, 130, 59, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: rgba(17, 130, 59, 0.4);
+  box-shadow: 0 4px 12px rgba(17, 130, 59, 0.1);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px rgba(17, 130, 59, 0.1), 0 4px 12px rgba(17, 130, 59, 0.15);
+}
+
 textarea {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 2px solid rgba(17, 130, 59, 0.2) !important;
-  border-radius: 10px !important;
-  padding: 0.875rem 1.25rem !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-  font-size: 1rem !important;
+  resize: vertical;
+  min-height: 120px;
 }
 
-input[type="text"]:hover,
-input[type="email"]:hover,
-input[type="number"]:hover,
-input[type="tel"]:hover,
-input[type="date"]:hover,
-input[type="password"]:hover,
-textarea:hover {
-  border-color: rgba(17, 130, 59, 0.4) !important;
-  box-shadow: 0 4px 12px rgba(17, 130, 59, 0.1) !important;
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2311823b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="number"]:focus,
-input[type="tel"]:focus,
-input[type="date"]:focus,
-input[type="password"]:focus,
-textarea:focus {
-  border-color: var(--primary-green) !important;
-  box-shadow: 0 0 0 4px rgba(17, 130, 59, 0.1), 0 4px 12px rgba(17, 130, 59, 0.15) !important;
-  outline: none !important;
+select option {
+  color: var(--text-dark);
+  background-color: var(--bg-white);
+  padding: 0.5rem;
 }
 
-/* Modern Typography Enhancements */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
-  line-height: 1.2 !important;
+label {
+  display: block;
+  color: var(--text-dark);
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.9375rem;
 }
 
-h1 {
-  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
-}
-
-h2 {
-  font-size: clamp(2rem, 4vw, 2.75rem) !important;
-}
-
-h3 {
-  font-size: clamp(1.5rem, 3vw, 2rem) !important;
-}
-
-/* Smooth Scroll */
-html {
-  scroll-behavior: smooth !important;
-}
-
-/* Modern Link Styles */
+/* ============================================
+   LINKS
+   ============================================ */
 a {
-  transition: all 0.3s ease !important;
-  text-decoration: none !important;
+  color: var(--primary-green);
+  text-decoration: none;
+  transition: all var(--transition-base);
 }
 
 a:hover {
-  text-decoration: underline !important;
-  text-underline-offset: 4px !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--primary-green-dark);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+table th {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  color: #ffffff;
+  padding: var(--spacing-md);
+  text-align: left;
+  font-weight: 600;
+}
+
+table td {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-gray);
+  color: var(--text-dark);
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+table tr:hover {
+  background-color: var(--bg-gray);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+.mt-4 { margin-top: var(--spacing-xl); }
+
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+.mb-4 { margin-bottom: var(--spacing-xl); }
+
+.p-1 { padding: var(--spacing-sm); }
+.p-2 { padding: var(--spacing-md); }
+.p-3 { padding: var(--spacing-lg); }
+.p-4 { padding: var(--spacing-xl); }
+
+/* ============================================
+   RESPONSIVE DESIGN - Mobile First
+   ============================================ */
+@media (max-width: 768px) {
+  :root {
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1.25rem;
+    --spacing-xl: 1.5rem;
+    --spacing-2xl: 2rem;
+  }
+  
+  button,
+  .btn,
+  a.btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .card,
+  .stat-card,
+  .survey-card,
+  .feature-card {
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+  }
+  
+  input,
+  textarea,
+  select {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet optimizations */
+  .card,
+  .stat-card,
+  .survey-card,
+  .feature-card {
+    padding: var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop - full spacing */
+  .card,
+  .stat-card,
+  .survey-card,
+  .feature-card {
+    padding: var(--spacing-2xl);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   TEXT HANDLING - Prevent Overflow
+   ============================================ */
+* {
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* ============================================
+   MODAL & OVERLAY STYLES
+   ============================================ */
+.modal,
+.validation-modal,
+[class*="modal"] {
+  color: var(--text-dark);
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+.pagination,
+[class*="pagination"] {
+  color: var(--primary-green);
+}
+
+/* ============================================
+   RATING BADGES
+   ============================================ */
+.rating-badge,
+[class*="rating-badge"] {
+  color: #ffffff;
+}
+
+/* ============================================
+   EMPTY STATES
+   ============================================ */
+.empty-state,
+.loading,
+.empty-message {
+  color: var(--text-dark);
+  text-align: center;
+  padding: var(--spacing-2xl);
 }
