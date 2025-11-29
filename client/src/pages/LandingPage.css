@@ -123,58 +123,6 @@
   color: #ffffff;
 }
 
-/* Maintenance Notice - Behance Card Style */
-.maintenance-notice {
-  background: linear-gradient(135deg, #1e453e 0%, #16332e 100%);
-  color: #ffffff;
-  padding: var(--spacing-lg);
-  border-radius: var(--radius-lg);
-  margin: 0 auto var(--spacing-xl);
-  max-width: 900px;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-md);
-  box-shadow: var(--shadow-md);
-  border: none;
-}
-
-.maintenance-icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm);
-}
-
-.maintenance-icon svg {
-  width: 100%;
-  height: 100%;
-  stroke: #ffffff;
-}
-
-.maintenance-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.maintenance-content h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 var(--spacing-sm) 0;
-  color: #ffffff;
-}
-
-.maintenance-content p {
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.95);
-}
-
 /* Main Content Container - Box Color #C1D0B5 */
 .landing-content {
   background: rgba(193, 208, 181, 0.4);
@@ -545,17 +493,6 @@
   .btn-support {
     width: 100%;
     max-width: 100%;
-  }
-  
-  .maintenance-notice {
-    flex-direction: column;
-    text-align: center;
-    padding: var(--spacing-md);
-  }
-  
-  .maintenance-icon {
-    width: 40px;
-    height: 40px;
   }
   
   .ratings-section {

@@ -302,22 +302,22 @@ function SurveyPage() {
         // Properly record alumni status
         isAlumni: isAlumni === 'Yes' ? 'Yes' : 'No',
         interestedAlumni: isAlumni === 'Yes' ? null : (interestedAlumni === 'Yes' ? 'Yes' : (interestedAlumni === 'No' ? 'No' : null)),
-        // Handle conditional fields
-        letLicense: formData.letLicense === 'Yes - With License Number' && formData.letLicenseNumber 
-          ? `${formData.letLicense} - ${formData.letLicenseNumber}` 
-          : formData.letLicense,
-        otherPRCLicense: formData.otherPRCLicense === 'Yes - With License Number' && formData.otherPRCLicenseNumber 
-          ? `${formData.otherPRCLicense} - ${formData.otherPRCLicenseNumber}` 
-          : formData.otherPRCLicense,
-        professionalOrganizations: formData.professionalOrganizations === 'Yes - Member' && formData.professionalOrganizationsList
-          ? `${formData.professionalOrganizations}: ${formData.professionalOrganizationsList}`
-          : formData.professionalOrganizations,
-        additionalRevenueSources: formData.additionalRevenueSources && formData.additionalRevenueSources.startsWith('Yes') && formData.additionalRevenueSourcesDetails
-          ? `${formData.additionalRevenueSources}: ${formData.additionalRevenueSourcesDetails}`
-          : formData.additionalRevenueSources,
+        // Handle conditional fields - with null safety checks
+        letLicense: (formData.letLicense === 'Yes - With License Number' && formData.letLicenseNumber && formData.letLicenseNumber.trim()) 
+          ? `${formData.letLicense} - ${formData.letLicenseNumber.trim()}` 
+          : (formData.letLicense || ''),
+        otherPRCLicense: (formData.otherPRCLicense === 'Yes - With License Number' && formData.otherPRCLicenseNumber && formData.otherPRCLicenseNumber.trim()) 
+          ? `${formData.otherPRCLicense} - ${formData.otherPRCLicenseNumber.trim()}` 
+          : (formData.otherPRCLicense || ''),
+        professionalOrganizations: (formData.professionalOrganizations === 'Yes - Member' && formData.professionalOrganizationsList && formData.professionalOrganizationsList.trim()) 
+          ? `${formData.professionalOrganizations}: ${formData.professionalOrganizationsList.trim()}`
+          : (formData.professionalOrganizations || ''),
+        additionalRevenueSources: (formData.additionalRevenueSources && typeof formData.additionalRevenueSources === 'string' && formData.additionalRevenueSources.startsWith('Yes') && formData.additionalRevenueSourcesDetails && formData.additionalRevenueSourcesDetails.trim()) 
+          ? `${formData.additionalRevenueSources}: ${formData.additionalRevenueSourcesDetails.trim()}`
+          : (formData.additionalRevenueSources || ''),
         // Account creation data
-        createAccount: createAccount,
-        accountPassword: createAccount ? accountPassword : null
+        createAccount: createAccount || false,
+        accountPassword: (createAccount && accountPassword && accountPassword.trim()) ? accountPassword.trim() : null
       };
       
       const response = await axios.post(`${API_URL}/survey`, submitData, {
@@ -354,7 +354,7 @@ function SurveyPage() {
         errorMessage = error.message;
       }
       
-        alert('Error: ' + errorMessage);
+      alert('Error: ' + errorMessage);
     } finally {
       setLoading(false);
     }

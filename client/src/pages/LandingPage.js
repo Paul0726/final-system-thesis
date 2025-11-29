@@ -41,21 +41,6 @@ function LandingPage() {
           <p className="landing-subtitle">Track and Monitor BSIT Graduates</p>
         </header>
 
-        {/* Maintenance Notice */}
-        <div className="maintenance-notice">
-          <div className="maintenance-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              <path d="M12 8v4"></path>
-              <path d="M12 16h.01"></path>
-            </svg>
-          </div>
-          <div className="maintenance-content">
-            <h3>System Under Maintenance</h3>
-            <p>The system is currently under maintenance to improve your experience. You can still answer the survey while we continue to enhance the interface and functionality of the system. Thank you for your understanding!</p>
-          </div>
-        </div>
-
         <div className="landing-content">
           <div className="landing-hero">
             <h2>Share Your Journey With Us</h2>
