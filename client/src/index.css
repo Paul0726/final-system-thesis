@@ -567,11 +567,8 @@ input[type="number"]::-webkit-outer-spin-button {
     -ms-hyphens: none !important;
   }
   
-  /* Allow nowrap only for specific elements */
-  button, .btn, a.button {
-    white-space: nowrap !important;
-    word-break: keep-all !important;
-  }
+  /* REMOVED: This was causing button overflow on mobile */
+  /* Buttons should wrap on mobile to prevent overflow */
   
   /* MOBILE SPACING IMPROVEMENTS - Much larger spacing for phone users */
   /* Exclude admin-page - it has its own mobile styles */
@@ -709,19 +706,28 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow-x: hidden !important;
   }
 
-  /* All buttons - prevent overflow */
+  /* All buttons - prevent overflow - MUST override any nowrap rules */
   :not(.admin-page) button,
   :not(.admin-page) .btn,
+  :not(.admin-page) .btn-primary,
+  :not(.admin-page) .btn-secondary,
+  :not(.admin-page) .btn-submit,
+  :not(.admin-page) .btn-large,
   :not(.admin-page) a[class*="btn"],
-  :not(.admin-page) [class*="button"] {
+  :not(.admin-page) a.button,
+  :not(.admin-page) [class*="button"],
+  :not(.admin-page) .evaluation-results-btn,
+  :not(.admin-page) .back-link {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
     white-space: normal !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
+    word-break: break-word !important;
     padding: 0.875rem 1rem !important;
     font-size: 0.9375rem !important;
+    min-width: 0 !important;
   }
 
   /* Button containers - allow wrapping */
@@ -729,12 +735,18 @@ input[type="number"]::-webkit-outer-spin-button {
   [class*="btn"],
   .cta-buttons-row,
   .button-group,
-  .action-buttons {
+  .action-buttons,
+  .dashboard-actions,
+  .form-actions,
+  .about-actions,
+  .success-actions {
     display: flex !important;
+    flex-direction: column !important;
     flex-wrap: wrap !important;
     gap: var(--spacing-sm) !important;
     width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   /* All form elements */
@@ -750,11 +762,18 @@ input[type="number"]::-webkit-outer-spin-button {
 
   /* All text elements - proper wrapping */
   p, span, div, h1, h2, h3, h4, h5, h6,
-  label, li, td, th {
+  label, li, td, th,
+  .rating-value,
+  .rating-count,
+  .rating-stars,
+  .star-rating,
+  .star {
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     hyphens: auto !important;
     max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   /* Prevent text from being cramped */
