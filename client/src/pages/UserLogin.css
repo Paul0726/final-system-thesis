@@ -31,11 +31,6 @@
 }
 
 /* MOBILE REMOVED - PC ONLY */
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
-}
 
 @keyframes backgroundPulse {
   0%, 100% {
