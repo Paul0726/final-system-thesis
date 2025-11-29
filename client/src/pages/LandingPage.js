@@ -15,7 +15,7 @@ function LandingPage() {
 
   useEffect(() => {
     let mounted = true;
-    const loadRatings = async () => {
+    const fetchRatings = async () => {
       try {
         const response = await axios.get(`${API_URL}/feedbacks`, {
           timeout: 10000
@@ -29,24 +29,11 @@ function LandingPage() {
         }
       }
     };
-    loadRatings();
+    fetchRatings();
     return () => {
       mounted = false;
     };
   }, []);
-
-  const fetchRatings = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/feedbacks`, {
-        timeout: 10000 // 10 second timeout for slow connections
-      });
-      if (response.data.success) {
-        setRatings(response.data.ratings || { school: 0, system: 0, total: 0 });
-      }
-    } catch (error) {
-      console.error('Error fetching ratings:', error);
-    }
-  };
 
   return (
     <div className="landing-page">

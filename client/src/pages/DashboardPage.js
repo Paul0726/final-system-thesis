@@ -43,7 +43,7 @@ function DashboardPage() {
 
   useEffect(() => {
     let mounted = true;
-    const loadStats = async () => {
+    const fetchStats = async () => {
       try {
         const response = await axios.get(`${API_URL}/stats`, {
           timeout: 10000
@@ -57,22 +57,11 @@ function DashboardPage() {
         }
       }
     };
-    loadStats();
+    fetchStats();
     return () => {
       mounted = false;
     };
   }, []);
-
-  const fetchStats = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/stats`, {
-        timeout: 10000 // 10 second timeout for slow connections
-      });
-      setStats(response.data.data);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    }
-  };
 
   // Memoize chart data computations for better performance
   const employmentData = useMemo(() => {
