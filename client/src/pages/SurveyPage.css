@@ -109,24 +109,24 @@
   color: #ffffff;
 }
 
-/* Survey Form - Behance White Card */
+/* Survey Form - Minimalist Compact */
 .survey-form {
   background: var(--bg-white);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-3xl);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) var(--spacing-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
   border: 1px solid var(--border-light);
   color: var(--text-dark);
   position: relative;
   z-index: var(--z-base);
 }
 
-/* Form Sections - Behance Clean Cards */
+/* Form Sections - Minimalist Compact */
 .form-section {
-  margin-bottom: var(--spacing-2xl);
-  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
   background: var(--bg-gray-light);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
   transition: all var(--transition-base);
 }
