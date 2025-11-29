@@ -1314,13 +1314,6 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
     surveyStatus = 'Unemployed';
   }
   
-  const getStatusTagColor = (status) => {
-    if (status === 'Employed') return 'green';
-    if (status === 'Self-Employed') return 'blue';
-    if (status === 'Unemployed') return 'orange';
-    return 'default';
-  };
-  
   const handleDelete = (e) => {
     e.preventDefault();
     e.stopPropagation();
