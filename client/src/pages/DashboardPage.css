@@ -28,8 +28,9 @@
   will-change: opacity, transform;
 }
 
-/* Mobile optimizations - Disable ALL heavy effects */
-/* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* Mobile optimizations - REMOVED (PC ONLY) */
+/*
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .dashboard-page::before {
     display: none !important;
   }
@@ -51,24 +52,25 @@
     padding: var(--spacing-md) !important;
   }
   
-  /* Reduce chart complexity on mobile */
+  Reduce chart complexity on mobile
   .charts-grid {
     grid-template-columns: 1fr !important;
     gap: var(--spacing-md) !important;
   }
   
-  /* Disable all chart animations */
+  Disable all chart animations
   .recharts-wrapper {
     transform: none !important;
     will-change: auto !important;
   }
   
-  /* Disable all transitions */
+  Disable all transitions
   * {
     transition: none !important;
     animation: none !important;
   }
 }
+*/
 
 /* Mobile-optimized data list (replaces charts on mobile) */
 .mobile-data-list {
