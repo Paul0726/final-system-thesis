@@ -7,8 +7,9 @@
   overflow-x: hidden;
 }
 
-/* Mobile optimizations - Disable ALL effects */
-/* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* Mobile optimizations - REMOVED (PC ONLY) */
+/*
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .about-page {
     background-attachment: scroll !important;
     background: var(--primary-green) !important;
@@ -21,6 +22,7 @@
     animation: none !important;
   }
 }
+*/
 
 .about-container {
   max-width: 1100px;
