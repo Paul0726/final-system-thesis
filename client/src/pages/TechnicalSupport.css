@@ -85,13 +85,34 @@
 /* Content - Behance White Card */
 .technical-support-content,
 .support-content {
-  background: #C1D0B5;
+  background: rgba(193, 208, 181, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-xl);
   padding: var(--spacing-3xl);
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--border-light);
+  box-shadow: 0 8px 32px rgba(30, 69, 62, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: var(--spacing-xl);
   color: var(--text-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.support-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.support-content > * {
+  position: relative;
+  z-index: 1;
 }
 
 .support-info {

@@ -20,7 +20,7 @@ const LoadingSpinner = () => (
     justifyContent: 'center', 
     alignItems: 'center', 
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #11823b 0%, #0d6b2f 50%, #0a5524 100%)'
+    background: '#1e453e'
   }}>
     <div style={{ 
       color: 'white', 

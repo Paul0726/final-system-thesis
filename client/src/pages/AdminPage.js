@@ -403,9 +403,9 @@ function AdminPage() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Employed': return '#11823b';
-      case 'Self-Employed': return '#3b82f6';
-      case 'Unemployed': return '#f59e0b';
+      case 'Employed': return '#1e453e';
+      case 'Self-Employed': return '#2a5d54';
+      case 'Unemployed': return '#C1D0B5';
       default: return '#6b7280';
     }
   };
@@ -769,7 +769,7 @@ function AdminPage() {
                 <Statistic
                   title="Total Surveys"
                   value={stats.total}
-                  valueStyle={{ color: '#11823b' }}
+                  valueStyle={{ color: '#1e453e' }}
                   prefix={<FileTextOutlined />}
                 />
               </Card>
@@ -1387,7 +1387,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
       <Modal
         title={
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <UserOutlined style={{ fontSize: '20px', color: '#11823b' }} />
+            <UserOutlined style={{ fontSize: '20px', color: '#1e453e' }} />
             <span>Respondent Details - {survey.name || 'N/A'}</span>
           </div>
         }
@@ -1491,7 +1491,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
                 <Card size="small" title="System Evaluation" className="admin-details-card">
                   {survey.systemEvaluation.functionality && (
                     <div style={{ marginBottom: '15px' }}>
-                      <Title level={5} style={{ marginBottom: '8px', color: '#11823b' }}>Functionality</Title>
+                      <Title level={5} style={{ marginBottom: '8px', color: '#1e453e' }}>Functionality</Title>
                       <Space direction="vertical" size="small">
                         <Text><strong>The system is easy to use and learned:</strong> {survey.systemEvaluation.functionality.q1 || 'N/A'}/5</Text>
                         <Text><strong>The system can be used with comfort and convenience:</strong> {survey.systemEvaluation.functionality.q2 || 'N/A'}/5</Text>

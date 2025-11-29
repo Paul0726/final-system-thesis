@@ -33,12 +33,12 @@ function EvaluationResultsPage() {
 
   const getRatingColor = (rating) => {
     switch (rating) {
-      case 'Excellent': return '#10b981'; // green
-      case 'Very Good': return '#3b82f6'; // blue
-      case 'Good': return '#8b5cf6'; // purple
-      case 'Fair': return '#f59e0b'; // orange
-      case 'Poor': return '#ef4444'; // red
-      default: return '#6b7280'; // gray
+      case 'Excellent': return '#1e453e';
+      case 'Very Good': return '#2a5d54';
+      case 'Good': return '#C1D0B5';
+      case 'Fair': return '#d2d9ca';
+      case 'Poor': return '#a8b99a';
+      default: return '#6b7280';
     }
   };
 

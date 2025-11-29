@@ -8,7 +8,7 @@ const API_URL = process.env.NODE_ENV === 'production'
   ? '/api' 
   : 'http://localhost:3000/api';
 
-const COLORS = ['#11823b', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
+const COLORS = ['#1e453e', '#2a5d54', '#16332e', '#C1D0B5', '#d2d9ca', '#a8b99a'];
 
 function DashboardPage() {
   const [stats, setStats] = useState(null);
@@ -251,7 +251,7 @@ function DashboardPage() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                    <Line type="monotone" dataKey="value" stroke="#11823b" strokeWidth={2} name="Number of Graduates" />
+                    <Line type="monotone" dataKey="value" stroke="#1e453e" strokeWidth={2} name="Number of Graduates" />
                   </LineChart>
               </ResponsiveContainer>
               )}
@@ -279,7 +279,7 @@ function DashboardPage() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="value" fill="#3b82f6" name="Number of Graduates" />
+                  <Bar dataKey="value" fill="#2a5d54" name="Number of Graduates" />
                 </BarChart>
               </ResponsiveContainer>
               )}
@@ -307,7 +307,7 @@ function DashboardPage() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={2} name="Number of Graduates" />
+                  <Line type="monotone" dataKey="value" stroke="#16332e" strokeWidth={2} name="Number of Graduates" />
                 </LineChart>
               </ResponsiveContainer>
               )}
@@ -338,7 +338,7 @@ function DashboardPage() {
                   <YAxis domain={[0, 5]} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="value" fill="#f59e0b" name="Average Rating" />
+                  <Bar dataKey="value" fill="#C1D0B5" name="Average Rating" />
                 </BarChart>
               </ResponsiveContainer>
               )}

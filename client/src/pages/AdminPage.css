@@ -29,7 +29,7 @@
 
 /* Header - Behance Clean Style */
 .admin-header {
-  background: linear-gradient(135deg, var(--primary-green, #11823b) 0%, var(--primary-green-dark, #0d6b2f) 100%);
+  background: linear-gradient(135deg, #1e453e 0%, #16332e 100%);
   padding: 0;
   box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.06));
   height: auto;
@@ -158,7 +158,7 @@
 .admin-stat-card .ant-statistic-content {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--primary-green, #11823b);
+  color: #1e453e;
 }
 
 /* Filters Section - Behance Clean Card */
@@ -264,7 +264,7 @@
 }
 
 .admin-survey-card:hover .admin-survey-arrow {
-  color: var(--primary-green, #11823b);
+  color: #1e453e;
   transform: translateX(2px);
 }
 
@@ -302,9 +302,9 @@
 }
 
 .admin-details-modal .ant-modal-header {
-  border-bottom: 2px solid var(--primary-green, #11823b);
+  border-bottom: 2px solid #1e453e;
   padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
-  background: linear-gradient(135deg, var(--primary-green, #11823b) 0%, var(--primary-green-dark, #0d6b2f) 100%);
+  background: linear-gradient(135deg, #1e453e 0%, #16332e 100%);
   position: relative;
 }
 
@@ -388,7 +388,7 @@
 
 .admin-details-card .ant-card-head-title {
   font-weight: 600;
-  color: var(--primary-green, #11823b);
+  color: #1e453e;
   font-size: 0.875rem;
   padding: 0;
 }

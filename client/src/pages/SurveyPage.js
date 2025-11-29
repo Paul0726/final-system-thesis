@@ -438,7 +438,7 @@ function SurveyPage() {
         <div className="survey-container">
           <div className="success-message">
             <div className="success-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="64" height="64" style={{ color: '#11823b' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="64" height="64" style={{ color: '#1e453e' }}>
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>

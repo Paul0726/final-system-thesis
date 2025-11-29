@@ -458,7 +458,7 @@ function PersonalDashboard() {
                   </div>
                 </div>
               ))}
-              <button type="button" onClick={addTraining} style={{ padding: '10px 20px', background: '#11823b', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+              <button type="button" onClick={addTraining} style={{ padding: '10px 20px', background: '#1e453e', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                 + Add Training
               </button>
             </div>
