@@ -16,7 +16,7 @@
     padding: var(--spacing-md) !important;
   }
   
-  /* Disable all transitions */
+  Disable all transitions
   * {
     transition: none !important;
     animation: none !important;
