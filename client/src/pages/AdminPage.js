@@ -910,7 +910,7 @@ function AdminPage() {
               </Empty>
             ) : (
               <>
-                <Row gutter={[0, 0]} className="admin-survey-grid">
+                <Row gutter={[16, 16]} className="admin-survey-grid">
                   {paginatedSurveys.map((survey, index) => (
                     <Col key={survey.id || index} xs={24} sm={24} md={12} lg={8} xl={6}>
                       <SurveyCard 
