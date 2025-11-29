@@ -4,8 +4,10 @@
   background-attachment: fixed;
   padding: var(--spacing-lg);
   width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
   position: relative;
+  box-sizing: border-box;
 }
 
 .landing-page::before {
@@ -105,9 +107,12 @@
 
 .landing-container {
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .landing-header {
@@ -142,21 +147,31 @@
   .landing-header {
     padding: var(--spacing-xl) var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .landing-header h1 {
     font-size: 2rem;
     margin-bottom: var(--spacing-sm);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .landing-subtitle {
     font-size: 1.2rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .maintenance-notice {
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     gap: var(--spacing-sm);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .maintenance-icon {
@@ -195,6 +210,8 @@
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: var(--spacing-lg);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .cta-section {
@@ -213,6 +230,9 @@
     margin-top: var(--spacing-sm);
     font-size: 0.875rem;
     text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    padding: 0 var(--spacing-xs);
   }
 
   .cta-secondary {
@@ -410,6 +430,10 @@
   border: 1px solid rgba(255, 255, 255, 0.95);
   margin-bottom: var(--spacing-xl);
   animation: fadeInUp 0.8s ease-out 0.4s both;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .landing-hero {
@@ -472,8 +496,10 @@
   align-items: center;
   width: 100%;
   max-width: 850px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
 }
 
 .cta-buttons-row {
@@ -482,6 +508,8 @@
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .cta-buttons-row:first-child {
@@ -492,6 +520,9 @@
   padding: 0.875rem 2.5rem;
   font-size: 1rem;
   min-width: 220px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .btn-about {
@@ -518,6 +549,8 @@
   max-width: 320px;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .btn-about::before {
@@ -582,6 +615,8 @@
   max-width: 320px;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .btn-support::before {
@@ -778,6 +813,10 @@
   border: 1px solid rgba(255, 255, 255, 0.95);
   margin-bottom: var(--spacing-xl);
   text-align: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .ratings-section h2 {
@@ -802,6 +841,8 @@
   border-radius: var(--radius-2xl);
   padding: var(--spacing-2xl);
   min-width: 280px;
+  max-width: 100%;
+  width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.9);
   transition: all var(--transition-slower);
   position: relative;
@@ -810,6 +851,7 @@
     var(--shadow-lg),
     0 0 0 1px rgba(255, 255, 255, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
 }
 
 .rating-card::before {
@@ -971,6 +1013,7 @@
   padding: var(--spacing-xl);
   min-width: 380px;
   max-width: 380px;
+  max-width: min(380px, calc(100vw - 2rem));
   border: 1px solid rgba(255, 255, 255, 0.9);
   transition: all var(--transition-slower);
   flex-shrink: 0;
@@ -980,6 +1023,7 @@
     var(--shadow-lg),
     0 0 0 1px rgba(255, 255, 255, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
 }
 
 .feedback-card::before {
@@ -1346,7 +1390,17 @@
 
 @media (max-width: 768px) {
   .landing-page {
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-md);
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .landing-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   .landing-header {
@@ -1367,9 +1421,12 @@
   }
 
   .landing-content {
-    padding: var(--spacing-2xl) var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-md);
     border-radius: var(--radius-xl);
-    margin-bottom: var(--spacing-2xl);
+    margin-bottom: var(--spacing-lg);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .landing-hero {
@@ -1390,35 +1447,48 @@
   }
 
   .btn-large {
-    padding: 1.25rem 2.5rem;
-    font-size: 1.125rem;
-    min-height: 56px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    min-height: 48px;
     width: 100%;
     max-width: 100%;
     margin: var(--spacing-md) 0;
+    box-sizing: border-box;
   }
 
   .cta-buttons-row {
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-sm);
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .btn-about,
   .btn-support {
     width: 100%;
     max-width: 100%;
-    padding: 1.125rem 2rem;
-    font-size: 1.0625rem;
-    min-height: 52px;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+    min-height: 44px;
+    min-width: auto;
+    box-sizing: border-box;
+  }
+
+  .cta-secondary {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .cta-secondary .btn-secondary {
     width: 100%;
     max-width: 100%;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    min-height: 48px;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+    min-height: 44px;
+    min-width: auto;
+    box-sizing: border-box;
   }
 
   .landing-features {
@@ -1463,22 +1533,31 @@
     padding: var(--spacing-lg) var(--spacing-md);
     border-radius: var(--radius-xl);
     margin-bottom: var(--spacing-lg);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .ratings-section h2 {
     font-size: 1.75rem;
     margin-bottom: var(--spacing-lg);
+    word-wrap: break-word;
   }
 
   .ratings-display {
     flex-direction: column;
     gap: var(--spacing-md);
+    width: 100%;
+    max-width: 100%;
   }
 
   .rating-card {
-    min-width: 100%;
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
     padding: var(--spacing-lg) var(--spacing-md);
     border-radius: var(--radius-lg);
+    box-sizing: border-box;
   }
 
   .rating-card h3 {
@@ -1510,10 +1589,24 @@
   }
 
   .feedback-card {
-    min-width: 280px;
-    max-width: 280px;
+    min-width: auto;
+    width: 100%;
+    max-width: calc(100vw - 2rem);
     padding: var(--spacing-lg) var(--spacing-md);
     border-radius: var(--radius-lg);
+    box-sizing: border-box;
+  }
+
+  .feedback-scroll-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+  }
+
+  .feedback-scroll {
+    width: max-content;
+    max-width: 100%;
   }
 
   .feedback-card p {
@@ -1592,6 +1685,14 @@
 @media (max-width: 480px) {
   .landing-page {
     padding: var(--spacing-sm);
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .landing-header {
@@ -1746,9 +1847,11 @@
   }
 
   .feedback-card {
-    min-width: 260px;
-    max-width: 260px;
+    min-width: auto;
+    width: 100%;
+    max-width: calc(100vw - 1rem);
     padding: var(--spacing-md) var(--spacing-sm);
+    box-sizing: border-box;
   }
 
   .developers-section {
