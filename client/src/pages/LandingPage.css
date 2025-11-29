@@ -346,6 +346,54 @@
     width: 40px;
     height: 40px;
   }
+  
+  .ratings-section {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+  
+  .ratings-display {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .rating-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .developers-section {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+  
+  .developers-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .developer-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .privacy-section {
+    border-radius: var(--radius-lg);
+  }
+  
+  .privacy-header {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+  
+  .privacy-content {
+    padding: var(--spacing-lg);
+  }
+  
+  .landing-footer {
+    padding: var(--spacing-lg);
+  }
+  
+  .developers-list {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
 }
 
 /* Tablet Devices */
@@ -370,11 +418,407 @@
   }
 }
 
+/* ============================================
+   RATINGS SECTION - Behance Clean Cards
+   ============================================ */
+.ratings-section {
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+}
+
+.ratings-section h2 {
+  color: var(--text-dark);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--spacing-2xl);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ratings-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.rating-card {
+  background: var(--bg-gray-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.rating-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: var(--primary-green);
+}
+
+.rating-card h3 {
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-lg);
+  font-weight: 600;
+}
+
+.rating-stars {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rating-value {
+  color: var(--primary-green);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.rating-count {
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Star Rating Component Styles */
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star-rating.star-small .star {
+  font-size: 0.875rem;
+}
+
+.star-rating.star-medium .star {
+  font-size: 1.25rem;
+}
+
+.star-rating.star-large .star {
+  font-size: 1.75rem;
+}
+
+.star {
+  color: #ffc107;
+  display: inline-block;
+  line-height: 1;
+}
+
+.star-filled {
+  color: #ffc107;
+}
+
+.star-half {
+  color: #ffc107;
+  opacity: 0.6;
+}
+
+.star-empty {
+  color: var(--border-gray);
+}
+
+/* ============================================
+   DEVELOPERS SECTION - Behance Clean Cards
+   ============================================ */
+.developers-section {
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+}
+
+.developers-section h2 {
+  color: var(--text-dark);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.developers-subtitle {
+  color: var(--text-gray);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-xl);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.btn-show-developers,
+.btn-hide-developers {
+  background: var(--primary-green);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+  margin: var(--spacing-md) auto var(--spacing-xl);
+  display: block;
+}
+
+.btn-show-developers:hover:not(:disabled),
+.btn-hide-developers:hover:not(:disabled) {
+  background: var(--primary-green-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.developers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.developer-card {
+  background: var(--bg-gray-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.developer-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: var(--primary-green);
+}
+
+.developer-image {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto var(--spacing-lg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 3px solid var(--border-light);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.developer-card:hover .developer-image {
+  border-color: var(--primary-green);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.developer-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.developer-card h3 {
+  color: var(--text-dark);
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 600;
+}
+
+.developer-role {
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ============================================
+   PRIVACY SECTION - Behance Clean Accordion
+   ============================================ */
+.privacy-section {
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-light);
+  margin-bottom: var(--spacing-2xl);
+  overflow: hidden;
+}
+
+.privacy-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all var(--transition-base);
+  background: var(--bg-gray-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.privacy-header:hover {
+  background: var(--bg-gray);
+}
+
+.privacy-header h3 {
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.privacy-toggle {
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  transition: transform var(--transition-base);
+}
+
+.privacy-content {
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  background: var(--bg-white);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.privacy-text {
+  color: var(--text-gray);
+  line-height: 1.8;
+  font-size: 0.9375rem;
+}
+
+.privacy-text p {
+  margin-bottom: var(--spacing-md);
+}
+
+.privacy-text strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.privacy-text ul {
+  margin: var(--spacing-md) 0 var(--spacing-lg) var(--spacing-xl);
+  list-style: disc;
+}
+
+.privacy-text ul li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.privacy-note {
+  background: var(--light-green);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--primary-green);
+  margin-top: var(--spacing-lg);
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   FOOTER SECTION
+   ============================================ */
+.landing-footer {
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-light);
+  text-align: center;
+  margin-top: var(--spacing-2xl);
+}
+
+.landing-footer p {
+  color: var(--text-gray);
+  font-size: 0.9375rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.footer-domain {
+  color: var(--primary-green);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.footer-developers {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-light);
+}
+
+.developers-label {
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.developers-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-gray);
+  font-size: 0.875rem;
+}
+
+.developers-list span {
+  display: inline-block;
+}
+
+/* ============================================
+   BUTTON IMPROVEMENTS - Behance Style
+   ============================================ */
+.btn-secondary {
+  background: var(--bg-white);
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+  padding: 0.875rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--primary-green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-green-dark);
+}
+
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   .feature-card:hover,
   .btn-about:hover,
-  .btn-support:hover {
+  .btn-support:hover,
+  .rating-card:hover,
+  .developer-card:hover,
+  .btn-secondary:hover {
     transform: none;
   }
 }
