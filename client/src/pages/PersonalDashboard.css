@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 50%, var(--primary-green-darker) 100%);
   background-attachment: fixed;
-  padding: var(--spacing-lg);
+  padding: clamp(var(--spacing-md), 2vw, var(--spacing-lg));
   width: 100%;
   overflow-x: hidden;
   position: relative;
@@ -27,15 +27,14 @@
   will-change: opacity, transform;
 }
 
-/* AGGRESSIVE MOBILE OPTIMIZATIONS - Disable ALL effects */
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* UNIVERSAL: Disable heavy effects for performance (prefers-reduced-motion only) */
+@media (prefers-reduced-motion: reduce) {
   .personal-dashboard-page::before {
     display: none !important;
   }
   
   .personal-dashboard-page {
     background-attachment: scroll !important;
-    background: var(--primary-green) !important;
   }
   
   .form-container {
@@ -44,7 +43,6 @@
     background: rgba(255, 255, 255, 0.95) !important;
   }
   
-  /* Disable all transitions */
   * {
     transition: none !important;
     animation: none !important;
@@ -72,8 +70,8 @@
 .personal-dashboard-header {
   text-align: center;
   color: white;
-  margin-bottom: var(--spacing-xl);
-  padding: var(--spacing-2xl) var(--spacing-lg);
+  margin-bottom: clamp(var(--spacing-lg), 2vw, var(--spacing-xl));
+  padding: clamp(var(--spacing-xl), 3vw, var(--spacing-2xl)) clamp(var(--spacing-md), 2vw, var(--spacing-lg));
   position: relative;
 }
 
@@ -403,24 +401,25 @@
   font-weight: 500;
 }
 
-@media (max-width: 768px) {
-  .personal-dashboard-form {
-    padding: var(--spacing-xl) var(--spacing-lg);
-    border-radius: var(--radius-xl);
-  }
+/* Universal responsive - all sizes scale automatically */
+.personal-dashboard-form {
+  padding: clamp(var(--spacing-lg), 3vw, var(--spacing-3xl)) clamp(var(--spacing-md), 2vw, var(--spacing-xl));
+  border-radius: clamp(var(--radius-lg), 2vw, var(--radius-2xl));
+}
 
-  .form-section {
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-xl);
-  }
+.form-section {
+  padding: clamp(var(--spacing-lg), 2vw, var(--spacing-xl));
+  border-radius: clamp(var(--radius-lg), 2vw, var(--radius-xl));
+}
 
-  .form-actions {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
+.form-actions {
+  flex-direction: column;
+  gap: clamp(var(--spacing-sm), 1vw, var(--spacing-md));
+}
 
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-  }
+.form-actions .btn-primary,
+.form-actions .btn-secondary {
+  width: 100%;
+  padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1.75rem, 3vw, 2.5rem);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
 }
