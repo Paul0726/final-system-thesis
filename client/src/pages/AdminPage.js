@@ -1361,22 +1361,29 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
       ]}
     >
       <div className="admin-survey-card-content">
+        <div className="admin-survey-status-indicator">
+          <div className={`admin-survey-status-dot ${surveyStatus === 'Employed' ? 'active' : surveyStatus === 'Self-Employed' ? 'self-employed' : 'inactive'}`}></div>
+        </div>
         <div className="admin-survey-main">
           <div className="admin-survey-name">
             {survey.name || 'N/A'}
           </div>
-          <div className="admin-survey-meta">
-            <span className="admin-survey-status">
-              <Tag color={getStatusTagColor(surveyStatus)} className="admin-survey-tag">
-                {surveyStatus || 'N/A'}
-              </Tag>
-            </span>
+          <div className="admin-survey-secondary">
             <span className="admin-survey-year">
               {survey.schoolYearGraduated || 'N/A'}
             </span>
+            <span className="admin-survey-separator">•</span>
             <span className="admin-survey-gender">
               {survey.sex || 'N/A'}
             </span>
+            {(survey.isAlumni || survey.interestedAlumni) && (
+              <>
+                <span className="admin-survey-separator">•</span>
+                <span className="admin-survey-alumni">
+                  {survey.isAlumni === 'Yes' ? 'Alumni' : survey.interestedAlumni === 'Yes' ? 'Wants Alumni' : ''}
+                </span>
+              </>
+            )}
           </div>
         </div>
         <div className="admin-survey-arrow">
