@@ -348,16 +348,49 @@
   }
   
   .ratings-section {
-    padding: var(--spacing-xl) var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+  }
+  
+  .ratings-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
   }
   
   .ratings-display {
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
+    max-width: 100%;
   }
   
   .rating-card {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .rating-card h3 {
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .rating-stars {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .star-rating.star-large .star {
+    font-size: 1.5rem;
+  }
+  
+  .rating-value {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .rating-count {
+    font-size: 0.8125rem;
   }
   
   .developers-section {
@@ -494,6 +527,8 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .star-rating.star-small .star {
@@ -506,6 +541,21 @@
 
 .star-rating.star-large .star {
   font-size: 1.75rem;
+}
+
+/* Mobile star rating adjustments */
+@media (max-width: 768px) {
+  .star-rating.star-large .star {
+    font-size: 1.25rem;
+  }
+  
+  .star-rating.star-medium .star {
+    font-size: 1rem;
+  }
+  
+  .star-rating {
+    gap: 1px;
+  }
 }
 
 .star {
