@@ -1392,16 +1392,24 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
           </div>
         }
         open={showDetailsModal}
-        onCancel={() => setShowDetailsModal(false)}
+        onCancel={(e) => {
+          e.stopPropagation();
+          setShowDetailsModal(false);
+        }}
+        maskClosable={true}
         footer={[
-          <Button key="close" onClick={() => setShowDetailsModal(false)}>
+          <Button key="close" onClick={(e) => {
+            e.stopPropagation();
+            setShowDetailsModal(false);
+          }}>
             Close
           </Button>,
           <Button 
             key="download" 
             type="primary" 
             icon={<DownloadOutlined />}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               onDownloadPDF(survey);
               setShowDetailsModal(false);
             }}
@@ -1412,6 +1420,7 @@ const SurveyCard = memo(function SurveyCard({ survey, index, onDelete, getStatus
         width={isMobile ? '95%' : 1000}
         className="admin-details-modal"
         style={{ top: isMobile ? 10 : 50 }}
+        closable={true}
       >
         <div style={{ maxHeight: isMobile ? '75vh' : '70vh', overflowY: 'auto', padding: isMobile ? '4px' : '8px' }}>
           <Row gutter={isMobile ? [12, 12] : [16, 16]}>
