@@ -403,13 +403,29 @@
    ADMIN PAGE - MOBILE DESIGN (Mobile Only)
    All mobile styles override PC styles
    ============================================ */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   /* Reset PC styles for mobile */
   /* Override global mobile styles from index.css */
   .admin-page {
     min-height: 100vh !important;
     background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%) !important;
     padding: 0 !important;
+  }
+  
+  /* TEST: Verify media query is working - remove after testing */
+  .admin-page::before {
+    content: 'MOBILE MODE ACTIVE' !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: red !important;
+    color: white !important;
+    padding: 4px !important;
+    text-align: center !important;
+    font-size: 10px !important;
+    z-index: 9999 !important;
+    display: block !important;
   }
   
   /* Override global button styles from index.css */
@@ -436,65 +452,75 @@
   /* ============================================
      MOBILE DESIGN - Content & Layout
      ============================================ */
-  .admin-content {
+  .admin-page .admin-content {
     padding: 6px !important;
   }
   
-  .admin-content .ant-card {
+  .admin-page .admin-content .ant-card {
     margin-bottom: 8px !important;
     border-radius: 6px !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
   }
   
-  .admin-content .ant-card-body {
+  .admin-page .admin-content .ant-card-body {
     padding: 10px !important;
+  }
+  
+  /* Force override any inline styles */
+  .admin-page .admin-content[style] {
+    padding: 6px !important;
   }
   
   /* ============================================
      MOBILE DESIGN - Header
      ============================================ */
-  .admin-header {
+  .admin-page .admin-header {
     padding: 0 !important;
   }
   
-  .admin-header-content {
+  .admin-page .admin-header-content {
     padding: 8px 10px !important;
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 8px !important;
   }
   
-  .admin-header-left {
+  .admin-page .admin-header-content[style] {
+    padding: 8px 10px !important;
+    flex-direction: column !important;
+  }
+  
+  .admin-page .admin-header-left {
     width: 100% !important;
   }
   
-  .admin-header-brand {
+  .admin-page .admin-header-brand {
     width: 100% !important;
     gap: 10px !important;
   }
   
-  .admin-header-logo {
+  .admin-page .admin-header-logo {
     width: 32px !important;
     height: 32px !important;
   }
   
-  .admin-header-title {
+  .admin-page .admin-header-title {
     font-size: 15px !important;
     line-height: 1.2 !important;
   }
   
-  .admin-header-subtitle {
+  .admin-page .admin-header-subtitle {
     font-size: 10px !important;
     line-height: 1.2 !important;
   }
   
-  .admin-header-right {
+  .admin-page .admin-header-right {
     width: 100% !important;
     justify-content: space-between !important;
     gap: 6px !important;
   }
   
-  .admin-header-btn {
+  .admin-page .admin-header-btn {
     flex: 1 !important;
     justify-content: center !important;
     padding: 5px 10px !important;
@@ -505,24 +531,24 @@
   /* ============================================
      MOBILE DESIGN - Filters Section
      ============================================ */
-  .admin-filters {
+  .admin-page .admin-filters {
     padding: 8px !important;
     border-radius: 6px !important;
     margin-bottom: 10px !important;
   }
   
-  .admin-filters-row {
+  .admin-page .admin-filters-row {
     flex-direction: column !important;
     gap: 8px !important;
   }
   
-  .admin-filter-item {
+  .admin-page .admin-filter-item {
     width: 100% !important;
     min-width: 100% !important;
   }
   
-  .admin-filter-item .ant-input,
-  .admin-filter-item .ant-select-selector {
+  .admin-page .admin-filter-item .ant-input,
+  .admin-page .admin-filter-item .ant-select-selector {
     padding: 5px 10px !important;
     font-size: 13px !important;
     height: 36px !important;
@@ -530,12 +556,12 @@
     border-radius: 4px !important;
   }
   
-  .admin-filter-item .ant-input-affix-wrapper {
+  .admin-page .admin-filter-item .ant-input-affix-wrapper {
     padding: 5px 10px !important;
     height: 36px !important;
   }
   
-  .admin-filter-item .ant-input-affix-wrapper .ant-input {
+  .admin-page .admin-filter-item .ant-input-affix-wrapper .ant-input {
     padding: 0 !important;
     height: auto !important;
   }
@@ -544,54 +570,54 @@
      MOBILE DESIGN - Statistics Cards
      Completely overrides PC styles
      ============================================ */
-  .admin-stats {
+  .admin-page .admin-stats {
     margin-bottom: 10px !important;
   }
   
-  .admin-stats .ant-row {
+  .admin-page .admin-stats .ant-row {
     margin: 0 -4px !important;
   }
   
-  .admin-stats .ant-col {
+  .admin-page .admin-stats .ant-col {
     padding: 0 4px !important;
     margin-bottom: 8px !important;
   }
   
-  .admin-stat-card {
+  .admin-page .admin-stat-card {
     border-radius: 6px !important;
     margin-bottom: 0 !important;
     height: auto !important;
   }
   
-  .admin-stat-card .ant-card-body {
+  .admin-page .admin-stat-card .ant-card-body {
     padding: 10px 12px !important;
     min-height: auto !important;
   }
   
-  .admin-stat-card .ant-statistic {
+  .admin-page .admin-stat-card .ant-statistic {
     margin: 0 !important;
   }
   
-  .admin-stat-card .ant-statistic-title {
+  .admin-page .admin-stat-card .ant-statistic-title {
     font-size: 11px !important;
     margin-bottom: 4px !important;
     line-height: 1.3 !important;
     color: #8c8c8c !important;
   }
   
-  .admin-stat-card .ant-statistic-content {
+  .admin-page .admin-stat-card .ant-statistic-content {
     font-size: 18px !important;
     line-height: 1.2 !important;
   }
   
-  .admin-stat-card .ant-statistic-content-value {
+  .admin-page .admin-stat-card .ant-statistic-content-value {
     font-size: 18px !important;
     line-height: 1.2 !important;
     font-weight: 600 !important;
     color: #11823b !important;
   }
   
-  .admin-stat-card .anticon {
+  .admin-page .admin-stat-card .anticon {
     font-size: 16px !important;
     color: #11823b !important;
   }
@@ -600,20 +626,20 @@
      MOBILE DESIGN - Survey Cards (Single Column)
      Completely overrides PC grid layout
      ============================================ */
-  .admin-survey-grid {
+  .admin-page .admin-survey-grid {
     margin-bottom: 16px !important;
     display: flex !important;
     flex-direction: column !important;
   }
   
-  .admin-survey-grid .ant-row {
+  .admin-page .admin-survey-grid .ant-row {
     display: flex !important;
     flex-direction: column !important;
     margin: 0 !important;
     gap: 0 !important;
   }
   
-  .admin-survey-grid .ant-col {
+  .admin-page .admin-survey-grid .ant-col {
     width: 100% !important;
     max-width: 100% !important;
     flex: 0 0 100% !important;
@@ -621,7 +647,7 @@
     padding: 0 !important;
   }
   
-  .admin-survey-card {
+  .admin-page .admin-survey-card {
     border-radius: 6px !important;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
     margin-bottom: 6px !important;
@@ -629,26 +655,26 @@
     border: 1px solid #f0f0f0 !important;
   }
   
-  .admin-survey-card:hover {
+  .admin-page .admin-survey-card:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     transform: none !important;
     border-color: #d9d9d9 !important;
   }
   
-  .admin-survey-card .ant-card-body {
+  .admin-page .admin-survey-card .ant-card-body {
     padding: 10px 12px !important;
     min-height: auto !important;
   }
   
-  .admin-survey-card-content {
+  .admin-page .admin-survey-card-content {
     gap: 8px !important;
   }
   
-  .admin-survey-main {
+  .admin-page .admin-survey-main {
     gap: 4px !important;
   }
   
-  .admin-survey-name {
+  .admin-page .admin-survey-name {
     font-size: 14px !important;
     font-weight: 600 !important;
     line-height: 1.3 !important;
@@ -656,23 +682,23 @@
     color: #262626 !important;
   }
   
-  .admin-survey-meta {
+  .admin-page .admin-survey-meta {
     gap: 6px !important;
   }
   
-  .admin-survey-year,
-  .admin-survey-gender {
+  .admin-page .admin-survey-year,
+  .admin-page .admin-survey-gender {
     font-size: 11px !important;
     line-height: 1.3 !important;
     color: #8c8c8c !important;
   }
   
-  .admin-survey-arrow {
+  .admin-page .admin-survey-arrow {
     font-size: 12px !important;
     color: #8c8c8c !important;
   }
   
-  .admin-survey-tag {
+  .admin-page .admin-survey-tag {
     font-size: 9px !important;
     padding: 2px 6px !important;
     line-height: 1.4 !important;
@@ -681,19 +707,19 @@
     border-radius: 3px !important;
   }
   
-  .admin-survey-card .ant-card-actions {
+  .admin-page .admin-survey-card .ant-card-actions {
     padding: 6px 0 !important;
     min-height: auto !important;
     border-top: 1px solid #f0f0f0 !important;
     margin-top: 4px !important;
   }
   
-  .admin-survey-card .ant-card-actions > li {
+  .admin-page .admin-survey-card .ant-card-actions > li {
     margin: 0 !important;
     padding: 0 !important;
   }
   
-  .admin-survey-card .ant-card-actions .ant-btn {
+  .admin-page .admin-survey-card .ant-card-actions .ant-btn {
     padding: 4px 8px !important;
     font-size: 12px !important;
     height: 28px !important;
@@ -788,11 +814,11 @@
   }
   
   /* Pagination - Mobile */
-  .admin-pagination {
+  .admin-page .admin-pagination {
     margin-top: 16px !important;
   }
   
-  .admin-pagination .ant-pagination-item {
+  .admin-page .admin-pagination .ant-pagination-item {
     min-width: 28px !important;
     height: 28px !important;
     line-height: 26px !important;
@@ -800,12 +826,12 @@
   }
   
   /* Divider - Mobile */
-  .admin-survey-card .ant-divider {
+  .admin-page .admin-survey-card .ant-divider {
     margin: 10px 0 !important;
   }
   
   /* Button - Mobile */
-  .admin-survey-card .ant-btn {
+  .admin-page .admin-survey-card .ant-btn {
     padding: 4px 8px !important;
     font-size: 12px !important;
     height: auto !important;
