@@ -4,7 +4,7 @@
 
 .technical-support-page {
   min-height: 100vh;
-  background: var(--bg-off-white);
+  background: #E0E2DB;
   padding: var(--spacing-xl);
   width: 100%;
   max-width: 100vw;
@@ -26,7 +26,7 @@
   color: white;
   padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  background: #1e453e;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
 }
@@ -85,7 +85,7 @@
 /* Content - Behance White Card */
 .technical-support-content,
 .support-content {
-  background: var(--bg-white);
+  background: #C1D0B5;
   border-radius: var(--radius-xl);
   padding: var(--spacing-3xl);
   box-shadow: var(--shadow-card);
@@ -171,22 +171,22 @@
   font-size: 0.9375rem;
   font-family: var(--font-family);
   transition: all var(--transition-base);
-  background: var(--bg-white);
+  background: #C1D0B5;
   color: var(--text-dark);
 }
 
 .support-form input:hover,
 .support-form textarea:hover,
 .support-form select:hover {
-  border-color: var(--primary-green-light);
+  border-color: #2a5d54;
 }
 
 .support-form input:focus,
 .support-form textarea:focus,
 .support-form select:focus {
   outline: none;
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1);
+  border-color: #1e453e;
+  box-shadow: 0 0 0 3px rgba(30, 69, 62, 0.1);
 }
 
 .support-form textarea {
@@ -254,7 +254,7 @@
 }
 
 .success-message {
-  background: var(--bg-white);
+  background: #C1D0B5;
   border-radius: var(--radius-xl);
   padding: var(--spacing-3xl);
   box-shadow: var(--shadow-card);

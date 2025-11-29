@@ -4,7 +4,7 @@
 
 .about-page {
   min-height: 100vh;
-  background: var(--bg-off-white);
+  background: #E0E2DB;
   padding: var(--spacing-xl);
   width: 100%;
   max-width: 100vw;
@@ -25,7 +25,7 @@
   color: white;
   padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  background: #1e453e;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
 }
@@ -71,7 +71,7 @@
 
 /* About Content - Behance White Card */
 .about-content {
-  background: var(--bg-white);
+  background: #C1D0B5;
   border-radius: var(--radius-xl);
   padding: var(--spacing-3xl);
   box-shadow: var(--shadow-card);
@@ -187,7 +187,7 @@
 .usage-item:hover,
 .note-item:hover {
   box-shadow: var(--shadow-sm);
-  background: var(--bg-white);
+  background: #C1D0B5;
 }
 
 .feature-item h3,

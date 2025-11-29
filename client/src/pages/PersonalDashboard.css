@@ -4,7 +4,7 @@
 
 .personal-dashboard-page {
   min-height: 100vh;
-  background: var(--bg-off-white);
+  background: #E0E2DB;
   padding: var(--spacing-xl);
   width: 100%;
   max-width: 100vw;
@@ -25,7 +25,7 @@
   color: white;
   margin-bottom: var(--spacing-xl);
   padding: var(--spacing-2xl) var(--spacing-lg);
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  background: #1e453e;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   position: relative;
@@ -95,7 +95,7 @@
   text-decoration: none;
   margin-bottom: var(--spacing-lg);
   padding: 0.625rem 1.25rem;
-  background: var(--bg-white);
+  background: #C1D0B5;
   border-radius: var(--radius-md);
   border: 1.5px solid var(--primary-green);
   transition: all var(--transition-base);
@@ -113,7 +113,7 @@
 /* Forms - Behance Clean Cards */
 .email-access-form,
 .personal-dashboard-form {
-  background: var(--bg-white);
+  background: #C1D0B5;
   border-radius: var(--radius-xl);
   padding: var(--spacing-3xl);
   box-shadow: var(--shadow-card);
@@ -157,13 +157,13 @@
 }
 
 .email-input:hover {
-  border-color: var(--primary-green-light);
+  border-color: #2a5d54;
 }
 
 .email-input:focus {
   outline: none;
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1);
+  border-color: #1e453e;
+  box-shadow: 0 0 0 3px rgba(30, 69, 62, 0.1);
 }
 
 .error-message {
@@ -197,7 +197,7 @@
 .form-section {
   margin-bottom: var(--spacing-2xl);
   padding: var(--spacing-xl);
-  background: var(--bg-gray-light);
+  background: #d2d9ca;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
   color: var(--text-dark);
@@ -253,15 +253,15 @@
 .form-group input:hover,
 .form-group select:hover,
 .form-group textarea:hover {
-  border-color: var(--primary-green-light);
+  border-color: #2a5d54;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1);
+  border-color: #1e453e;
+  box-shadow: 0 0 0 3px rgba(30, 69, 62, 0.1);
 }
 
 .alumni-status-display {
@@ -274,7 +274,7 @@
 }
 
 .alumni-status-display h3 {
-  color: var(--primary-green);
+  color: #1e453e;
   margin-bottom: var(--spacing-md);
   font-size: 1.25rem;
   font-weight: 600;

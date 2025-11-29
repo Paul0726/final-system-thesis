@@ -4,7 +4,7 @@
 
 .evaluation-results-page {
   min-height: 100vh;
-  background: var(--bg-off-white);
+  background: #E0E2DB;
   padding: var(--spacing-xl);
   width: 100%;
   max-width: 100vw;
@@ -15,7 +15,7 @@
 .evaluation-container {
   max-width: 1300px;
   margin: 0 auto;
-  background: var(--bg-white);
+  background: #C1D0B5;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
   border: 1px solid var(--border-light);
@@ -26,7 +26,7 @@
 
 /* Header - Behance Clean Style */
 .evaluation-header {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  background: #1e453e;
   color: white;
   padding: var(--spacing-xl);
   display: flex;
@@ -269,7 +269,7 @@
 .btn-back {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background: var(--bg-white);
+  background: #C1D0B5;
   color: var(--primary-green);
   text-decoration: none;
   border-radius: var(--radius-md);
