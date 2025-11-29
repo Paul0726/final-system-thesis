@@ -409,98 +409,138 @@
     min-height: 100vh;
     background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%);
   }
+  /* ============================================
+     MOBILE DESIGN - Content & Layout
+     ============================================ */
   .admin-content {
-    padding: 4px !important;
+    padding: 6px !important;
   }
   
   .admin-content .ant-card {
-    margin-bottom: 6px !important;
-    border-radius: 4px !important;
+    margin-bottom: 8px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
   }
   
   .admin-content .ant-card-body {
-    padding: 8px !important;
+    padding: 10px !important;
+  }
+  
+  /* ============================================
+     MOBILE DESIGN - Header
+     ============================================ */
+  .admin-header {
+    padding: 0 !important;
   }
   
   .admin-header-content {
-    padding: 10px 12px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    padding: 8px 10px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
   }
   
   .admin-header-left {
-    width: 100%;
+    width: 100% !important;
   }
   
   .admin-header-brand {
-    width: 100%;
+    width: 100% !important;
+    gap: 10px !important;
   }
   
   .admin-header-logo {
-    width: 36px;
-    height: 36px;
+    width: 32px !important;
+    height: 32px !important;
   }
   
   .admin-header-title {
-    font-size: 16px !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
   }
   
   .admin-header-subtitle {
-    font-size: 11px !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
   }
   
   .admin-header-right {
-    width: 100%;
-    justify-content: flex-end;
-  }
-  
-  .admin-header-btn {
-    flex: 1;
-    justify-content: center;
-    padding: 6px 12px !important;
-    font-size: 13px !important;
-  }
-  
-  .admin-filters {
-    padding: 6px !important;
-    border-radius: 4px !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .admin-filters-row {
-    flex-direction: column;
+    width: 100% !important;
+    justify-content: space-between !important;
     gap: 6px !important;
   }
   
+  .admin-header-btn {
+    flex: 1 !important;
+    justify-content: center !important;
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+  }
+  
+  /* ============================================
+     MOBILE DESIGN - Filters Section
+     ============================================ */
+  .admin-filters {
+    padding: 8px !important;
+    border-radius: 6px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .admin-filters-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
   .admin-filter-item {
-    width: 100%;
-    min-width: 100%;
+    width: 100% !important;
+    min-width: 100% !important;
   }
   
   .admin-filter-item .ant-input,
   .admin-filter-item .ant-select-selector {
-    padding: 4px 8px !important;
-    font-size: 12px !important;
-    height: 32px !important;
-    line-height: 24px !important;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    line-height: 26px !important;
+    border-radius: 4px !important;
   }
   
   .admin-filter-item .ant-input-affix-wrapper {
-    padding: 4px 8px !important;
+    padding: 5px 10px !important;
+    height: 36px !important;
+  }
+  
+  .admin-filter-item .ant-input-affix-wrapper .ant-input {
+    padding: 0 !important;
+    height: auto !important;
   }
   
   /* ============================================
      MOBILE DESIGN - Statistics Cards
      Completely overrides PC styles
      ============================================ */
+  .admin-stats {
+    margin-bottom: 10px !important;
+  }
+  
+  .admin-stats .ant-row {
+    margin: 0 -4px !important;
+  }
+  
+  .admin-stats .ant-col {
+    padding: 0 4px !important;
+    margin-bottom: 8px !important;
+  }
+  
   .admin-stat-card {
-    border-radius: 4px !important;
-    margin-bottom: 6px !important;
+    border-radius: 6px !important;
+    margin-bottom: 0 !important;
+    height: auto !important;
   }
   
   .admin-stat-card .ant-card-body {
-    padding: 8px 10px !important;
+    padding: 10px 12px !important;
     min-height: auto !important;
   }
   
@@ -509,36 +549,27 @@
   }
   
   .admin-stat-card .ant-statistic-title {
-    font-size: 10px !important;
-    margin-bottom: 2px !important;
-    line-height: 1.2 !important;
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
+    line-height: 1.3 !important;
+    color: #8c8c8c !important;
   }
   
   .admin-stat-card .ant-statistic-content {
-    font-size: 14px !important;
+    font-size: 18px !important;
     line-height: 1.2 !important;
   }
   
   .admin-stat-card .ant-statistic-content-value {
-    font-size: 14px !important;
+    font-size: 18px !important;
     line-height: 1.2 !important;
+    font-weight: 600 !important;
+    color: #11823b !important;
   }
   
   .admin-stat-card .anticon {
-    font-size: 14px !important;
-  }
-  
-  .admin-stats {
-    margin-bottom: 8px !important;
-  }
-  
-  .admin-stats .ant-row {
-    margin: 0 -3px !important;
-  }
-  
-  .admin-stats .ant-col {
-    padding: 0 3px !important;
-    margin-bottom: 6px !important;
+    font-size: 16px !important;
+    color: #11823b !important;
   }
   
   /* ============================================
@@ -568,77 +599,80 @@
   
   .admin-survey-card {
     border-radius: 6px !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
-    margin-bottom: 0 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+    margin-bottom: 6px !important;
     height: auto !important;
+    border: 1px solid #f0f0f0 !important;
   }
   
   .admin-survey-card:hover {
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     transform: none !important;
-  }
-  
-  .admin-survey-card {
-    margin-bottom: 4px !important;
+    border-color: #d9d9d9 !important;
   }
   
   .admin-survey-card .ant-card-body {
-    padding: 6px 8px !important;
+    padding: 10px 12px !important;
     min-height: auto !important;
   }
   
   .admin-survey-card-content {
-    gap: 5px !important;
+    gap: 8px !important;
   }
   
   .admin-survey-main {
-    gap: 2px !important;
+    gap: 4px !important;
   }
   
   .admin-survey-name {
-    font-size: 12px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
-    line-height: 1.2 !important;
+    line-height: 1.3 !important;
     margin: 0 !important;
+    color: #262626 !important;
   }
   
   .admin-survey-meta {
-    gap: 4px !important;
+    gap: 6px !important;
   }
   
   .admin-survey-year,
   .admin-survey-gender {
-    font-size: 9px !important;
-    line-height: 1.2 !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    color: #8c8c8c !important;
   }
   
   .admin-survey-arrow {
-    font-size: 10px !important;
+    font-size: 12px !important;
+    color: #8c8c8c !important;
   }
   
   .admin-survey-tag {
-    font-size: 8px !important;
-    padding: 0 4px !important;
-    line-height: 1.2 !important;
-    height: 16px !important;
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+    line-height: 1.4 !important;
+    height: auto !important;
     margin: 0 !important;
+    border-radius: 3px !important;
   }
   
   .admin-survey-card .ant-card-actions {
-    padding: 4px 0 !important;
+    padding: 6px 0 !important;
     min-height: auto !important;
     border-top: 1px solid #f0f0f0 !important;
+    margin-top: 4px !important;
   }
   
   .admin-survey-card .ant-card-actions > li {
     margin: 0 !important;
-    padding: 2px 0 !important;
+    padding: 0 !important;
   }
   
   .admin-survey-card .ant-card-actions .ant-btn {
-    padding: 2px 6px !important;
-    font-size: 11px !important;
-    height: 24px !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    height: 28px !important;
   }
   
   /* Details Modal - Mobile Minimalist */
