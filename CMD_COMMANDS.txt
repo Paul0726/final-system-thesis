@@ -1,0 +1,35 @@
+========================================
+COMMAND PROMPT COMMANDS
+Para ma-apply ang Behance UI Changes
+========================================
+
+OPTION 1: One-Line Command (Fastest)
+----------------------------------------
+git add -A && git commit -m "Behance UI redesign" && git push origin main
+
+OPTION 2: Step-by-Step
+----------------------------------------
+git add -A
+git commit -m "Behance UI redesign"
+git push origin main
+
+OPTION 3: With Timestamp
+----------------------------------------
+git add -A && git commit -m "Behance UI redesign - %date% %time%" && git push origin main
+
+OPTION 4: Using Batch File
+----------------------------------------
+Double-click: APPLY_CHANGES.bat
+
+========================================
+QUICK STEPS:
+========================================
+1. Open Command Prompt
+2. Navigate to project:
+   cd "C:\final system thesis"
+3. Run one of the commands above
+4. Wait for Railway to deploy (2-5 minutes)
+5. Hard refresh browser (Ctrl + Shift + R)
+
+========================================
+
