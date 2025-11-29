@@ -32,14 +32,101 @@ function LandingPage() {
 
   return (
     <div className="landing-page">
-      <div className="landing-container">
-        <header className="landing-header">
-          <div className="logo-container">
-            <img src="/seal.png" alt="School Seal" className="school-seal" />
+      {/* Navigation Header */}
+      <nav className="landing-nav">
+        <div className="nav-container">
+          <div className="nav-logo">
+            <div className="nav-logo-icon">
+              <img src="/seal.png" alt="School Seal" className="nav-seal" />
+            </div>
+            <div className="nav-logo-text">
+              <div className="nav-logo-title">BSIT Graduate Tracer</div>
+              <div className="nav-logo-subtitle">App Landing Page</div>
+            </div>
           </div>
-          <h1>BSIT Graduate Tracer System</h1>
-          <p className="landing-subtitle">Track and Monitor BSIT Graduates</p>
-        </header>
+          <div className="nav-links">
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/about" className="nav-link">About</Link>
+            <Link to="/dashboard" className="nav-link">Features</Link>
+            <Link to="/survey" className="nav-link">How it work</Link>
+            <Link to="/dashboard" className="nav-link">Pricing</Link>
+            <Link to="/survey" className="nav-link">Download</Link>
+            <Link to="/technical-support" className="nav-link">Contact</Link>
+          </div>
+          <Link to="/survey" className="nav-cta-btn">Get Start</Link>
+        </div>
+      </nav>
+
+      <div className="landing-container">
+        {/* Hero Section */}
+        <section className="hero-section">
+          <div className="hero-content">
+            <div className="hero-badge">NEW EXPERIANCE</div>
+            <h1 className="hero-title">Share Your Journey With Us</h1>
+            <p className="hero-description">
+              Are you a BSIT graduate? Help us improve our program by sharing your current employment status, 
+              experiences, and feedback. Your input is valuable in shaping the future of our curriculum.
+            </p>
+            <div className="hero-buttons">
+              <Link to="/survey" className="btn-primary btn-hero-primary">Start Survey Now</Link>
+              <Link to="/about" className="btn-hero-secondary">
+                <svg className="btn-play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                Watch Our Video
+              </Link>
+            </div>
+            <p className="hero-subtext">It only takes 5-10 minutes to complete</p>
+            <div className="hero-indicators">
+              <div className="hero-indicator active"></div>
+              <div className="hero-indicator active"></div>
+              <div className="hero-indicator"></div>
+            </div>
+          </div>
+          <div className="hero-mockup">
+            <div className="phone-mockup">
+              <div className="phone-frame">
+                <div className="phone-notch"></div>
+                <div className="phone-screen">
+                  <div className="phone-header">BSIT Graduate Tracer</div>
+                  <div className="phone-features">
+                    <div className="phone-feature-card">
+                      <div className="phone-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M9 11l3 3L22 4"></path>
+                          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                        </svg>
+                      </div>
+                      <div className="phone-feature-title">Complete Survey</div>
+                    </div>
+                    <div className="phone-feature-card">
+                      <div className="phone-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <line x1="18" y1="20" x2="18" y2="10"></line>
+                          <line x1="12" y1="20" x2="12" y2="4"></line>
+                          <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                      </div>
+                      <div className="phone-feature-title">View Statistics</div>
+                    </div>
+                    <div className="phone-feature-card">
+                      <div className="phone-feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                          <path d="M16 3.13a4 4 0 010 7.75"></path>
+                        </svg>
+                      </div>
+                      <div className="phone-feature-title">Admin Access</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Maintenance Notice */}
         <div className="maintenance-notice">
