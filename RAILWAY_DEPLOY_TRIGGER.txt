@@ -1,0 +1,7 @@
+RAILWAY DEPLOYMENT TRIGGER
+==========================
+This file forces Railway to redeploy
+Timestamp: 2025-01-27 12:35:00
+Reason: CSS syntax fix - removed broken :root block
+Action: Please redeploy immediately
+

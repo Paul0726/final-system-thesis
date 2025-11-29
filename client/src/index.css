@@ -9,7 +9,7 @@
   box-sizing: border-box;
 }
 
-/* Green buttons - white text */
+/* Modern Green buttons - white text with gradient and shadow */
 button.btn-primary,
 .btn-primary,
 button[class*="btn-primary"],
@@ -18,11 +18,49 @@ button[style*="background-color: #11823b"],
 a.btn-primary,
 a[class*="btn-primary"] {
   color: #ffffff !important;
+  background: linear-gradient(135deg, #11823b 0%, #0d6b2f 100%) !important;
   background-color: var(--primary-green) !important;
-  border-color: var(--primary-green) !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.4), 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
-/* White buttons - green text */
+button.btn-primary::before,
+.btn-primary::before,
+a.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+button.btn-primary:hover::before,
+.btn-primary:hover::before,
+a.btn-primary:hover::before {
+  left: 100%;
+}
+
+button.btn-primary:hover,
+.btn-primary:hover,
+a.btn-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+button.btn-primary:active,
+.btn-primary:active,
+a.btn-primary:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+/* Modern White buttons - green text with glassmorphism */
 button.btn-secondary,
 .btn-secondary,
 button[class*="btn-secondary"],
@@ -31,8 +69,29 @@ button[style*="background-color: white"],
 a.btn-secondary,
 a[class*="btn-secondary"] {
   color: var(--primary-green) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   background-color: var(--bg-white) !important;
+  border: 2px solid var(--primary-green) !important;
   border-color: var(--primary-green) !important;
+  box-shadow: 0 4px 15px rgba(17, 130, 59, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+button.btn-secondary:hover,
+.btn-secondary:hover,
+a.btn-secondary:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(17, 130, 59, 0.3), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  border-color: #0d6b2f !important;
+}
+
+button.btn-secondary:active,
+.btn-secondary:active,
+a.btn-secondary:active {
+  transform: translateY(0) scale(0.98) !important;
 }
 
 /* Action buttons - ensure visible */
@@ -85,12 +144,14 @@ h1, h2, h3, h4, h5, h6 {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Ensure all interactive elements respond immediately */
-button:active,
-a:active,
-.btn-primary:active,
-.btn-secondary:active {
-  transform: scale(0.98);
+/* Modern smooth transitions for all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button:focus, a:focus, input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--primary-green) !important;
+  outline-offset: 2px !important;
 }
 
 /* Universal text handling */
@@ -166,8 +227,141 @@ table th {
   color: var(--primary-green) !important;
 }
 
-/* Fix for select dropdown text */
+/* Modern select dropdown styling */
+select {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid rgba(17, 130, 59, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+select:hover {
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 4px 12px rgba(17, 130, 59, 0.15) !important;
+}
+
+select:focus {
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 0 0 3px rgba(17, 130, 59, 0.1) !important;
+}
+
 select option {
   color: var(--text-dark) !important;
   background-color: var(--bg-white) !important;
+  padding: 0.5rem !important;
+}
+
+/* Modern Card Styles - Glassmorphism Effect */
+.card,
+.stat-card,
+.survey-card,
+.feature-card,
+.rating-card,
+.feedback-card,
+.developer-card,
+[class*="card"] {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.card:hover,
+.stat-card:hover,
+.survey-card:hover,
+.feature-card:hover,
+.rating-card:hover,
+.feedback-card:hover,
+.developer-card:hover,
+[class*="card"]:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* Modern Input Fields */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="password"],
+textarea {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid rgba(17, 130, 59, 0.2) !important;
+  border-radius: 10px !important;
+  padding: 0.875rem 1.25rem !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  font-size: 1rem !important;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="number"]:hover,
+input[type="tel"]:hover,
+input[type="date"]:hover,
+input[type="password"]:hover,
+textarea:hover {
+  border-color: rgba(17, 130, 59, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(17, 130, 59, 0.1) !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 0 0 4px rgba(17, 130, 59, 0.1), 0 4px 12px rgba(17, 130, 59, 0.15) !important;
+  outline: none !important;
+}
+
+/* Modern Typography Enhancements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 2.75rem) !important;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem) !important;
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth !important;
+}
+
+/* Modern Link Styles */
+a {
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
 }
