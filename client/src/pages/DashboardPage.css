@@ -29,7 +29,7 @@
 }
 
 /* Mobile optimizations - Disable ALL heavy effects */
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .dashboard-page::before {
     display: none !important;
   }
@@ -235,7 +235,7 @@
 }
 
 /* Universal responsive - using clamp for scaling */
-@media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .header-seal {
     width: 55px;
     height: 55px;
@@ -461,7 +461,7 @@
   box-shadow: var(--shadow-md);
 }
 
-@media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .dashboard-page {
     width: 100% !important;
     max-width: 100vw !important;

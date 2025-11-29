@@ -28,7 +28,8 @@
   will-change: opacity, transform;
 }
 
-/* Mobile optimizations - Disable heavy effects */
+/* Mobile optimizations - REMOVED (PC ONLY) */
+/*
 @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .survey-page::before,
   .survey-page::after {
@@ -52,6 +53,7 @@
     animation: none !important;
   }
 }
+*/
 
 .survey-page::after {
   content: '';
@@ -612,7 +614,7 @@
   }
 }
 
-@media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .validation-modal {
     max-width: 95%;
     margin: var(--spacing-sm);
@@ -1121,9 +1123,10 @@
 }
 
 /* ============================================
-   MOBILE OVERFLOW FIXES
+   MOBILE OVERFLOW FIXES - REMOVED (PC ONLY)
    ============================================ */
-@media (max-width: 768px) {
+/*
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .survey-page {
     width: 100% !important;
     max-width: 100vw !important;
@@ -1250,3 +1253,4 @@
     max-width: 100% !important;
   }
 }
+*/

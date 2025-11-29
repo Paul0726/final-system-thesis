@@ -8,7 +8,7 @@
 }
 
 /* Mobile optimizations - Disable ALL effects */
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .technical-support-page {
     background-attachment: scroll !important;
     background: var(--primary-green) !important;
@@ -327,7 +327,7 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .technical-support-page {
     padding: var(--spacing-md);
     width: 100% !important;
@@ -459,7 +459,7 @@
   }
 }
 
-@media (max-width: 480px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 480px) {
   .support-header h1 {
     font-size: 1.875rem;
     flex-direction: column;

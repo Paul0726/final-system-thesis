@@ -394,9 +394,10 @@ input[type="number"]::-webkit-outer-spin-button {
   color: var(--text-dark) !important;
 }
 
-/* MOBILE FIXES - Button and Text Readability */
+/* MOBILE FIXES REMOVED - PC ONLY LAYOUT */
+/*
 @media (max-width: 768px) {
-  /* CRITICAL: Fix ALL light gray text to dark for readability */
+  CRITICAL: Fix ALL light gray text to dark for readability
   p,
   span,
   div,

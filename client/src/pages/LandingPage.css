@@ -30,7 +30,7 @@
 }
 
 /* Mobile optimizations - Disable ALL effects */
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px), (prefers-reduced-motion: reduce) {
   .landing-page::before {
     display: none !important;
   }
@@ -138,7 +138,7 @@
   animation: fadeInDown 0.8s ease-out;
 }
 
-@media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .school-seal {
     width: 90px;
     height: 90px;
@@ -1417,7 +1417,7 @@
   font-weight: 400;
 }
 
-@media (max-width: 768px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 768px) {
   .landing-page {
     padding: var(--spacing-md);
     width: 100%;
@@ -1751,7 +1751,7 @@
   }
 }
 
-@media (max-width: 480px) {
+/* MOBILE REMOVED - PC ONLY */ /* /* MOBILE REMOVED - PC ONLY */ /* @media (max-width: 480px) {
   .landing-page {
     padding: var(--spacing-sm);
     width: 100%;
