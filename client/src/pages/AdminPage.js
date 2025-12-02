@@ -291,17 +291,40 @@ function AdminPage() {
     e.preventDefault();
     try {
       setLoginLoading(true);
-      const response = await axios.post(`${API_URL}/admin/verify-otp`, { email, otp });
+      
+      // Trim and validate inputs
+      const trimmedEmail = (email || '').trim();
+      const trimmedOTP = (otp || '').trim();
+      
+      if (!trimmedEmail) {
+        alert('Please enter your email address.');
+        return;
+      }
+      
+      if (!trimmedOTP) {
+        alert('Please enter the OTP code.');
+        return;
+      }
+      
+      console.log('Verifying OTP for email:', trimmedEmail);
+      const response = await axios.post(`${API_URL}/admin/verify-otp`, { 
+        email: trimmedEmail, 
+        otp: trimmedOTP 
+      });
+      
       if (response.data.success) {
         localStorage.setItem('adminToken', 'admin-token');
         setIsAuthenticated(true);
+        setOtpSent(false);
+        setOtp('');
         fetchSurveys();
       } else {
         alert('Error: ' + response.data.message);
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      alert('Error: ' + (error.response?.data?.message || 'Invalid OTP. Please try again.'));
+      const errorMessage = error.response?.data?.message || error.message || 'Invalid OTP. Please try again.';
+      alert('Error: ' + errorMessage);
     } finally {
       setLoginLoading(false);
     }

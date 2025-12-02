@@ -625,6 +625,8 @@ app.post('/api/admin/verify-otp', async (req, res) => {
   try {
     const { email, otp } = req.body;
     
+    console.log(`[ADMIN OTP VERIFY] Verification request received for email: ${email}, OTP: ${otp ? '***' : 'missing'}`);
+    
     // Only allow specific admin email (from environment variable or default)
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     
@@ -640,14 +642,25 @@ app.post('/api/admin/verify-otp', async (req, res) => {
       });
     }
 
-    const result = verifyOTP(email, otp);
+    if (!otp || otp.trim() === '') {
+      console.log(`[ADMIN OTP VERIFY] OTP is missing or empty`);
+      return res.status(400).json({ 
+        success: false, 
+        message: 'OTP is required' 
+      });
+    }
+
+    // Use normalized email for OTP verification
+    const result = verifyOTP(normalizedEmail, otp.trim());
+    console.log(`[ADMIN OTP VERIFY] Verification result: ${result.success ? 'SUCCESS' : 'FAILED'} - ${result.message}`);
+    
     if (result.success) {
       res.json({ success: true, message: 'Login successful', token: 'admin-token' });
     } else {
       res.status(401).json({ success: false, message: result.message });
     }
   } catch (error) {
-    console.error('Error verifying OTP:', error);
+    console.error('[ADMIN OTP VERIFY] Error verifying OTP:', error);
     res.status(500).json({ success: false, message: 'Failed to verify OTP' });
   }
 });

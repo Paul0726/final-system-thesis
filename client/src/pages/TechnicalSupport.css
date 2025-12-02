@@ -347,29 +347,29 @@
   .technical-support-page {
     padding: var(--spacing-md);
   }
-  
+
   .technical-support-header,
   .support-header {
     padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
     border-radius: var(--radius-lg);
   }
-  
+
   .technical-support-content,
   .support-content,
   .success-message {
     padding: var(--spacing-xl) var(--spacing-lg);
     border-radius: var(--radius-lg);
   }
-  
+
   .support-form {
     max-width: 100%;
   }
-  
+
   .success-actions,
   .form-actions {
     flex-direction: column;
   }
-  
+
   .success-actions .btn-primary,
   .success-actions .btn-secondary,
   .form-actions .btn-primary,

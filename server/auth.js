@@ -51,10 +51,13 @@ const sendOTP = async (email) => {
     console.log(`[OTP] App Password configured: ${gmailPassword ? 'Yes (hidden)' : 'No'}`);
 
     const otp = generateOTP();
-    otpStore[email] = {
+    // Normalize email to lowercase for consistent storage
+    const normalizedEmail = (email || '').trim().toLowerCase();
+    otpStore[normalizedEmail] = {
       otp: otp,
       expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
     };
+    console.log(`[OTP] OTP stored for normalized email: ${normalizedEmail}`);
 
     // Determine if this is admin or user OTP
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
@@ -129,23 +132,43 @@ const sendOTP = async (email) => {
 
 // Verify OTP
 const verifyOTP = (email, otp) => {
-  const stored = otpStore[email];
+  // Normalize email to lowercase for consistent lookup
+  const normalizedEmail = (email || '').trim().toLowerCase();
+  
+  // Try to find OTP with normalized email
+  let stored = otpStore[normalizedEmail];
+  
+  // If not found, try original email (for backward compatibility)
+  if (!stored) {
+    stored = otpStore[email];
+    // If found with original email, migrate to normalized key
+    if (stored) {
+      otpStore[normalizedEmail] = stored;
+      delete otpStore[email];
+    }
+  }
   
   if (!stored) {
+    console.log(`[OTP VERIFY] OTP not found for email: ${email} (normalized: ${normalizedEmail})`);
+    console.log(`[OTP VERIFY] Available OTP keys:`, Object.keys(otpStore));
     return { success: false, message: 'OTP not found. Please request a new one.' };
   }
 
   if (Date.now() > stored.expiresAt) {
-    delete otpStore[email];
+    delete otpStore[normalizedEmail];
+    if (otpStore[email]) delete otpStore[email];
     return { success: false, message: 'OTP has expired. Please request a new one.' };
   }
 
   if (stored.otp !== otp) {
+    console.log(`[OTP VERIFY] OTP mismatch. Expected: ${stored.otp}, Received: ${otp}`);
     return { success: false, message: 'Invalid OTP. Please try again.' };
   }
 
   // OTP verified, delete it
-  delete otpStore[email];
+  delete otpStore[normalizedEmail];
+  if (otpStore[email]) delete otpStore[email];
+  console.log(`[OTP VERIFY] OTP verified successfully for: ${normalizedEmail}`);
   return { success: true, message: 'OTP verified successfully' };
 };
 

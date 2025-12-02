@@ -50,8 +50,8 @@
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(30px, -30px) scale(1.1); }
-}
-
+  }
+  
 .landing-container {
   position: relative;
   z-index: 1;
@@ -197,7 +197,7 @@
   margin-bottom: var(--spacing-xl);
   padding: var(--spacing-lg) 0;
   position: relative;
-}
+  }
 
 /* Decorative Lines */
 .landing-hero::before,
@@ -459,23 +459,23 @@
 @media (max-width: 768px) {
   .landing-page {
     padding: var(--spacing-md);
-  }
-  
+}
+
   .landing-header {
     padding: var(--spacing-xl) var(--spacing-md);
     border-radius: var(--radius-lg);
-  }
-  
+}
+
   .landing-content {
     padding: var(--spacing-xl) var(--spacing-lg);
     border-radius: var(--radius-lg);
-  }
-  
+}
+
   .landing-hero {
     padding: var(--spacing-lg) 0;
     margin-bottom: var(--spacing-xl);
-  }
-  
+}
+
   .landing-features {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
@@ -483,8 +483,8 @@
   
   .feature-card {
     padding: var(--spacing-xl) var(--spacing-lg);
-  }
-  
+}
+
   .cta-buttons-row {
     flex-direction: column;
   }
@@ -493,22 +493,22 @@
   .btn-support {
     width: 100%;
     max-width: 100%;
-  }
-  
-  .ratings-section {
+}
+
+.ratings-section {
     padding: var(--spacing-lg) var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     border-radius: var(--radius-lg);
-    text-align: center;
-  }
-  
-  .ratings-section h2 {
+  text-align: center;
+}
+
+.ratings-section h2 {
     font-size: 1.5rem;
     margin-bottom: var(--spacing-lg);
     text-align: center;
-  }
-  
-  .ratings-display {
+}
+
+.ratings-display {
     grid-template-columns: 1fr;
     gap: var(--spacing-sm);
     max-width: 100%;
@@ -521,10 +521,10 @@
     width: 100%;
     max-width: 100%;
     text-align: center;
-    display: flex;
+  display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+  justify-content: center;
   }
   
   .rating-card h3 {
@@ -532,8 +532,8 @@
     margin-bottom: var(--spacing-sm);
     text-align: center;
     width: 100%;
-  }
-  
+}
+
   .rating-stars {
     margin-bottom: var(--spacing-sm);
     display: flex;
@@ -564,8 +564,8 @@
     text-align: center;
     line-height: 1;
     flex-shrink: 0;
-  }
-  
+}
+
   .rating-value {
     font-size: 1.25rem;
     margin-bottom: var(--spacing-xs);
@@ -586,13 +586,13 @@
   .developers-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
-  }
-  
+}
+
   .developer-image {
     width: 100px;
     height: 100px;
-  }
-  
+}
+
   .privacy-section {
     border-radius: var(--radius-lg);
   }
@@ -603,8 +603,8 @@
   
   .privacy-content {
     padding: var(--spacing-lg);
-  }
-  
+}
+
   .landing-footer {
     padding: var(--spacing-lg);
   }
@@ -612,22 +612,22 @@
   .developers-list {
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
     gap: var(--spacing-xs) var(--spacing-sm);
-  }
-  
+}
+
   .developers-list span:nth-child(even) {
     margin: 0 var(--spacing-xs);
-  }
+}
 }
 
 /* Tablet Devices */
 @media (min-width: 769px) and (max-width: 1024px) {
   .landing-content {
     padding: var(--spacing-2xl);
-  }
-  
+}
+
   .landing-features {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -637,8 +637,8 @@
 @media (min-width: 1200px) {
   .landing-content {
     max-width: 1400px;
-  }
-  
+}
+
   .landing-features {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -826,14 +826,14 @@
   
   .star-rating {
     gap: 2px;
-    display: flex;
+  display: flex;
     justify-content: center;
     align-items: center;
     width: auto;
     margin: 0 auto;
     flex-wrap: nowrap;
-  }
-  
+}
+
   .star-rating .star {
     display: inline-block;
     text-align: center;
@@ -843,13 +843,13 @@
   
   /* Ensure rating cards are properly centered */
   .rating-card {
-    display: flex;
+  display: flex;
     flex-direction: column;
-    align-items: center;
+  align-items: center;
     justify-content: center;
     text-align: center;
-  }
-  
+}
+
   .rating-card > * {
     text-align: center;
     width: 100%;
@@ -1258,7 +1258,7 @@
   color: #1e453e;
   border: 2px solid #1e453e;
   padding: 0.875rem 1.75rem;
-  font-size: 1rem;
+    font-size: 1rem;
   font-weight: 500;
   border-radius: var(--radius-md);
   text-decoration: none;
@@ -1269,7 +1269,7 @@
   transition: all var(--transition-base);
   cursor: pointer;
   box-shadow: var(--shadow-xs);
-}
+  }
 
 .btn-secondary:hover:not(:disabled) {
   background: #1e453e;
@@ -1277,7 +1277,7 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
   border-color: #16332e;
-}
+  }
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {

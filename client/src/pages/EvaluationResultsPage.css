@@ -314,41 +314,41 @@
   .evaluation-results-page {
     padding: var(--spacing-md);
   }
-  
+
   .evaluation-container {
     border-radius: var(--radius-lg);
   }
-  
+
   .evaluation-header {
     padding: var(--spacing-lg);
   }
-  
+
   .evaluation-header .header-title {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .evaluation-header .header-seal {
     width: 60px;
     height: 60px;
   }
-  
+
   .evaluation-content {
     padding: var(--spacing-lg);
   }
-  
+
   .evaluation-table {
     font-size: 0.8125rem;
     display: block;
     overflow-x: auto;
   }
-  
+
   .evaluation-table th,
   .evaluation-table td {
     padding: var(--spacing-sm);
     font-size: 0.75rem;
   }
-  
+
   .rating-badge {
     min-width: 80px;
     font-size: 0.75rem;
