@@ -6,25 +6,43 @@ const otpStore = {};
 const passwordResetOTPStore = {};
 
 // Create transporter for Gmail
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD
-  }
-});
+const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
+const gmailPassword = process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD;
 
-// Verify transporter configuration on startup
-transporter.verify(function (error, success) {
-  if (error) {
-    console.error('[EMAIL] Transporter verification failed:', error);
-    console.error('[EMAIL] Make sure GMAIL_USER and GMAIL_APP_PASSWORD are set correctly in Railway!');
-  } else {
-    console.log('[EMAIL] Transporter is ready to send emails');
-    console.log('[EMAIL] Gmail User:', process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com');
-    console.log('[EMAIL] App Password configured:', (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD) ? 'Yes' : 'No');
-  }
-});
+// Only create transporter if credentials are available
+let transporter = null;
+if (gmailPassword) {
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPassword
+    }
+  });
+
+  // Verify transporter configuration on startup
+  transporter.verify(function (error, success) {
+    if (error) {
+      console.error('[EMAIL] ⚠️ Transporter verification failed:', error.message);
+      console.error('[EMAIL] ⚠️ Error code:', error.code);
+      if (error.code === 'EAUTH') {
+        console.error('[EMAIL] ⚠️ Authentication failed. Please check:');
+        console.error('[EMAIL] ⚠️ 1. GMAIL_USER is set correctly in Railway environment variables');
+        console.error('[EMAIL] ⚠️ 2. GMAIL_APP_PASSWORD is set correctly in Railway environment variables');
+        console.error('[EMAIL] ⚠️ 3. Gmail App Password is valid (not the regular password)');
+        console.error('[EMAIL] ⚠️ 4. 2-Step Verification is enabled on Gmail account');
+      }
+    } else {
+      console.log('[EMAIL] ✅ Transporter is ready to send emails');
+      console.log('[EMAIL] ✅ Gmail User:', gmailUser);
+      console.log('[EMAIL] ✅ App Password configured: Yes');
+    }
+  });
+} else {
+  console.error('[EMAIL] ❌ ERROR: GMAIL_APP_PASSWORD or GMAIL_PASSWORD is not set!');
+  console.error('[EMAIL] ❌ Email functionality will not work until credentials are configured.');
+  console.error('[EMAIL] ❌ Please set GMAIL_APP_PASSWORD in Railway environment variables.');
+}
 
 // Generate OTP
 const generateOTP = () => {
@@ -34,15 +52,25 @@ const generateOTP = () => {
 // Send OTP to email
 const sendOTP = async (email) => {
   try {
+    // Check if transporter is configured
+    if (!transporter) {
+      console.error('[OTP] ERROR: Email transporter is not configured!');
+      console.error('[OTP] ERROR: GMAIL_APP_PASSWORD or GMAIL_PASSWORD is not set in Railway environment variables!');
+      return { 
+        success: false, 
+        message: 'Email service is not configured. Please contact the administrator to set up Gmail credentials in Railway.' 
+      };
+    }
+    
     // Check if Gmail credentials are configured
     const gmailUser = process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
     const gmailPassword = process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASSWORD;
     
     if (!gmailPassword) {
-      console.error('ERROR: GMAIL_APP_PASSWORD or GMAIL_PASSWORD is not set in environment variables!');
+      console.error('[OTP] ERROR: GMAIL_APP_PASSWORD or GMAIL_PASSWORD is not set in environment variables!');
       return { 
         success: false, 
-        message: 'Email service is not configured. Please contact the administrator.' 
+        message: 'Email service is not configured. Please contact the administrator to set up Gmail credentials in Railway.' 
       };
     }
 
