@@ -168,9 +168,11 @@ const verifyOTP = (email, otp) => {
   const normalizedEmail = (email || '').trim().toLowerCase();
   const trimmedOTP = (otp || '').trim();
   
+  console.log(`[OTP VERIFY] ========================================`);
   console.log(`[OTP VERIFY] Starting verification for email: ${email} (normalized: ${normalizedEmail})`);
-  console.log(`[OTP VERIFY] OTP received: ${trimmedOTP ? '***' : 'MISSING'}`);
+  console.log(`[OTP VERIFY] OTP received: ${trimmedOTP} (length: ${trimmedOTP.length})`);
   console.log(`[OTP VERIFY] Current OTP store keys:`, Object.keys(otpStore));
+  console.log(`[OTP VERIFY] OTP store contents:`, JSON.stringify(otpStore, null, 2));
   
   // Try to find OTP with normalized email
   let stored = otpStore[normalizedEmail];

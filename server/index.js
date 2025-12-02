@@ -609,12 +609,16 @@ app.post('/api/admin/send-otp', async (req, res) => {
     console.log(`[ADMIN OTP] Sending OTP to admin email...`);
     // Use normalized email for consistency
     const normalizedEmailForSend = (email || '').trim().toLowerCase();
+    console.log(`[ADMIN OTP] Normalized email for sending: ${normalizedEmailForSend}`);
     const result = await sendOTP(normalizedEmailForSend);
     if (result.success) {
-      console.log(`[ADMIN OTP] OTP sent successfully to: ${normalizedEmailForSend}`);
+      console.log(`[ADMIN OTP] ✅ OTP sent successfully to: ${normalizedEmailForSend}`);
+      // Log the OTP store after sending (for debugging - remove in production)
+      const { otpStore } = require('./auth');
+      console.log(`[ADMIN OTP] OTP store after sending:`, Object.keys(otpStore));
       res.json({ success: true, message: 'OTP sent to your email' });
     } else {
-      console.error(`[ADMIN OTP] Failed to send OTP: ${result.message}`);
+      console.error(`[ADMIN OTP] ❌ Failed to send OTP: ${result.message}`);
       res.status(500).json({ success: false, message: result.message });
     }
   } catch (error) {
@@ -653,8 +657,11 @@ app.post('/api/admin/verify-otp', async (req, res) => {
     }
 
     // Use normalized email for OTP verification
+    console.log(`[ADMIN OTP VERIFY] Calling verifyOTP with normalizedEmail: ${normalizedEmail}, OTP: ${otp.trim()}`);
     const result = verifyOTP(normalizedEmail, otp.trim());
-    console.log(`[ADMIN OTP VERIFY] Verification result: ${result.success ? 'SUCCESS' : 'FAILED'} - ${result.message}`);
+    console.log(`[ADMIN OTP VERIFY] ========================================`);
+    console.log(`[ADMIN OTP VERIFY] Verification result: ${result.success ? '✅ SUCCESS' : '❌ FAILED'} - ${result.message}`);
+    console.log(`[ADMIN OTP VERIFY] ========================================`);
     
     if (result.success) {
       res.json({ success: true, message: 'Login successful', token: 'admin-token' });
