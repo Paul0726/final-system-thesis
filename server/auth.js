@@ -88,7 +88,9 @@ const sendOTP = async (email) => {
     };
     console.log(`[OTP] OTP generated and stored for normalized email: ${normalizedEmail}`);
     console.log(`[OTP] OTP value: ${otp} (stored as: "${otpStore[normalizedEmail].otp}")`);
+    console.log(`[OTP] OTP length: ${otpStore[normalizedEmail].otp.length} characters`);
     console.log(`[OTP] OTP expires at: ${new Date(expiresAt).toISOString()}`);
+    console.log(`[OTP] Current OTP store contents:`, JSON.stringify(Object.keys(otpStore)));
 
     // Determine if this is admin or user OTP
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
@@ -200,17 +202,31 @@ const verifyOTP = (email, otp) => {
     return { success: false, message: 'OTP has expired. Please request a new one.' };
   }
 
-  // Compare OTP as strings, ensuring both are trimmed
+  // Compare OTP as strings, ensuring both are trimmed and normalized
   const storedOTP = String(stored.otp).trim();
   const receivedOTP = String(trimmedOTP).trim();
   
-  console.log(`[OTP VERIFY] Comparing OTPs - Stored: "${storedOTP}" (length: ${storedOTP.length}), Received: "${receivedOTP}" (length: ${receivedOTP.length})`);
-  console.log(`[OTP VERIFY] OTP match: ${storedOTP === receivedOTP}`);
+  // Remove any non-digit characters (in case user copied with spaces or formatting)
+  const cleanedStoredOTP = storedOTP.replace(/\D/g, '');
+  const cleanedReceivedOTP = receivedOTP.replace(/\D/g, '');
   
-  if (storedOTP !== receivedOTP) {
-    console.log(`[OTP VERIFY] OTP mismatch. Expected: "${storedOTP}", Received: "${receivedOTP}"`);
-    return { success: false, message: 'Invalid OTP. Please check the code and try again.' };
+  console.log(`[OTP VERIFY] Comparing OTPs:`);
+  console.log(`[OTP VERIFY]   Stored (raw): "${storedOTP}" (length: ${storedOTP.length})`);
+  console.log(`[OTP VERIFY]   Stored (cleaned): "${cleanedStoredOTP}" (length: ${cleanedStoredOTP.length})`);
+  console.log(`[OTP VERIFY]   Received (raw): "${receivedOTP}" (length: ${receivedOTP.length})`);
+  console.log(`[OTP VERIFY]   Received (cleaned): "${cleanedReceivedOTP}" (length: ${cleanedReceivedOTP.length})`);
+  console.log(`[OTP VERIFY]   Direct match: ${storedOTP === receivedOTP}`);
+  console.log(`[OTP VERIFY]   Cleaned match: ${cleanedStoredOTP === cleanedReceivedOTP}`);
+  
+  // Try both direct and cleaned comparison
+  const isMatch = (storedOTP === receivedOTP) || (cleanedStoredOTP === cleanedReceivedOTP && cleanedStoredOTP.length === 6);
+  
+  if (!isMatch) {
+    console.log(`[OTP VERIFY] ❌ OTP mismatch. Expected: "${storedOTP}", Received: "${receivedOTP}"`);
+    return { success: false, message: 'Invalid OTP. Please check the code and try again. Make sure to copy only the 6-digit number.' };
   }
+  
+  console.log(`[OTP VERIFY] ✅ OTP matches!`);
 
   // OTP verified, delete it
   delete otpStore[normalizedEmail];

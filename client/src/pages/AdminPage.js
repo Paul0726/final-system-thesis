@@ -308,19 +308,26 @@ function AdminPage() {
         return;
       }
       
+      // Clean OTP - remove any non-digit characters (spaces, dashes, etc.)
+      const cleanedOTP = trimmedOTP.replace(/\D/g, '');
+      
       // Validate OTP format (should be 6 digits)
-      if (!/^\d{6}$/.test(trimmedOTP)) {
-        alert('Invalid OTP format. Please enter the 6-digit code from your email.');
+      if (cleanedOTP.length !== 6) {
+        alert('Invalid OTP format. Please enter the 6-digit code from your email (numbers only).');
         setLoginLoading(false);
         return;
       }
       
+      // Use cleaned OTP for verification
+      const finalOTP = cleanedOTP;
+      
       console.log('[ADMIN] Verifying OTP for email:', trimmedEmail);
-      console.log('[ADMIN] OTP entered:', trimmedOTP);
+      console.log('[ADMIN] OTP entered (raw):', trimmedOTP);
+      console.log('[ADMIN] OTP entered (cleaned):', finalOTP);
       
       const response = await axios.post(`${API_URL}/admin/verify-otp`, { 
         email: trimmedEmail, 
-        otp: trimmedOTP 
+        otp: finalOTP 
       });
       
       console.log('[ADMIN] Verification response:', response.data);

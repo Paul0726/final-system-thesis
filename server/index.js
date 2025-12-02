@@ -607,9 +607,11 @@ app.post('/api/admin/send-otp', async (req, res) => {
     }
 
     console.log(`[ADMIN OTP] Sending OTP to admin email...`);
-    const result = await sendOTP(email);
+    // Use normalized email for consistency
+    const normalizedEmailForSend = (email || '').trim().toLowerCase();
+    const result = await sendOTP(normalizedEmailForSend);
     if (result.success) {
-      console.log(`[ADMIN OTP] OTP sent successfully`);
+      console.log(`[ADMIN OTP] OTP sent successfully to: ${normalizedEmailForSend}`);
       res.json({ success: true, message: 'OTP sent to your email' });
     } else {
       console.error(`[ADMIN OTP] Failed to send OTP: ${result.message}`);
