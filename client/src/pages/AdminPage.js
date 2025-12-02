@@ -298,31 +298,46 @@ function AdminPage() {
       
       if (!trimmedEmail) {
         alert('Please enter your email address.');
+        setLoginLoading(false);
         return;
       }
       
       if (!trimmedOTP) {
         alert('Please enter the OTP code.');
+        setLoginLoading(false);
         return;
       }
       
-      console.log('Verifying OTP for email:', trimmedEmail);
+      // Validate OTP format (should be 6 digits)
+      if (!/^\d{6}$/.test(trimmedOTP)) {
+        alert('Invalid OTP format. Please enter the 6-digit code from your email.');
+        setLoginLoading(false);
+        return;
+      }
+      
+      console.log('[ADMIN] Verifying OTP for email:', trimmedEmail);
+      console.log('[ADMIN] OTP entered:', trimmedOTP);
+      
       const response = await axios.post(`${API_URL}/admin/verify-otp`, { 
         email: trimmedEmail, 
         otp: trimmedOTP 
       });
+      
+      console.log('[ADMIN] Verification response:', response.data);
       
       if (response.data.success) {
         localStorage.setItem('adminToken', 'admin-token');
         setIsAuthenticated(true);
         setOtpSent(false);
         setOtp('');
+        alert('Login successful! Welcome to Admin Panel.');
         fetchSurveys();
       } else {
         alert('Error: ' + response.data.message);
       }
     } catch (error) {
-      console.error('Error verifying OTP:', error);
+      console.error('[ADMIN] Error verifying OTP:', error);
+      console.error('[ADMIN] Error response:', error.response?.data);
       const errorMessage = error.response?.data?.message || error.message || 'Invalid OTP. Please try again.';
       alert('Error: ' + errorMessage);
     } finally {
