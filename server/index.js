@@ -622,8 +622,16 @@ app.post('/api/admin/send-otp', async (req, res) => {
       res.status(500).json({ success: false, message: result.message });
     }
   } catch (error) {
-    console.error('[ADMIN OTP] Error in send-otp endpoint:', error);
-    res.status(500).json({ success: false, message: 'Failed to send OTP' });
+    console.error('[ADMIN OTP] ❌ Error in send-otp endpoint:', error);
+    console.error('[ADMIN OTP] Error details:', {
+      message: error.message,
+      stack: error.stack
+    });
+    const errorMessage = error.message || 'Failed to send OTP. Please check server logs for details.';
+    res.status(500).json({ 
+      success: false, 
+      message: errorMessage 
+    });
   }
 });
 

@@ -272,16 +272,22 @@ function AdminPage() {
   const handleSendOTP = async () => {
     try {
       setLoginLoading(true);
+      console.log('[ADMIN] Requesting OTP for email:', email);
       const response = await axios.post(`${API_URL}/admin/send-otp`, { email });
+      console.log('[ADMIN] Send OTP response:', response.data);
       if (response.data.success) {
         setOtpSent(true);
         alert('OTP sent to your email! Please check your inbox.');
       } else {
-        alert('Error: ' + response.data.message);
+        const errorMsg = response.data.message || 'Failed to send OTP';
+        console.error('[ADMIN] Send OTP failed:', errorMsg);
+        alert('Error: ' + errorMsg);
       }
     } catch (error) {
-      console.error('Error sending OTP:', error);
-      alert('Error sending OTP. Please try again.');
+      console.error('[ADMIN] Error sending OTP:', error);
+      console.error('[ADMIN] Error response:', error.response?.data);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to send OTP. Please check your Gmail configuration in Railway.';
+      alert('Error: ' + errorMessage);
     } finally {
       setLoginLoading(false);
     }

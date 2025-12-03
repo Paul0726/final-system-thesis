@@ -137,27 +137,33 @@ const sendOTP = async (email) => {
       `
     });
 
-    console.log(`[OTP] Email sent successfully! Message ID: ${info.messageId}`);
+    console.log(`[OTP] ✅ Email sent successfully! Message ID: ${info.messageId}`);
     return { success: true, message: 'OTP sent successfully' };
   } catch (error) {
-    console.error('[OTP] ERROR sending OTP:', error);
+    console.error('[OTP] ❌ ERROR sending OTP:', error);
     console.error('[OTP] Error details:', {
       message: error.message,
       code: error.code,
       command: error.command,
-      response: error.response
+      response: error.response,
+      stack: error.stack
     });
     
     // Provide more specific error messages
     let errorMessage = 'Failed to send OTP';
     if (error.code === 'EAUTH') {
-      errorMessage = 'Email authentication failed. Please check Gmail App Password configuration.';
+      errorMessage = 'Email authentication failed. Please check GMAIL_APP_PASSWORD in Railway environment variables. Make sure 2-Step Verification is enabled and you\'re using an App Password, not your regular password.';
     } else if (error.code === 'ECONNECTION') {
-      errorMessage = 'Cannot connect to email server. Please check your internet connection.';
+      errorMessage = 'Cannot connect to email server. Please check your internet connection and Gmail service status.';
+    } else if (error.code === 'ETIMEDOUT') {
+      errorMessage = 'Email server connection timed out. Please try again later.';
     } else if (error.response) {
       errorMessage = `Email server error: ${error.response}`;
+    } else if (error.message) {
+      errorMessage = `Error: ${error.message}`;
     }
     
+    console.error('[OTP] ❌ Returning error message:', errorMessage);
     return { success: false, message: errorMessage };
   }
 };
