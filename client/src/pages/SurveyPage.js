@@ -1167,105 +1167,57 @@ function SurveyPage() {
           </div>
 
           {/* F. SYSTEM EVALUATION */}
-          <div className="form-section">
+          <div className="form-section system-evaluation-section">
             <h2>F. SYSTEM EVALUATION</h2>
             <p className="rating-instruction">Please evaluate the BSIT Graduate Tracer System according to the following criteria. Rate from 1 (Poor) to 5 (Excellent):</p>
 
-            {/* Functionality */}
-            <div className="rating-section">
-              <h3>Functionality</h3>
-              {[
+            <SystemEvaluationCategory
+              category="functionality"
+              title="Functionality"
+              questions={[
                 { q: 'q1', text: 'The system is easy to use and learned.' },
                 { q: 'q2', text: 'The system can be used with comfort and convenience.' },
                 { q: 'q3', text: 'The system is user-friendly.' }
-              ].map((item, idx) => (
-                <div key={idx} className="rating-question">
-                  <label>{item.text}</label>
-                  <div className="rating-buttons">
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <label key={num} className="rating-label">
-                        <input type="radio" name={`functionality_${item.q}`} value={num} 
-                          checked={formData.systemEvaluation.functionality[item.q] === String(num)} 
-                          onChange={(e) => handleSystemEvaluationChange('functionality', item.q, e.target.value)} />
-                        <span>{num}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+              ]}
+              value={formData.systemEvaluation.functionality}
+              onChange={handleSystemEvaluationChange}
+            />
 
-            {/* Reliability */}
-            <div className="rating-section">
-              <h3>Reliability</h3>
-              {[
+            <SystemEvaluationCategory
+              category="reliability"
+              title="Reliability"
+              questions={[
                 { q: 'q1', text: 'The system provides the correct desired output.' },
                 { q: 'q2', text: 'Absence of failures in the system.' },
                 { q: 'q3', text: 'The system is accurate in performance.' }
-              ].map((item, idx) => (
-                <div key={idx} className="rating-question">
-                  <label>{item.text}</label>
-                  <div className="rating-buttons">
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <label key={num} className="rating-label">
-                        <input type="radio" name={`reliability_${item.q}`} value={num} 
-                          checked={formData.systemEvaluation.reliability[item.q] === String(num)} 
-                          onChange={(e) => handleSystemEvaluationChange('reliability', item.q, e.target.value)} />
-                        <span>{num}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+              ]}
+              value={formData.systemEvaluation.reliability}
+              onChange={handleSystemEvaluationChange}
+            />
 
-            {/* Accuracy */}
-            <div className="rating-section">
-              <h3>Accuracy</h3>
-              {[
+            <SystemEvaluationCategory
+              category="accuracy"
+              title="Accuracy"
+              questions={[
                 { q: 'q1', text: 'The system gives accurate information/computation.' },
                 { q: 'q2', text: 'The system provides accurate outputs.' },
                 { q: 'q3', text: 'The system provides accurate reports.' }
-              ].map((item, idx) => (
-                <div key={idx} className="rating-question">
-                  <label>{item.text}</label>
-                  <div className="rating-buttons">
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <label key={num} className="rating-label">
-                        <input type="radio" name={`accuracy_${item.q}`} value={num} 
-                          checked={formData.systemEvaluation.accuracy[item.q] === String(num)} 
-                          onChange={(e) => handleSystemEvaluationChange('accuracy', item.q, e.target.value)} />
-                        <span>{num}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+              ]}
+              value={formData.systemEvaluation.accuracy}
+              onChange={handleSystemEvaluationChange}
+            />
 
-            {/* Efficiency */}
-            <div className="rating-section">
-              <h3>Efficiency</h3>
-              {[
+            <SystemEvaluationCategory
+              category="efficiency"
+              title="Efficiency"
+              questions={[
                 { q: 'q1', text: 'The system is well organized and working properly.' },
                 { q: 'q2', text: 'The system is well organized for purpose.' },
                 { q: 'q3', text: 'The system is capable to produce the desired output without delaying the run time performance.' }
-              ].map((item, idx) => (
-                <div key={idx} className="rating-question">
-                  <label>{item.text}</label>
-                  <div className="rating-buttons">
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <label key={num} className="rating-label">
-                        <input type="radio" name={`efficiency_${item.q}`} value={num} 
-                          checked={formData.systemEvaluation.efficiency[item.q] === String(num)} 
-                          onChange={(e) => handleSystemEvaluationChange('efficiency', item.q, e.target.value)} />
-                        <span>{num}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+              ]}
+              value={formData.systemEvaluation.efficiency}
+              onChange={handleSystemEvaluationChange}
+            />
           </div>
 
           {/* Account Creation Section */}
