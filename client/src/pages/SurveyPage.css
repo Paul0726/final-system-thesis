@@ -487,14 +487,73 @@
    RESPONSIVE DESIGN
    ============================================ */
 
+/* System Evaluation Section - Mobile Optimizations */
+.system-evaluation-section {
+  /* Force GPU acceleration for smooth scrolling on mobile */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: scroll-position;
+  /* Prevent layout shifts */
+  contain: layout style paint;
+  /* Optimize scrolling */
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+
 @media (max-width: 768px) {
   .survey-page {
     padding: var(--spacing-md);
+    /* Optimize scrolling performance on mobile */
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+    /* Prevent text selection during scroll */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Re-enable text selection for inputs */
+  .survey-page input,
+  .survey-page textarea,
+  .survey-page select,
+  .survey-page label {
+    -webkit-user-select: auto;
+    user-select: auto;
   }
   
   .survey-header {
     padding: var(--spacing-xl) var(--spacing-md);
     border-radius: var(--radius-lg);
+  }
+  
+  /* Optimize rating sections for mobile */
+  .rating-section {
+    /* Reduce padding on mobile */
+    padding: var(--spacing-md);
+    /* Force GPU acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Optimize rendering */
+    contain: layout style paint;
+  }
+  
+  .rating-buttons {
+    /* Optimize flex layout for mobile */
+    gap: var(--spacing-sm);
+    justify-content: space-between;
+  }
+  
+  .rating-label {
+    /* Reduce size on mobile for better performance */
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-width: 45px;
+    font-size: 0.875rem;
+    /* Disable hover effects on touch devices */
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .rating-label:hover {
+    /* Disable hover transform on mobile */
+    transform: none;
   }
   
   .survey-form {
@@ -608,6 +667,9 @@
   background: #d2d9ca;
   border-radius: var(--radius-md);
   border-left: 3px solid var(--primary-green);
+  /* Performance optimizations for mobile */
+  will-change: auto;
+  contain: layout style;
 }
 
 .rating-question label {
@@ -641,6 +703,11 @@
   color: var(--text-dark);
   min-width: 50px;
   justify-content: center;
+  /* Performance optimizations for mobile */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .rating-label:hover {

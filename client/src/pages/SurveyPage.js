@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './SurveyPage.css';
@@ -1337,5 +1337,60 @@ function SurveyPage() {
     </div>
   );
 }
+
+// Optimized System Evaluation Category Component
+const SystemEvaluationCategory = memo(({ category, title, questions, value, onChange }) => {
+  const handleChange = useCallback((question, val) => {
+    onChange(category, question, val);
+  }, [category, onChange]);
+
+  return (
+    <div className="rating-section">
+      <h3>{title}</h3>
+      {questions.map((item, idx) => (
+        <RatingQuestion
+          key={`${category}_${item.q}`}
+          name={`${category}_${item.q}`}
+          label={item.text}
+          value={value[item.q]}
+          onChange={(val) => handleChange(item.q, val)}
+        />
+      ))}
+    </div>
+  );
+});
+
+SystemEvaluationCategory.displayName = 'SystemEvaluationCategory';
+
+// Optimized Rating Question Component
+const RatingQuestion = memo(({ name, label, value, onChange }) => {
+  const handleRadioChange = useCallback((e) => {
+    onChange(e.target.value);
+  }, [onChange]);
+
+  const ratingOptions = useMemo(() => [1, 2, 3, 4, 5], []);
+
+  return (
+    <div className="rating-question">
+      <label>{label}</label>
+      <div className="rating-buttons">
+        {ratingOptions.map(num => (
+          <label key={num} className="rating-label">
+            <input 
+              type="radio" 
+              name={name} 
+              value={String(num)} 
+              checked={value === String(num)} 
+              onChange={handleRadioChange} 
+            />
+            <span>{num}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+RatingQuestion.displayName = 'RatingQuestion';
 
 export default SurveyPage;
