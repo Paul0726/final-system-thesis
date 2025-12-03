@@ -82,15 +82,20 @@ const sendOTP = async (email) => {
     // Normalize email to lowercase for consistent storage
     const normalizedEmail = (email || '').trim().toLowerCase();
     const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const otpString = String(otp).trim();
     otpStore[normalizedEmail] = {
-      otp: String(otp).trim(), // Ensure OTP is stored as trimmed string
+      otp: otpString, // Ensure OTP is stored as trimmed string
       expiresAt: expiresAt
     };
-    console.log(`[OTP] OTP generated and stored for normalized email: ${normalizedEmail}`);
-    console.log(`[OTP] OTP value: ${otp} (stored as: "${otpStore[normalizedEmail].otp}")`);
-    console.log(`[OTP] OTP length: ${otpStore[normalizedEmail].otp.length} characters`);
+    console.log(`[OTP] ========================================`);
+    console.log(`[OTP] OTP generated and stored`);
+    console.log(`[OTP] Original email: ${email}`);
+    console.log(`[OTP] Normalized email: ${normalizedEmail}`);
+    console.log(`[OTP] OTP value: ${otpString} (length: ${otpString.length})`);
     console.log(`[OTP] OTP expires at: ${new Date(expiresAt).toISOString()}`);
-    console.log(`[OTP] Current OTP store contents:`, JSON.stringify(Object.keys(otpStore)));
+    console.log(`[OTP] Current OTP store keys:`, Object.keys(otpStore));
+    console.log(`[OTP] OTP store entry:`, JSON.stringify({ email: normalizedEmail, otpLength: otpString.length, expiresAt: new Date(expiresAt).toISOString() }));
+    console.log(`[OTP] ========================================`);
 
     // Determine if this is admin or user OTP
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
@@ -175,10 +180,20 @@ const verifyOTP = (email, otp) => {
   const trimmedOTP = (otp || '').trim();
   
   console.log(`[OTP VERIFY] ========================================`);
-  console.log(`[OTP VERIFY] Starting verification for email: ${email} (normalized: ${normalizedEmail})`);
+  console.log(`[OTP VERIFY] Starting verification`);
+  console.log(`[OTP VERIFY] Original email: ${email}`);
+  console.log(`[OTP VERIFY] Normalized email: ${normalizedEmail}`);
   console.log(`[OTP VERIFY] OTP received: ${trimmedOTP} (length: ${trimmedOTP.length})`);
   console.log(`[OTP VERIFY] Current OTP store keys:`, Object.keys(otpStore));
-  console.log(`[OTP VERIFY] OTP store contents:`, JSON.stringify(otpStore, null, 2));
+  console.log(`[OTP VERIFY] OTP store size: ${Object.keys(otpStore).length} entries`);
+  if (Object.keys(otpStore).length > 0) {
+    console.log(`[OTP VERIFY] OTP store entries:`, Object.keys(otpStore).map(key => ({
+      key: key,
+      hasOTP: !!otpStore[key]?.otp,
+      otpLength: otpStore[key]?.otp?.length || 0,
+      expiresAt: otpStore[key]?.expiresAt ? new Date(otpStore[key].expiresAt).toISOString() : 'N/A'
+    })));
+  }
   
   // Try to find OTP with normalized email
   let stored = otpStore[normalizedEmail];
@@ -227,11 +242,22 @@ const verifyOTP = (email, otp) => {
   console.log(`[OTP VERIFY]   Cleaned match: ${cleanedStoredOTP === cleanedReceivedOTP}`);
   
   // Try both direct and cleaned comparison
-  const isMatch = (storedOTP === receivedOTP) || (cleanedStoredOTP === cleanedReceivedOTP && cleanedStoredOTP.length === 6);
+  const directMatch = storedOTP === receivedOTP;
+  const cleanedMatch = cleanedStoredOTP === cleanedReceivedOTP && cleanedStoredOTP.length === 6 && cleanedReceivedOTP.length === 6;
+  const isMatch = directMatch || cleanedMatch;
+  
+  console.log(`[OTP VERIFY] Match results:`);
+  console.log(`[OTP VERIFY]   Direct match: ${directMatch}`);
+  console.log(`[OTP VERIFY]   Cleaned match: ${cleanedMatch}`);
+  console.log(`[OTP VERIFY]   Final match: ${isMatch}`);
   
   if (!isMatch) {
-    console.log(`[OTP VERIFY] ❌ OTP mismatch. Expected: "${storedOTP}", Received: "${receivedOTP}"`);
-    return { success: false, message: 'Invalid OTP. Please check the code and try again. Make sure to copy only the 6-digit number.' };
+    console.log(`[OTP VERIFY] ❌ OTP mismatch`);
+    console.log(`[OTP VERIFY]   Expected (raw): "${storedOTP}"`);
+    console.log(`[OTP VERIFY]   Expected (cleaned): "${cleanedStoredOTP}"`);
+    console.log(`[OTP VERIFY]   Received (raw): "${receivedOTP}"`);
+    console.log(`[OTP VERIFY]   Received (cleaned): "${cleanedReceivedOTP}"`);
+    return { success: false, message: `Invalid OTP. Expected: ${storedOTP}, Received: ${receivedOTP}. Please check the code and try again.` };
   }
   
   console.log(`[OTP VERIFY] ✅ OTP matches!`);
