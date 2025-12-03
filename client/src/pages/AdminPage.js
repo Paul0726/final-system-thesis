@@ -327,18 +327,24 @@ function AdminPage() {
       // Use cleaned OTP for verification
       const finalOTP = cleanedOTP;
       
-      console.log('[ADMIN] Verifying OTP for email:', trimmedEmail);
+      console.log('[ADMIN] ========================================');
+      console.log('[ADMIN] Verifying OTP');
+      console.log('[ADMIN] Email:', trimmedEmail);
       console.log('[ADMIN] OTP entered (raw):', trimmedOTP);
       console.log('[ADMIN] OTP entered (cleaned):', finalOTP);
+      console.log('[ADMIN] Sending verification request...');
       
       const response = await axios.post(`${API_URL}/admin/verify-otp`, { 
-        email: trimmedEmail, 
+        email: trimmedEmail.toLowerCase().trim(), 
         otp: finalOTP 
+      }, {
+        timeout: 10000 // 10 second timeout
       });
       
       console.log('[ADMIN] Verification response:', response.data);
+      console.log('[ADMIN] ========================================');
       
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         localStorage.setItem('adminToken', 'admin-token');
         setIsAuthenticated(true);
         setOtpSent(false);
@@ -346,12 +352,33 @@ function AdminPage() {
         alert('Login successful! Welcome to Admin Panel.');
         fetchSurveys();
       } else {
-        alert('Error: ' + response.data.message);
+        const errorMsg = response.data?.message || 'OTP verification failed. Please try again.';
+        console.error('[ADMIN] Verification failed:', errorMsg);
+        alert('Error: ' + errorMsg);
       }
     } catch (error) {
+      console.error('[ADMIN] ========================================');
       console.error('[ADMIN] Error verifying OTP:', error);
       console.error('[ADMIN] Error response:', error.response?.data);
-      const errorMessage = error.response?.data?.message || error.message || 'Invalid OTP. Please try again.';
+      console.error('[ADMIN] Error status:', error.response?.status);
+      console.error('[ADMIN] ========================================');
+      
+      let errorMessage = 'Failed to verify OTP. Please try again.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Invalid OTP. Please check the code and try again.';
+      } else if (error.response?.status === 403) {
+        errorMessage = 'Unauthorized email address.';
+      } else if (error.response?.status === 400) {
+        errorMessage = 'Invalid request. Please check your input.';
+      } else if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Request timed out. Please check your internet connection and try again.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       alert('Error: ' + errorMessage);
     } finally {
       setLoginLoading(false);
