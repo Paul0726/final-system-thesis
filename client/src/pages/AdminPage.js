@@ -760,13 +760,18 @@ function AdminPage() {
                   </Space>
                   
                   <Form.Item 
+                    name="otp"
                     label="Enter OTP Code"
-                    required
+                    rules={[
+                      { required: true, message: 'Please enter the OTP code' },
+                      { len: 6, message: 'OTP must be 6 digits' },
+                      { pattern: /^\d+$/, message: 'OTP must contain only numbers' }
+                    ]}
                   >
                     <Input 
                       size="large"
                       value={otp} 
-                      onChange={(e) => setOtp(e.target.value)}
+                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       placeholder="Enter 6-digit OTP"
                       maxLength={6}
                       style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '18px' }}
