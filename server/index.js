@@ -613,10 +613,6 @@ app.post('/api/admin/send-otp', async (req, res) => {
     const result = await sendOTP(normalizedEmailForSend);
     if (result.success) {
       console.log(`[ADMIN OTP] ✅ OTP sent successfully to: ${normalizedEmailForSend}`);
-      // Log OTP store for debugging (only keys, not values for security)
-      const { getOTPStoreKeys } = require('./auth');
-      const storeKeys = getOTPStoreKeys();
-      console.log(`[ADMIN OTP] Current OTP store keys:`, storeKeys);
       res.json({ success: true, message: 'OTP sent to your email' });
     } else {
       console.error(`[ADMIN OTP] ❌ Failed to send OTP: ${result.message}`);

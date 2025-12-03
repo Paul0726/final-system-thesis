@@ -418,12 +418,7 @@ const clearPasswordResetOTP = (email) => {
   delete passwordResetOTPStore[email];
 };
 
-// Helper function to get OTP store keys (for debugging only)
-const getOTPStoreKeys = () => {
-  return Object.keys(otpStore);
-};
-
-module.exports = { sendOTP, verifyOTP, sendTechnicalSupportReport, sendPasswordResetOTP, verifyPasswordResetOTP, clearPasswordResetOTP, getOTPStoreKeys };
+module.exports = { sendOTP, verifyOTP, sendTechnicalSupportReport, sendPasswordResetOTP, verifyPasswordResetOTP, clearPasswordResetOTP };
 
 
 
