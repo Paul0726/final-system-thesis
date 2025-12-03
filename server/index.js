@@ -613,6 +613,10 @@ app.post('/api/admin/send-otp', async (req, res) => {
     const result = await sendOTP(normalizedEmailForSend);
     if (result.success) {
       console.log(`[ADMIN OTP] ✅ OTP sent successfully to: ${normalizedEmailForSend}`);
+      // Log OTP store for debugging (only keys, not values for security)
+      const { getOTPStoreKeys } = require('./auth');
+      const storeKeys = getOTPStoreKeys();
+      console.log(`[ADMIN OTP] Current OTP store keys:`, storeKeys);
       res.json({ success: true, message: 'OTP sent to your email' });
     } else {
       console.error(`[ADMIN OTP] ❌ Failed to send OTP: ${result.message}`);
@@ -636,7 +640,11 @@ app.post('/api/admin/verify-otp', async (req, res) => {
   try {
     const { email, otp } = req.body;
     
-    console.log(`[ADMIN OTP VERIFY] Verification request received for email: ${email}, OTP: ${otp ? '***' : 'missing'}`);
+    console.log(`[ADMIN OTP VERIFY] ========================================`);
+    console.log(`[ADMIN OTP VERIFY] Verification request received`);
+    console.log(`[ADMIN OTP VERIFY] Email: ${email}`);
+    console.log(`[ADMIN OTP VERIFY] OTP: ${otp ? (otp.length > 0 ? '***' : 'EMPTY') : 'MISSING'}`);
+    console.log(`[ADMIN OTP VERIFY] ========================================`);
     
     // Only allow specific admin email (from environment variable or default)
     const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER || 'dwcsjtracersystem@gmail.com';
@@ -645,16 +653,19 @@ app.post('/api/admin/verify-otp', async (req, res) => {
     const normalizedEmail = (email || '').trim().toLowerCase();
     const normalizedAdminEmail = (adminEmail || '').trim().toLowerCase();
     
+    console.log(`[ADMIN OTP VERIFY] Normalized email: ${normalizedEmail}`);
+    console.log(`[ADMIN OTP VERIFY] Expected admin email: ${normalizedAdminEmail}`);
+    
     if (normalizedEmail !== normalizedAdminEmail) {
-      console.log(`[ADMIN OTP VERIFY] Unauthorized email attempt: ${email} (expected: ${adminEmail})`);
+      console.log(`[ADMIN OTP VERIFY] ❌ Unauthorized email attempt: ${email} (expected: ${adminEmail})`);
       return res.status(403).json({ 
         success: false, 
-        message: 'Unauthorized email address' 
+        message: `Unauthorized email address. Expected: ${adminEmail}` 
       });
     }
 
     if (!otp || otp.trim() === '') {
-      console.log(`[ADMIN OTP VERIFY] OTP is missing or empty`);
+      console.log(`[ADMIN OTP VERIFY] ❌ OTP is missing or empty`);
       return res.status(400).json({ 
         success: false, 
         message: 'OTP is required' 
@@ -662,10 +673,12 @@ app.post('/api/admin/verify-otp', async (req, res) => {
     }
 
     // Use normalized email for OTP verification
-    console.log(`[ADMIN OTP VERIFY] Calling verifyOTP with normalizedEmail: ${normalizedEmail}, OTP: ${otp.trim()}`);
-    const result = verifyOTP(normalizedEmail, otp.trim());
+    const trimmedOTP = otp.trim();
+    console.log(`[ADMIN OTP VERIFY] Calling verifyOTP with normalizedEmail: ${normalizedEmail}, OTP: ${trimmedOTP}`);
+    const result = verifyOTP(normalizedEmail, trimmedOTP);
     console.log(`[ADMIN OTP VERIFY] ========================================`);
-    console.log(`[ADMIN OTP VERIFY] Verification result: ${result.success ? '✅ SUCCESS' : '❌ FAILED'} - ${result.message}`);
+    console.log(`[ADMIN OTP VERIFY] Verification result: ${result.success ? '✅ SUCCESS' : '❌ FAILED'}`);
+    console.log(`[ADMIN OTP VERIFY] Message: ${result.message}`);
     console.log(`[ADMIN OTP VERIFY] ========================================`);
     
     if (result.success) {
@@ -674,8 +687,12 @@ app.post('/api/admin/verify-otp', async (req, res) => {
       res.status(401).json({ success: false, message: result.message });
     }
   } catch (error) {
-    console.error('[ADMIN OTP VERIFY] Error verifying OTP:', error);
-    res.status(500).json({ success: false, message: 'Failed to verify OTP' });
+    console.error('[ADMIN OTP VERIFY] ❌ ERROR verifying OTP:', error);
+    console.error('[ADMIN OTP VERIFY] Error stack:', error.stack);
+    res.status(500).json({ 
+      success: false, 
+      message: `Failed to verify OTP: ${error.message}` 
+    });
   }
 });
 
