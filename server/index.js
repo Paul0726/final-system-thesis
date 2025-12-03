@@ -610,13 +610,24 @@ app.post('/api/admin/send-otp', async (req, res) => {
     // Use normalized email for consistency
     const normalizedEmailForSend = (email || '').trim().toLowerCase();
     console.log(`[ADMIN OTP] Normalized email for sending: ${normalizedEmailForSend}`);
-    const result = await sendOTP(normalizedEmailForSend);
-    if (result.success) {
-      console.log(`[ADMIN OTP] ✅ OTP sent successfully to: ${normalizedEmailForSend}`);
-      res.json({ success: true, message: 'OTP sent to your email' });
-    } else {
-      console.error(`[ADMIN OTP] ❌ Failed to send OTP: ${result.message}`);
-      res.status(500).json({ success: false, message: result.message });
+    
+    try {
+      const result = await sendOTP(normalizedEmailForSend);
+      if (result && result.success) {
+        console.log(`[ADMIN OTP] ✅ OTP sent successfully to: ${normalizedEmailForSend}`);
+        res.json({ success: true, message: 'OTP sent to your email' });
+      } else {
+        const errorMsg = result?.message || 'Failed to send OTP';
+        console.error(`[ADMIN OTP] ❌ Failed to send OTP: ${errorMsg}`);
+        res.status(500).json({ success: false, message: errorMsg });
+      }
+    } catch (sendError) {
+      console.error(`[ADMIN OTP] ❌ Exception in sendOTP:`, sendError);
+      console.error(`[ADMIN OTP] Error stack:`, sendError.stack);
+      res.status(500).json({ 
+        success: false, 
+        message: sendError.message || 'Failed to send OTP. Please check server configuration.' 
+      });
     }
   } catch (error) {
     console.error('[ADMIN OTP] ❌ Error in send-otp endpoint:', error);

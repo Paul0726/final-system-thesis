@@ -293,14 +293,16 @@ function AdminPage() {
     }
   };
 
-  const handleVerifyOTP = async (e) => {
-    e.preventDefault();
+  const handleVerifyOTP = async (values) => {
+    // Ant Design Form onFinish passes values object, not event
+    // Get OTP from form values or state
     try {
       setLoginLoading(true);
       
-      // Trim and validate inputs
+      // Get OTP from form values or state
+      const formOTP = values?.otp || otp;
       const trimmedEmail = (email || '').trim();
-      const trimmedOTP = (otp || '').trim();
+      const trimmedOTP = (formOTP || '').trim();
       
       if (!trimmedEmail) {
         alert('Please enter your email address.');
